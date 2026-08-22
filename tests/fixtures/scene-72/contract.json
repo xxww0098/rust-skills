@@ -1,0 +1,27 @@
+{
+  "id": "72",
+  "title": "serde Value 当模型 + unwrap",
+  "commands": [
+    "serde"
+  ],
+  "fixture": "hits.rs",
+  "fixture_needles": [
+    "serde_json::Value",
+    "from_str(&body).unwrap()",
+    "#[serde(untagged)]",
+    "password"
+  ],
+  "skill_needles": {
+    "skills/rust/reference/serde.md": [
+      "SE-11",
+      "SE-15",
+      "SE-13",
+      "SE-03"
+    ],
+    "tests/pressure-scenarios.md": [
+      "### 场景 72",
+      "SE-11",
+      "SE-15"
+    ]
+  }
+}

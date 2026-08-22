@@ -1,0 +1,14 @@
+{
+  "name": "rust-skills",
+  "version": "0.0.40",
+  "description": "Use for any Cargo/Rust work — implement, debug, rustc/borrow-checker, ownership/clone, clippy, review, unsafe/FFI, axum/sqlx/tokio, clap/tracing, Tauri v2, edition 2024, or /rust-skills:rust. Engage without waiting for a subcommand. Skip non-Cargo repos and pure language trivia with no project.",
+  "author": {
+    "name": "xxww"
+  },
+  "license": "MIT",
+  "keywords": [
+    "rust"
+  ],
+  "skills": "./skills/",
+  "commands": "./commands/"
+}

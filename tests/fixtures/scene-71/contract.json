@@ -1,0 +1,27 @@
+{
+  "id": "71",
+  "title": "stack --apply 不删活栈、不双开 HTTP",
+  "commands": [
+    "stack"
+  ],
+  "fixture": "Cargo.toml",
+  "fixture_needles": [
+    "rocket = \"0.4\"",
+    "structopt",
+    "async-std"
+  ],
+  "skill_needles": {
+    "skills/rust/reference/stack.md": [
+      "ST-14",
+      "ST-02",
+      "cargo remove",
+      "1.53.1",
+      "0.1.44"
+    ],
+    "tests/pressure-scenarios.md": [
+      "### 场景 71",
+      "ST-14",
+      "cargo remove"
+    ]
+  }
+}

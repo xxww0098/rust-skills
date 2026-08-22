@@ -1,0 +1,31 @@
+{
+  "id": "62",
+  "title": "capability 裸通配 scope + 生产 CSP 为 null",
+  "commands": [
+    "tauri"
+  ],
+  "fixture": "capabilities.json",
+  "fixture_needles": [
+    "\"windows\": [\"*\"]",
+    "$HOME/**",
+    "\"args\": true",
+    "shell:allow-open"
+  ],
+  "skill_needles": {
+    "skills/rust/reference/tauri.md": [
+      "TA-14",
+      "TA-15",
+      "TA-17",
+      "shell:allow-execute",
+      "$HOME/**",
+      "devCsp"
+    ],
+    "tests/pressure-scenarios.md": [
+      "### 场景 62",
+      "TA-14",
+      "TA-15",
+      "TA-17",
+      "$HOME/**"
+    ]
+  }
+}

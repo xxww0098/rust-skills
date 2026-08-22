@@ -1,0 +1,115 @@
+{
+  "as_of": "2026-08-22",
+  "baseline": {
+    "edition": "2024",
+    "msrv": "1.85",
+    "files": [
+      "skills/rust/rules/preamble.md",
+      "skills/rust/rules/ws.md",
+      "skills/rust/rules/dep.md"
+    ]
+  },
+  "crates": [
+    {
+      "name": "axum",
+      "stable_line": "0.8",
+      "pinned": "0.8.9",
+      "pinned_date": "2026-04",
+      "crate_msrv": "1.75",
+      "files": ["skills/rust/reference/axum.md"],
+      "must_contain": ["0.8.x", "0.8.9", "crates.io", "2026-04"]
+    },
+    {
+      "name": "tauri",
+      "stable_line": "2.11",
+      "pinned": "2.11.5",
+      "pinned_date": "2026-07",
+      "crate_msrv": "1.77",
+      "files": ["skills/rust/reference/tauri.md"],
+      "must_contain": ["2.11.x", "2.11.5", "crates.io", "2026-07"]
+    },
+    {
+      "name": "sqlx",
+      "stable_line": "0.8",
+      "pinned": "0.9.0",
+      "pinned_date": "2026-05",
+      "crate_msrv": "1.94",
+      "note": "0.8 remains in range; do not bump workspace MSRV to 1.94 just to take 0.9",
+      "files": ["skills/rust/reference/sqlx.md"],
+      "must_contain": ["0.9.0", "1.94", "0.8"]
+    },
+    {
+      "name": "sea-orm",
+      "stable_line": "2.0",
+      "pinned": "2.0.2",
+      "pinned_date": "2026-08",
+      "files": ["skills/rust/reference/seaorm.md"],
+      "must_contain": ["2.0.x", "2.0.2", "crates.io", "2026-08"]
+    },
+    {
+      "name": "clap",
+      "stable_line": "4.6",
+      "pinned": "4.6.6",
+      "pinned_date": "2026-08",
+      "files": ["skills/rust/reference/cli.md"],
+      "must_contain": ["4.6.x", "4.6.6", "crates.io", "2026-08"]
+    },
+    {
+      "name": "tokio",
+      "stable_line": "1.53",
+      "pinned": "1.53.1",
+      "pinned_date": "2026-08",
+      "files": ["skills/rust/reference/stack.md"],
+      "must_contain": ["1.53.1", "1.53"]
+    },
+    {
+      "name": "tracing",
+      "stable_line": "0.1",
+      "pinned": "0.1.44",
+      "pinned_date": "2025-12",
+      "files": ["skills/rust/reference/obs.md"],
+      "must_contain": ["0.1.44", "crates.io"]
+    },
+    {
+      "name": "tracing-subscriber",
+      "stable_line": "0.3",
+      "pinned": "0.3.23",
+      "pinned_date": "2026-08",
+      "files": ["skills/rust/reference/obs.md"],
+      "must_contain": ["0.3.23", "crates.io"]
+    },
+    {
+      "name": "serde",
+      "stable_line": "1.0",
+      "pinned": "1.0.229",
+      "pinned_date": "2026-08",
+      "files": ["skills/rust/reference/serde.md"],
+      "must_contain": ["1.0.x", "1.0.229", "crates.io"]
+    },
+    {
+      "name": "serde_json",
+      "stable_line": "1.0",
+      "pinned": "1.0.151",
+      "pinned_date": "2026-08",
+      "files": ["skills/rust/reference/serde.md"],
+      "must_contain": ["1.0.151", "crates.io"]
+    },
+    {
+      "name": "tower-http",
+      "stable_line": "0.6",
+      "pinned": "0.6.11",
+      "pinned_date": "2026-08",
+      "note": "axum 0.8.9 requires tower-http ^0.6.8; do not pair 0.7 with axum 0.8",
+      "files": ["skills/rust/reference/stack.md"],
+      "must_contain": ["0.6.11", "0.6.x"]
+    },
+    {
+      "name": "reqwest",
+      "stable_line": "0.13",
+      "pinned": "0.13.4",
+      "pinned_date": "2026-08",
+      "files": ["skills/rust/reference/stack.md"],
+      "must_contain": ["0.13.4", "0.13.x"]
+    }
+  ]
+}

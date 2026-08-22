@@ -1,0 +1,23 @@
+{
+  "title": "axum 状态事故",
+  "commands": [
+    "axum"
+  ],
+  "fixture_needles": [
+    "Client::new()",
+    "Arc<Mutex<sqlx::PgPool>>"
+  ],
+  "skill_needles": {
+    "skills/rust/reference/axum.md": [
+      "AX-02",
+      "Client::new()",
+      "Arc<Mutex"
+    ],
+    "tests/pressure-scenarios.md": [
+      "### 场景 10",
+      "AX-02"
+    ]
+  },
+  "id": "10",
+  "fixture": "hits.rs"
+}

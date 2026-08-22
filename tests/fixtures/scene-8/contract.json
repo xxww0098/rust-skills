@@ -1,0 +1,25 @@
+{
+  "title": "doctor 抓坏引用",
+  "commands": [
+    "doctor"
+  ],
+  "fixture_needles": [
+    "WS-99",
+    "AS-99"
+  ],
+  "skill_needles": {
+    "skills/rust/reference/doctor.md": [
+      "只读",
+      "eval-fixtures.py",
+      "N-A",
+      "DRIFT"
+    ],
+    "tests/pressure-scenarios.md": [
+      "### 场景 8",
+      "WS-99",
+      "AS-99"
+    ]
+  },
+  "id": "8",
+  "fixture": "bad-ref.md"
+}

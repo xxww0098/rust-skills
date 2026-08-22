@@ -1,0 +1,24 @@
+{
+  "title": "显式 distill 报告精简度量",
+  "commands": [
+    "distill"
+  ],
+  "fixture_needles": [
+    "trait Parser",
+    "ParserBuilder",
+    "impl Parser<Value>"
+  ],
+  "skill_needles": {
+    "skills/rust/reference/distill.md": [
+      "SIMP-01",
+      "/crate",
+      "/optimize"
+    ],
+    "tests/pressure-scenarios.md": [
+      "### 场景 29",
+      "distill"
+    ]
+  },
+  "id": "29",
+  "fixture": "hits.rs"
+}

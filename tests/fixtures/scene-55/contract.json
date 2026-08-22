@@ -1,0 +1,28 @@
+{
+  "id": "55",
+  "title": "给子进程传环境不改父进程",
+  "commands": [
+    "process"
+  ],
+  "fixture": "hits.rs",
+  "fixture_needles": [
+    "env::set_var",
+    "Command::new",
+    ".output()"
+  ],
+  "skill_needles": {
+    "skills/rust/reference/process.md": [
+      "UNSAFE-11",
+      "Command::env",
+      "PR-01",
+      "PR-08",
+      "io::pipe"
+    ],
+    "tests/pressure-scenarios.md": [
+      "### 场景 55",
+      "Command::env",
+      "wait_with_output",
+      "PR-08"
+    ]
+  }
+}

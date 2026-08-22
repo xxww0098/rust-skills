@@ -1,0 +1,504 @@
+{
+  "categories": [
+    "搭建与设计",
+    "评审",
+    "改造",
+    "语言语义",
+    "框架",
+    "交付",
+    "治理"
+  ],
+  "commands": {
+    "init": {
+      "category": "搭建与设计",
+      "summary": "把工程调和到最小基线并生成/刷新 RUST.md 画像；新项目从这里开始",
+      "argumentHint": "",
+      "triggers": [
+        "新项目",
+        "搭基线",
+        "统一 lint 与工具链",
+        "RUST.md 初始化"
+      ],
+      "triggers_en": [
+        "new project",
+        "bootstrap lint toolchain",
+        "init RUST.md"
+      ]
+    },
+    "shape": {
+      "category": "搭建与设计",
+      "summary": "写码前设计：落点/类型/错误/并发四问，只出一页设计小结",
+      "argumentHint": "<feature>",
+      "triggers": [
+        "动手前先设计",
+        "这个功能怎么建模",
+        "数据/错误/并发怎么设计"
+      ],
+      "triggers_en": [
+        "design before coding",
+        "how to model this feature",
+        "data/error/concurrency design"
+      ]
+    },
+    "crate": {
+      "category": "搭建与设计",
+      "summary": "对抗审查一个模块值不值得拆成 crate，只出建议",
+      "argumentHint": "<module>",
+      "triggers": [
+        "要不要拆 crate",
+        "这个模块独立成库",
+        "值不值得新建 crate"
+      ],
+      "triggers_en": [
+        "should this be a crate",
+        "extract this module into a library"
+      ]
+    },
+    "document": {
+      "category": "搭建与设计",
+      "summary": "从当前项目事实生成/刷新 RUST.md 画像；老项目先跑这个",
+      "argumentHint": "",
+      "triggers": [
+        "生成项目画像",
+        "RUST.md",
+        "了解这个项目的结构",
+        "更新画像"
+      ],
+      "triggers_en": [
+        "generate project portrait",
+        "update RUST.md",
+        "explain this repo structure"
+      ]
+    },
+    "stack": {
+      "category": "搭建与设计",
+      "summary": "分析仓库与口述产物，推荐并（仅 --apply/「改」）按表给缺失层加依赖；不删活栈",
+      "argumentHint": "[target] [--apply]",
+      "triggers": [
+        "技术栈",
+        "用什么框架",
+        "最佳技术栈",
+        "选 axum 还是 actix",
+        "这个项目该用什么 crate"
+      ],
+      "triggers_en": [
+        "tech stack",
+        "which framework",
+        "best rust stack",
+        "axum vs actix",
+        "what crates should this project use"
+      ]
+    },
+    "review": {
+      "category": "评审",
+      "summary": "按分级规则评审当前改动或指定路径，只读出问题清单",
+      "argumentHint": "[target]",
+      "triggers": [
+        "帮我 review",
+        "评审这次改动",
+        "这段 diff 有没有问题",
+        "代码审查"
+      ],
+      "triggers_en": [
+        "review this PR",
+        "code review",
+        "review this diff"
+      ]
+    },
+    "audit": {
+      "category": "评审",
+      "summary": "单域深审：unsafe / deps / tests / build / async / api / security",
+      "argumentHint": "<domain>",
+      "triggers": [
+        "深审 unsafe",
+        "依赖审计",
+        "测试质量",
+        "安全审计"
+      ],
+      "triggers_en": [
+        "audit unsafe",
+        "dependency audit",
+        "security audit",
+        "test quality audit"
+      ]
+    },
+    "triage": {
+      "category": "评审",
+      "summary": "编译错误分诊：先回答设计问题再动手，三次不过升级设计",
+      "argumentHint": "[error]",
+      "triggers": [
+        "编译报错",
+        "这个错误怎么修",
+        "borrow checker 打架"
+      ],
+      "triggers_en": [
+        "compiler error",
+        "how do I fix this rustc error",
+        "borrow checker fight",
+        "E0382"
+      ]
+    },
+    "doctor": {
+      "category": "评审",
+      "summary": "体检技能库与项目画像的一致性/漂移，只读",
+      "argumentHint": "",
+      "triggers": [
+        "体检",
+        "检查漂移",
+        "画像过期了没"
+      ],
+      "triggers_en": [
+        "health check",
+        "check drift",
+        "is the portrait stale"
+      ]
+    },
+    "harden": {
+      "category": "改造",
+      "summary": "生产加固：错误路径、边界、可观测性、优雅停机",
+      "argumentHint": "[target]",
+      "triggers": [
+        "能跑但要上生产",
+        "补错误处理",
+        "补边界检查",
+        "加可观测性"
+      ],
+      "triggers_en": [
+        "production-ready",
+        "add error handling",
+        "boundary checks",
+        "add observability"
+      ]
+    },
+    "slim": {
+      "category": "改造",
+      "summary": "构建减肥：用 timings 数据定位、裁依赖、拆 crate",
+      "argumentHint": "[target]",
+      "triggers": [
+        "编译太慢",
+        "构建时间太长",
+        "构建减肥",
+        "target 目录太大"
+      ],
+      "triggers_en": [
+        "compile too slow",
+        "slow builds",
+        "shrink target dir"
+      ]
+    },
+    "modernize": {
+      "category": "改造",
+      "summary": "把过时写法换成现代等价物（lazy_static → OnceLock 等）",
+      "argumentHint": "[target]",
+      "triggers": [
+        "lazy_static 换 OnceLock",
+        "过时写法现代化",
+        "升级到现代 Rust",
+        "升到 edition 2024"
+      ],
+      "triggers_en": [
+        "lazy_static to OnceLock",
+        "upgrade to edition 2024",
+        "modernize outdated APIs"
+      ]
+    },
+    "distill": {
+      "category": "改造",
+      "summary": "旧代码优化入口：删抽象、结构梯子、crate 只建议不擅迁",
+      "argumentHint": "[target]",
+      "triggers": [
+        "过度设计了",
+        "删到本质",
+        "精简代码",
+        "去掉仪式",
+        "优化旧代码",
+        "整理遗留模块"
+      ],
+      "triggers_en": [
+        "too much abstraction",
+        "simplify legacy",
+        "remove ceremony",
+        "clean up this module"
+      ]
+    },
+    "gate": {
+      "category": "改造",
+      "summary": "生成/维护 xtask 门禁与 clippy 基线（只收紧不放宽）",
+      "argumentHint": "",
+      "triggers": [
+        "上 CI 门禁",
+        "xtask",
+        "提交前自动检查",
+        "clippy 基线只收紧"
+      ],
+      "triggers_en": [
+        "add CI gates",
+        "xtask",
+        "pre-commit checks",
+        "tighten clippy baseline"
+      ]
+    },
+    "concurrency": {
+      "category": "语言语义",
+      "summary": "并发/并行选型与调优：rayon/tokio 桥、锁与调度；正确性测法见 testing.md",
+      "argumentHint": "[target]",
+      "triggers": [
+        "多线程",
+        "并发",
+        "rayon/tokio",
+        "锁竞争",
+        "火焰山",
+        "loom"
+      ],
+      "triggers_en": [
+        "multithreading",
+        "rayon/tokio",
+        "lock contention",
+        "flaky concurrent tests",
+        "loom"
+      ]
+    },
+    "process": {
+      "category": "语言语义",
+      "summary": "多进程选型与编排：隔离/故障域、Command 生命周期、fork 边界、进程池、IPC、信号停机",
+      "argumentHint": "[target]",
+      "triggers": [
+        "多进程",
+        "子进程",
+        "fork/Command",
+        "进程池",
+        "IPC/管道"
+      ],
+      "triggers_en": [
+        "subprocess",
+        "fork/Command",
+        "process pool",
+        "IPC pipes"
+      ]
+    },
+    "async": {
+      "category": "语言语义",
+      "summary": "异步深审：取消安全、结构化停机、Stream 背压",
+      "argumentHint": "[target]",
+      "triggers": [
+        "异步",
+        "取消安全",
+        "Future/Stream",
+        "结构化并发"
+      ],
+      "triggers_en": [
+        "cancellation safety",
+        "structured concurrency",
+        "Future/Stream"
+      ]
+    },
+    "serde": {
+      "category": "语言语义",
+      "summary": "序列化边界：零拷贝、enum 表示、字段纪律、兼容演进",
+      "argumentHint": "[target]",
+      "triggers": [
+        "序列化",
+        "serde",
+        "JSON 性能",
+        "协议兼容"
+      ],
+      "triggers_en": [
+        "serialization",
+        "JSON performance",
+        "wire compatibility"
+      ]
+    },
+    "obs": {
+      "category": "语言语义",
+      "summary": "tracing 接线：只在 main 装一次、EnvFilter、json/pretty、字段/span 基数、WorkerGuard、测试 try_init",
+      "argumentHint": "[target]",
+      "triggers": [
+        "tracing",
+        "日志乱",
+        "RUST_LOG",
+        "OpenTelemetry",
+        "span 对不上",
+        "日志丢了",
+        "subscriber"
+      ],
+      "triggers_en": [
+        "tracing",
+        "structured logging",
+        "RUST_LOG",
+        "OpenTelemetry",
+        "logs dropped",
+        "tracing subscriber"
+      ]
+    },
+    "axum": {
+      "category": "框架",
+      "summary": "axum 0.8 服务：状态、边界防护、流式、超时；按信号深入路由/提取器/中间件/鉴权/实时/测试/迁移",
+      "argumentHint": "[target]",
+      "triggers": [
+        "axum",
+        "web 服务",
+        "路由/状态/超时",
+        "鉴权/JWT/session",
+        "WebSocket/SSE",
+        "中间件/tower",
+        "0.7 升 0.8"
+      ],
+      "triggers_en": [
+        "axum",
+        "web service",
+        "JWT/session auth",
+        "WebSocket/SSE",
+        "tower middleware",
+        "0.7 to 0.8"
+      ]
+    },
+    "tauri": {
+      "category": "框架",
+      "summary": "Tauri v2：体积、启动、IPC 选型；按信号深入权限/命令/窗口/插件/移动端/迁移",
+      "argumentHint": "[target]",
+      "triggers": [
+        "Tauri",
+        "桌面应用",
+        "体积/启动/IPC",
+        "capabilities/权限",
+        "插件/托盘/菜单",
+        "Android/iOS",
+        "v1 升 v2"
+      ],
+      "triggers_en": [
+        "Tauri",
+        "desktop app",
+        "capabilities/permissions",
+        "tray/menu plugins",
+        "Android/iOS",
+        "v1 to v2"
+      ]
+    },
+    "seaorm": {
+      "category": "框架",
+      "summary": "SeaORM 2.x：池调优、Entity Loader、ExprTrait、execute vs execute_raw",
+      "argumentHint": "[target]",
+      "triggers": [
+        "SeaORM",
+        "数据库查询",
+        "N+1"
+      ],
+      "triggers_en": [
+        "SeaORM",
+        "ORM N+1",
+        "SeaORM query"
+      ]
+    },
+    "sqlx": {
+      "category": "框架",
+      "summary": "SQLx 0.8/0.9：池、query!、sqlx.toml、事务 Executor、row/领域分界",
+      "argumentHint": "[target]",
+      "triggers": [
+        "sqlx",
+        "query! 宏",
+        "编译期 SQL",
+        "连接池饿死"
+      ],
+      "triggers_en": [
+        "sqlx",
+        "query! macro",
+        "compile-time SQL",
+        "pool starvation"
+      ]
+    },
+    "cli": {
+      "category": "框架",
+      "summary": "clap 4.6 CLI：derive、子命令、env、退出码、补全；解析只在 bin",
+      "argumentHint": "[target]",
+      "triggers": [
+        "clap",
+        "命令行",
+        "子命令",
+        "shell 补全",
+        "CLI 参数"
+      ],
+      "triggers_en": [
+        "clap",
+        "CLI args",
+        "subcommands",
+        "shell completion"
+      ]
+    },
+    "bench": {
+      "category": "交付",
+      "summary": "性能纪律：搭基准、出同机前后对比",
+      "argumentHint": "<target>",
+      "triggers": [
+        "性能对比",
+        "benchmark",
+        "这改动快了多少"
+      ],
+      "triggers_en": [
+        "benchmark",
+        "before/after perf",
+        "how much faster"
+      ]
+    },
+    "ship": {
+      "category": "交付",
+      "summary": "发布工程：容器产线 / 桌面签名 + 公证 + updater",
+      "argumentHint": "[target]",
+      "triggers": [
+        "要发版",
+        "打镜像",
+        "签名/公证/updater",
+        "发布链路"
+      ],
+      "triggers_en": [
+        "release",
+        "container image",
+        "signing/notarization/updater"
+      ]
+    },
+    "xplat": {
+      "category": "交付",
+      "summary": "跨平台一致性：平台边界、CI 矩阵、差异账本",
+      "argumentHint": "[target]",
+      "triggers": [
+        "Windows 报错 Mac 正常",
+        "跨平台",
+        "CI 矩阵"
+      ],
+      "triggers_en": [
+        "Windows fails Mac works",
+        "cross-platform",
+        "CI matrix"
+      ]
+    },
+    "docs": {
+      "category": "治理",
+      "summary": "治理文档集合：首页/权威源/生命周期/链接，默认只读",
+      "argumentHint": "[target]",
+      "triggers": [
+        "整理文档",
+        "docs 首页",
+        "链接失效",
+        "文档治理"
+      ],
+      "triggers_en": [
+        "docs index",
+        "broken links",
+        "documentation governance"
+      ]
+    },
+    "capture": {
+      "category": "治理",
+      "summary": "把踩坑蒸馏进项目 outbox，人工确认后提升为规则",
+      "argumentHint": "[lesson]",
+      "triggers": [
+        "踩坑了记下来",
+        "沉淀教训",
+        "值得写进规则"
+      ],
+      "triggers_en": [
+        "record a pitfall",
+        "promote a lesson to a rule"
+      ]
+    }
+  }
+}

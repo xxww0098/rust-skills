@@ -1,0 +1,43 @@
+{
+  "id": "67",
+  "title": "Windows 路径分裂 + 异步 command 里阻塞 rfd + macOS 关窗无 Reopen",
+  "commands": [
+    "tauri"
+  ],
+  "fixture": "hits.rs",
+  "fixture_needles": [
+    "LOCALAPPDATA",
+    "rfd::FileDialog",
+    "async fn pick",
+    "17892"
+  ],
+  "skill_needles": {
+    "skills/rust/reference/tauri.md": [
+      "TA-40",
+      "TA-41",
+      "TA-42",
+      "TA-44"
+    ],
+    "skills/rust/reference/xplat.md": [
+      "LOCALAPPDATA",
+      "app_data_dir",
+      "Roaming"
+    ],
+    "skills/rust/reference/tauri/ipc.md": [
+      "rfd::FileDialog",
+      "AsyncFileDialog",
+      "TA-41"
+    ],
+    "skills/rust/reference/tauri/window.md": [
+      "RunEvent::Reopen",
+      "TA-42"
+    ],
+    "tests/pressure-scenarios.md": [
+      "### 场景 67",
+      "TA-40",
+      "TA-41",
+      "TA-42",
+      "TA-44"
+    ]
+  }
+}

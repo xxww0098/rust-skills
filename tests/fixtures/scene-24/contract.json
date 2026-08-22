@@ -1,0 +1,24 @@
+{
+  "title": "bench 不 stash 用户工作区",
+  "commands": [
+    "bench"
+  ],
+  "fixture_needles": [
+    "git stash",
+    "before baseline",
+    "cargo clean"
+  ],
+  "skill_needles": {
+    "skills/rust/reference/bench.md": [
+      "stash",
+      "before",
+      "PERF-01"
+    ],
+    "tests/pressure-scenarios.md": [
+      "### 场景 24",
+      "stash"
+    ]
+  },
+  "id": "24",
+  "fixture": "case.md"
+}

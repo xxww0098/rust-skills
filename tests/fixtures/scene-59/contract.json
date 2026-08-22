@@ -1,0 +1,31 @@
+{
+  "id": "59",
+  "title": "axum 0.8 自定义 extractor 与 Option 语义",
+  "commands": [
+    "axum"
+  ],
+  "fixture": "hits.rs",
+  "fixture_needles": [
+    "#[async_trait]",
+    "usize::MAX",
+    "Option<ApiKey>",
+    "Option<Path<u32>>"
+  ],
+  "skill_needles": {
+    "skills/rust/reference/axum.md": [
+      "AX-19",
+      "AX-21",
+      "AX-30",
+      "#[async_trait]",
+      "OptionalFromRequest",
+      "DefaultBodyLimit"
+    ],
+    "tests/pressure-scenarios.md": [
+      "### 场景 59",
+      "AX-19",
+      "AX-21",
+      "async_trait",
+      "usize::MAX"
+    ]
+  }
+}

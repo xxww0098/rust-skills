@@ -1,0 +1,24 @@
+{
+  "title": "document 保留人工内容",
+  "commands": [
+    "document"
+  ],
+  "fixture_needles": [
+    "rust-skills:human:start",
+    "领域术语",
+    "managed:unknown"
+  ],
+  "skill_needles": {
+    "skills/rust/reference/document.md": [
+      "rust-skills:human",
+      "投影",
+      "账本"
+    ],
+    "tests/pressure-scenarios.md": [
+      "### 场景 20",
+      "human"
+    ]
+  },
+  "id": "20",
+  "fixture": "RUST.md"
+}

@@ -1,0 +1,13 @@
+{
+  "id": "6",
+  "title": "评审抓测试布局",
+  "commands": ["review"],
+  "fixture": "hits.rs",
+  "fixture_needles": ["tests/common.rs", "pub fn load_user"],
+  "skill_needles": {
+    "skills/rust/reference/review.md": ["只读", "TEST-03", "API-02"],
+    "skills/rust/rules/test.md": ["TEST-03"],
+    "skills/rust/rules/api.md": ["API-02"],
+    "tests/pressure-scenarios.md": ["### 场景 6", "TEST-03", "API-02"]
+  }
+}

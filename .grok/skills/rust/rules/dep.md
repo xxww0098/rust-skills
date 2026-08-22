@@ -1,0 +1,11 @@
+## DEP 依赖治理
+- DEP-01[S] 多成员共享的三方版本优先收口；有意使用不同版本或 feature 时局部声明并保留理由。
+- DEP-02[M] 新依赖评估 std/现有依赖的替代、维护状态、传递代价与 license；实现行数不是单独裁决标准。
+- DEP-03[S] 明确理解默认 feature 后决定是否关闭；不要机械写 `default-features=false`。
+- DEP-04[M] feature 必须可叠加：只增能力，不改语义、不互斥。
+- DEP-05[M] optional 依赖必须配具名 feature；禁只用 #[cfg] 门控。
+- DEP-06[S] 有供应链或许可要求的项目在 CI 使用 cargo-deny 等检查；重复版本只有造成风险、体积或类型不兼容时才治理。
+- DEP-07[S] Cargo.lock 是否提交由 artifact、可复现交付需求与项目约定决定；应用通常跟踪，publish-only library 可选择不跟踪。已跟踪 lock 的依赖升级 diff 应作为评审对象；缺失本身不是违规。
+- DEP-08[M] edition 必须是 2024。MSRV（≥ 1.85）用 `rust-version` 或 `rust-toolchain.toml` 显式钉住，CI 有对应编译任务。resolver：新仓 3；已有 2024+resolver 2 不是违规。依赖自己的 MSRV 可以高于仓基线（sqlx 0.9 为 1.94）：不要为对齐「现行稳定线」把全仓 rust-version 抬到最严依赖；该依赖上一主线仍在范围内就留在上一主线，抬 MSRV 必须写入 RUST.md 或 rust-version 变更。
+- DEP-09[S] cargo hack --feature-powerset 每夜验证 feature 叠加性。
+- DEP-10[Y] 高保证场景用 cargo-vet/cargo-crev。

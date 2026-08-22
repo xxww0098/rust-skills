@@ -1,0 +1,26 @@
+{
+  "title": "harden 尊重目标和写授权",
+  "commands": [
+    "harden"
+  ],
+  "fixture_needles": [
+    ".unwrap()",
+    "pub fn upload"
+  ],
+  "skill_needles": {
+    "skills/rust/reference/harden.md": [
+      "ERR",
+      "只读体检",
+      "unwrap"
+    ],
+    "skills/rust/rules/err.md": [
+      "ERR-03"
+    ],
+    "tests/pressure-scenarios.md": [
+      "### 场景 21",
+      "unwrap"
+    ]
+  },
+  "id": "21",
+  "fixture": "hits.rs"
+}

@@ -1,0 +1,24 @@
+{
+  "title": "docs 先治理权威与生命周期",
+  "commands": [
+    "docs"
+  ],
+  "fixture_needles": [
+    "no README.md",
+    "SSOT",
+    "CONTRACT.md"
+  ],
+  "skill_needles": {
+    "skills/rust/reference/docs.md": [
+      "docs/README.md",
+      "UNVERIFIED",
+      "只读"
+    ],
+    "tests/pressure-scenarios.md": [
+      "### 场景 40",
+      "docs/README"
+    ]
+  },
+  "id": "40",
+  "fixture": "layout.md"
+}

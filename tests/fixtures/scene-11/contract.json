@@ -1,0 +1,24 @@
+{
+  "title": "tauri 大文件走 IPC",
+  "commands": [
+    "tauri"
+  ],
+  "fixture_needles": [
+    "Vec<u8>",
+    "std::fs::read",
+    "#[tauri::command]"
+  ],
+  "skill_needles": {
+    "skills/rust/reference/tauri.md": [
+      "TA-06",
+      "TA-07",
+      "tauri::ipc::Response"
+    ],
+    "tests/pressure-scenarios.md": [
+      "### 场景 11",
+      "TA-06/07/08"
+    ]
+  },
+  "id": "11",
+  "fixture": "hits.rs"
+}

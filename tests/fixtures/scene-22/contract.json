@@ -1,0 +1,22 @@
+{
+  "title": "modernize 正确解释 Rust 2024 static mut",
+  "commands": [
+    "modernize"
+  ],
+  "fixture_needles": [
+    "static mut COUNT",
+    "&mut COUNT"
+  ],
+  "skill_needles": {
+    "skills/rust/reference/modernize.md": [
+      "static mut",
+      "OnceLock"
+    ],
+    "tests/pressure-scenarios.md": [
+      "### 场景 22",
+      "static mut"
+    ]
+  },
+  "id": "22",
+  "fixture": "hits.rs"
+}

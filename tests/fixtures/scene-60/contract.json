@@ -1,0 +1,26 @@
+{
+  "title": "组合根顺序错 = 中间件静默丢失",
+  "commands": [
+    "axum"
+  ],
+  "fixture_needles": [
+    ".with_state(state)",
+    ".layer(ServiceBuilder",
+    "from_fn(require_user)"
+  ],
+  "skill_needles": {
+    "skills/rust/reference/axum.md": [
+      "AX-22",
+      "AX-23",
+      "AX-28",
+      "AX-29"
+    ],
+    "tests/pressure-scenarios.md": [
+      "### 场景 60",
+      "AX-22",
+      "AX-28"
+    ]
+  },
+  "id": "60",
+  "fixture": "hits.rs"
+}

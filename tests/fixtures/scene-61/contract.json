@@ -1,0 +1,26 @@
+{
+  "title": "JWT 与上传的边界三连",
+  "commands": [
+    "axum"
+  ],
+  "fixture_needles": [
+    "const SECRET",
+    "Validation::default()",
+    "field.bytes()"
+  ],
+  "skill_needles": {
+    "skills/rust/reference/axum.md": [
+      "AX-39",
+      "AX-15",
+      "AX-43",
+      "AX-30"
+    ],
+    "tests/pressure-scenarios.md": [
+      "### 场景 61",
+      "AX-39",
+      "AX-43"
+    ]
+  },
+  "id": "61",
+  "fixture": "hits.rs"
+}

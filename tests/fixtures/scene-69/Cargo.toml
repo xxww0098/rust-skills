@@ -1,0 +1,10 @@
+[package]
+name = "shop"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+rocket = "0.4"
+async-std = "1"
+structopt = "0.3"
+diesel = "1"

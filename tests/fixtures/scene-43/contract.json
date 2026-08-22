@@ -1,0 +1,27 @@
+{
+  "title": "sqlx 拼接查询与 row 泄漏 API",
+  "commands": [
+    "sqlx"
+  ],
+  "fixture_needles": [
+    "format!(\"SELECT * FROM users",
+    "FromRow, serde::Serialize",
+    "balance: f64"
+  ],
+  "skill_needles": {
+    "skills/rust/reference/sqlx.md": [
+      "SX-04",
+      "SX-06",
+      "SX-08",
+      "SX-09",
+      "ANY"
+    ],
+    "tests/pressure-scenarios.md": [
+      "### 场景 43",
+      "SX-04",
+      "SX-08"
+    ]
+  },
+  "id": "43",
+  "fixture": "hits.rs"
+}

@@ -1,0 +1,26 @@
+{
+  "title": "拆 crate 先对抗审查且不擅迁",
+  "commands": [
+    "crate"
+  ],
+  "fixture_needles": [
+    "src/billing",
+    "crates/billing",
+    "CK-04"
+  ],
+  "skill_needles": {
+    "skills/rust/reference/crate.md": [
+      "CK-02",
+      "CK-04",
+      "CK-06",
+      "WS-12"
+    ],
+    "tests/pressure-scenarios.md": [
+      "### 场景 45",
+      "CK-04",
+      "CK-06"
+    ]
+  },
+  "id": "45",
+  "fixture": "case.md"
+}

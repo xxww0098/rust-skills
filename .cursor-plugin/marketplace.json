@@ -1,0 +1,17 @@
+{
+  "name": "rust-skills",
+  "owner": {
+    "name": "xxww"
+  },
+  "metadata": {
+    "description": "Personal Rust engineering skills marketplace",
+    "version": "0.0.40"
+  },
+  "plugins": [
+    {
+      "name": "rust-skills",
+      "description": "Scoped Rust engineering playbooks with review, triage, framework overlays, project-local state, and evidence-driven validation",
+      "source": "./"
+    }
+  ]
+}

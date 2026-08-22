@@ -1,0 +1,24 @@
+{
+  "title": "Windows 保存报错 share_mode",
+  "commands": [
+    "xplat"
+  ],
+  "fixture_needles": [
+    "share_mode(0)",
+    "fs::rename"
+  ],
+  "skill_needles": {
+    "skills/rust/reference/xplat.md": [
+      "XP-06",
+      "XP-03",
+      "XP-12"
+    ],
+    "tests/pressure-scenarios.md": [
+      "### 场景 17",
+      "XP-06",
+      "share_mode"
+    ]
+  },
+  "id": "17",
+  "fixture": "hits.rs"
+}

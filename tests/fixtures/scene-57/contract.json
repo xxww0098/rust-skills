@@ -1,0 +1,24 @@
+{
+  "id": "57",
+  "title": "axum 0.8 路径是 {id} 不是 :id",
+  "commands": [
+    "axum"
+  ],
+  "fixture": "hits.rs",
+  "fixture_needles": [
+    "/users/:id",
+    "/*path"
+  ],
+  "skill_needles": {
+    "skills/rust/reference/axum.md": [
+      "AX-18",
+      "{id}",
+      ":id"
+    ],
+    "tests/pressure-scenarios.md": [
+      "### 场景 57",
+      "AX-18",
+      "{id}"
+    ]
+  }
+}

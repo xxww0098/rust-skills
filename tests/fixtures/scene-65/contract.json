@@ -1,0 +1,26 @@
+{
+  "title": "clap Option 加 default 与库里 exit",
+  "commands": [
+    "cli"
+  ],
+  "fixture_needles": [
+    "process::exit(1)",
+    "default_value_t = 8080",
+    "port: Option<u16>"
+  ],
+  "skill_needles": {
+    "skills/rust/reference/cli.md": [
+      "CL-01",
+      "CL-04",
+      "default_value_t",
+      "clap_complete"
+    ],
+    "tests/pressure-scenarios.md": [
+      "### 场景 65",
+      "CL-04",
+      "CL-01"
+    ]
+  },
+  "id": "65",
+  "fixture": "hits.rs"
+}

@@ -1,0 +1,26 @@
+{
+  "title": "SeaORM N+1 与全列",
+  "commands": [
+    "seaorm"
+  ],
+  "fixture_needles": [
+    "find_related",
+    ".all(db)",
+    "Cake::find()"
+  ],
+  "skill_needles": {
+    "skills/rust/reference/seaorm.md": [
+      "SO-04",
+      "load_many",
+      "SO-05",
+      "SO-02"
+    ],
+    "tests/pressure-scenarios.md": [
+      "### 场景 12",
+      "SO-04",
+      "load_many"
+    ]
+  },
+  "id": "12",
+  "fixture": "hits.rs"
+}

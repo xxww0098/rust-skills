@@ -1,0 +1,5 @@
+# Scene 5: slim refuses wildcard opt-level without timings.
+# Not a buildable crate — pattern source for eval-fixtures.py.
+
+[profile.dev.package."*"]
+opt-level = 3

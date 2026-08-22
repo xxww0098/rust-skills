@@ -1,0 +1,28 @@
+{
+  "title": "插件次序、sidecar 命名与 v1 残留",
+  "commands": [
+    "tauri"
+  ],
+  "fixture_needles": [
+    "tauri_plugin_single_instance",
+    "externalBin",
+    "allowlist",
+    "emit_all"
+  ],
+  "skill_needles": {
+    "skills/rust/reference/tauri.md": [
+      "TA-26",
+      "TA-32",
+      "TA-39",
+      "TA-30"
+    ],
+    "tests/pressure-scenarios.md": [
+      "### 场景 64",
+      "TA-26",
+      "TA-32",
+      "TA-39"
+    ]
+  },
+  "id": "64",
+  "fixture": "hits.rs"
+}

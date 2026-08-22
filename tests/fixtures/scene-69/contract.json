@@ -1,0 +1,33 @@
+{
+  "id": "69",
+  "title": "技术栈按产物分层，不写依赖",
+  "commands": [
+    "stack"
+  ],
+  "fixture": "Cargo.toml",
+  "fixture_needles": [
+    "rocket = \"0.4\"",
+    "async-std",
+    "structopt",
+    "diesel = \"1\"",
+    "edition = \"2021\""
+  ],
+  "skill_needles": {
+    "skills/rust/reference/stack.md": [
+      "ST-01",
+      "ST-04",
+      "ST-05",
+      "ST-06",
+      "ST-13",
+      "0.8.9",
+      "4.6.6",
+      "永不写码"
+    ],
+    "tests/pressure-scenarios.md": [
+      "### 场景 69",
+      "ST-04",
+      "ST-06",
+      "ST-13"
+    ]
+  }
+}

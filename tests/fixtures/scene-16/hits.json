@@ -1,0 +1,7 @@
+{
+  "updater": {
+    "pubkey": "repo-committed-minisign-secret-DO-NOT-SHIP",
+    "endpoints": ["https://example.com/latest.json"]
+  },
+  "mac": { "signingIdentity": "Developer ID", "notarization": false }
+}

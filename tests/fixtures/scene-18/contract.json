@@ -1,0 +1,25 @@
+{
+  "title": "init 不强制 profile 配对",
+  "commands": [
+    "init"
+  ],
+  "fixture_needles": [
+    "profile.dev.package.image",
+    "opt-level = 2"
+  ],
+  "skill_needles": {
+    "skills/rust/reference/init.md": [
+      "BUILD-01/02/05",
+      "build-override"
+    ],
+    "skills/rust/rules/build.md": [
+      "BUILD-02"
+    ],
+    "tests/pressure-scenarios.md": [
+      "### 场景 18",
+      "BUILD-02"
+    ]
+  },
+  "id": "18",
+  "fixture": "hits.toml"
+}

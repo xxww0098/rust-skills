@@ -1,0 +1,26 @@
+{
+  "title": "select! 取消丢数据",
+  "commands": [
+    "async"
+  ],
+  "fixture_needles": [
+    "read_exact",
+    "select!",
+    "shutdown.recv()"
+  ],
+  "skill_needles": {
+    "skills/rust/reference/async.md": [
+      "AS-01",
+      "read_exact",
+      "AS-02",
+      "AS-04"
+    ],
+    "tests/pressure-scenarios.md": [
+      "### 场景 14",
+      "AS-01",
+      "AS-04"
+    ]
+  },
+  "id": "14",
+  "fixture": "hits.rs"
+}

@@ -1,0 +1,32 @@
+{
+  "id": "56",
+  "title": "unsafe fn 体内仍要 unsafe 块，! 不流进 unsafe",
+  "commands": [
+    "triage"
+  ],
+  "fixture": "hits.rs",
+  "fixture_needles": [
+    "unsafe fn get",
+    "get_unchecked",
+    "f()?;"
+  ],
+  "skill_needles": {
+    "skills/rust/rules/unsafe.md": [
+      "UNSAFE-03",
+      "unsafe_op_in_unsafe_fn"
+    ],
+    "skills/rust/rules/d.md": [
+      "never_type_fallback"
+    ],
+    "skills/rust/reference/triage.md": [
+      "unsafe_op_in_unsafe_fn",
+      "never_type_fallback",
+      "UNSAFE-03"
+    ],
+    "tests/pressure-scenarios.md": [
+      "### 场景 56",
+      "UNSAFE-03",
+      "never-type fallback"
+    ]
+  }
+}

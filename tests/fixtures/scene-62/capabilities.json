@@ -1,0 +1,14 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "main",
+  "description": "Scene 62 fixture: wildcard capability surface. Not a valid app config — pattern source for eval-fixtures.py and LLM sessions.",
+  "windows": ["*"],
+  "permissions": [
+    "fs:default",
+    "shell:default",
+    { "identifier": "fs:allow-read-text-file", "allow": [{ "path": "$HOME/**" }] },
+    { "identifier": "fs:allow-write-text-file", "allow": [{ "path": "**" }] },
+    { "identifier": "shell:allow-execute", "allow": [{ "name": "convert", "cmd": "convert", "args": true }] },
+    "shell:allow-open"
+  ]
+}

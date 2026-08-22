@@ -1,0 +1,24 @@
+{
+  "title": "rayon 跑在 tokio worker 上",
+  "commands": [
+    "concurrency"
+  ],
+  "fixture_needles": [
+    "par_iter()",
+    "async fn handle"
+  ],
+  "skill_needles": {
+    "skills/rust/reference/concurrency.md": [
+      "CC-04",
+      "spawn_blocking",
+      "ASYNC-03"
+    ],
+    "tests/pressure-scenarios.md": [
+      "### 场景 13",
+      "CC-04",
+      "ASYNC-03"
+    ]
+  },
+  "id": "13",
+  "fixture": "hits.rs"
+}

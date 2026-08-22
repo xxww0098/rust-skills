@@ -1,0 +1,45 @@
+{
+  "id": "54",
+  "title": "2024 unsafe 语法不是「已经安全」",
+  "commands": [
+    "audit",
+    "modernize"
+  ],
+  "fixture": "hits.rs",
+  "fixture_needles": [
+    "extern \"C\"",
+    "#[no_mangle]",
+    "env::set_var"
+  ],
+  "skill_needles": {
+    "skills/rust/rules/unsafe.md": [
+      "UNSAFE-10",
+      "UNSAFE-11"
+    ],
+    "skills/rust/rules/ffi.md": [
+      "FFI-10"
+    ],
+    "skills/rust/reference/audit.md": [
+      "no_mangle",
+      "set_var",
+      "FFI-10",
+      "UNSAFE-10",
+      "UNSAFE-11",
+      "unsafe extern"
+    ],
+    "skills/rust/reference/modernize.md": [
+      "UNSAFE-10",
+      "FFI-10",
+      "UNSAFE-11",
+      "Command::env",
+      "unsafe extern"
+    ],
+    "tests/pressure-scenarios.md": [
+      "### 场景 54",
+      "FFI-10",
+      "UNSAFE-10",
+      "UNSAFE-11",
+      "Command::env"
+    ]
+  }
+}

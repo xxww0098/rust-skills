@@ -1,0 +1,35 @@
+{
+  "id": "68",
+  "title": "agent 给互斥计数器堆 12 条 sleep hammer",
+  "commands": [
+    "concurrency"
+  ],
+  "fixture": "hits.rs",
+  "fixture_needles": [
+    "get_equals_get",
+    "thread::sleep",
+    "assert_eq!(c.get(), c.get())"
+  ],
+  "skill_needles": {
+    "skills/rust/rules/test.md": [
+      "TEST-13",
+      "TEST-14",
+      "TEST-15"
+    ],
+    "skills/rust/reference/testing.md": [
+      "火焰山",
+      "顺序规格",
+      "start_paused"
+    ],
+    "skills/rust/reference/concurrency.md": [
+      "CC-15",
+      "CC-16"
+    ],
+    "tests/pressure-scenarios.md": [
+      "### 场景 68",
+      "TEST-13",
+      "TEST-14",
+      "TEST-15"
+    ]
+  }
+}

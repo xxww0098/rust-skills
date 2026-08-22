@@ -1,0 +1,28 @@
+{
+  "title": "subscriber 装两次 + println 当日志",
+  "commands": [
+    "obs"
+  ],
+  "fixture_needles": [
+    "tracing_subscriber::fmt().init()",
+    "env_logger::init()",
+    "println!(\"user {} fetched\""
+  ],
+  "skill_needles": {
+    "skills/rust/reference/obs.md": [
+      "TR-01",
+      "TR-04",
+      "TR-05",
+      "TR-08",
+      "TR-09",
+      "try_from_default_env"
+    ],
+    "tests/pressure-scenarios.md": [
+      "### 场景 66",
+      "TR-01",
+      "TR-09"
+    ]
+  },
+  "id": "66",
+  "fixture": "hits.rs"
+}

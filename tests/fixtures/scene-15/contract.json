@@ -1,0 +1,25 @@
+{
+  "title": "serde String 风暴与 untagged",
+  "commands": [
+    "serde"
+  ],
+  "fixture_needles": [
+    "#[serde(untagged)]",
+    "payload: String"
+  ],
+  "skill_needles": {
+    "skills/rust/reference/serde.md": [
+      "SE-02",
+      "SE-03",
+      "untagged",
+      "SE-08"
+    ],
+    "tests/pressure-scenarios.md": [
+      "### 场景 15",
+      "SE-02",
+      "SE-03"
+    ]
+  },
+  "id": "15",
+  "fixture": "hits.rs"
+}

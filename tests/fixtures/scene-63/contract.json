@@ -1,0 +1,26 @@
+{
+  "title": "命令签名与事件通道选错",
+  "commands": [
+    "tauri"
+  ],
+  "fixture_needles": [
+    "async fn parse(input: &str)",
+    "invoke_handler",
+    "emit(\"progress\""
+  ],
+  "skill_needles": {
+    "skills/rust/reference/tauri.md": [
+      "TA-19",
+      "TA-06",
+      "TA-22",
+      "TA-13"
+    ],
+    "tests/pressure-scenarios.md": [
+      "### 场景 63",
+      "TA-19",
+      "TA-06"
+    ]
+  },
+  "id": "63",
+  "fixture": "hits.rs"
+}

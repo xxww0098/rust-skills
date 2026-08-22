@@ -1,0 +1,26 @@
+{
+  "title": "tauri 发布链路裸奔",
+  "commands": [
+    "ship"
+  ],
+  "fixture_needles": [
+    "notarization\": false",
+    "minisign-secret",
+    "latest.json"
+  ],
+  "skill_needles": {
+    "skills/rust/reference/ship.md": [
+      "SH-09",
+      "SH-10",
+      "SH-11",
+      "notarization"
+    ],
+    "tests/pressure-scenarios.md": [
+      "### 场景 16",
+      "SH-09",
+      "SH-10"
+    ]
+  },
+  "id": "16",
+  "fixture": "hits.json"
+}

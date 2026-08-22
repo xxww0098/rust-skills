@@ -1,0 +1,10 @@
+# Scene 18: init must not force build-override pairing or rewrite lock policy.
+
+[package]
+name = "widget"
+version = "0.1.0"
+edition = "2024"
+publish = true
+
+[profile.dev.package.image]
+opt-level = 2

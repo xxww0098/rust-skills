@@ -1,0 +1,27 @@
+{
+  "title": "构建减肥拒绝无数据偏方",
+  "commands": [
+    "slim"
+  ],
+  "fixture_needles": [
+    "package.\"*\"",
+    "opt-level = 3"
+  ],
+  "skill_needles": {
+    "skills/rust/reference/slim.md": [
+      "BUILD-01",
+      "timings",
+      "BUILD-10"
+    ],
+    "skills/rust/rules/build.md": [
+      "BUILD-01",
+      "BUILD-03"
+    ],
+    "tests/pressure-scenarios.md": [
+      "### 场景 5",
+      "BUILD-01"
+    ]
+  },
+  "id": "5",
+  "fixture": "hits.toml"
+}

@@ -1,0 +1,25 @@
+{
+  "title": "捕获走完六步",
+  "commands": [
+    "capture"
+  ],
+  "fixture_needles": [
+    "capture-outbox.md",
+    "capture promote",
+    "as_ptr()"
+  ],
+  "skill_needles": {
+    "skills/rust/reference/capture.md": [
+      "六步",
+      "capture-outbox.md",
+      "capture promote"
+    ],
+    "tests/pressure-scenarios.md": [
+      "### 场景 7",
+      "capture-outbox.md",
+      "capture promote"
+    ]
+  },
+  "id": "7",
+  "fixture": "case.md"
+}

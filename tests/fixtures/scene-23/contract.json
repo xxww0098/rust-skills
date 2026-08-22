@@ -1,0 +1,23 @@
+{
+  "title": "gate 拒绝假绿和 hook 覆盖",
+  "commands": [
+    "gate"
+  ],
+  "fixture_needles": [
+    "crate_direction",
+    "Ok(())"
+  ],
+  "skill_needles": {
+    "skills/rust/reference/gate.md": [
+      "NOT_IMPLEMENTED",
+      "ENABLED",
+      ".git/hooks"
+    ],
+    "tests/pressure-scenarios.md": [
+      "### 场景 23",
+      "NOT_IMPLEMENTED"
+    ]
+  },
+  "id": "23",
+  "fixture": "hits.rs"
+}

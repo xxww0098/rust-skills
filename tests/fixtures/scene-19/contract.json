@@ -1,0 +1,24 @@
+{
+  "title": "shape 只设计不写码",
+  "commands": [
+    "shape"
+  ],
+  "fixture_needles": [
+    "cancellable batch import",
+    "四问",
+    "no source edits"
+  ],
+  "skill_needles": {
+    "skills/rust/reference/shape.md": [
+      "四问",
+      "不是代码",
+      "D-1"
+    ],
+    "tests/pressure-scenarios.md": [
+      "### 场景 19",
+      "不写码"
+    ]
+  },
+  "id": "19",
+  "fixture": "case.md"
+}
