@@ -1,8 +1,8 @@
 {
   "name": "rust-skills",
   "displayName": "Rust Skills",
-  "version": "0.0.40",
-  "description": "Use for any Cargo/Rust work — implement, debug, rustc/borrow-checker, ownership/clone, clippy, review, unsafe/FFI, axum/sqlx/tokio, clap/tracing, Tauri v2, edition 2024, or /rust-skills:rust. Engage without waiting for a subcommand. Skip non-Cargo repos and pure language trivia with no project.",
+  "version": "0.0.41",
+  "description": "Use for Cargo/Rust work in a repo — implement, debug, rustc/borrow-checker, clippy, review, unsafe/FFI, axum/sqlx/tokio, clap/tracing, Tauri v2, edition 2024, or /rust-skills:rust. Skip non-Cargo repos, Python/Go/JS reviews, language trivia, translation, and generic summaries.",
   "author": {
     "name": "xxww"
   },

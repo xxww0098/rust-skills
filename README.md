@@ -1,6 +1,6 @@
 # rust-skills — Rust 工程技能包
 
-`/rust-skills:rust <命令> [target]`：一个入口、28 条命令。同一份技能源同步到支持的全部 harness。
+`/rust-skills:rust <命令> [target]`：一个入口、29 条命令。同一份技能源同步到支持的全部 harness。
 
 > 立场：先守用户边界和项目事实，再追求正确、精简、可验证。规则是候选约束，不是把现有项目改造成统一模板的许可。**只推崇 edition 2024**（MSRV ≥ 1.85）。新仓 resolver 3；成熟 2024 仓钉 resolver 2 不迁。2018/2021 当迁移债务。
 
@@ -10,14 +10,16 @@
 2. **裸命令默认不改你的代码。** 评审永远只读。改造类要 `--apply` 或说「改」才动。
 3. **旧代码优化用 `distill`，不要等 `/optimize` 或 `/split`。** 拆不拆 crate 用 `crate`，由你拍板。
 
-不确定用哪条：直接说人话，或敲 `/rust-skills:rust` 看推荐。
+不确定用哪条：直接说人话，或敲 `/rust-skills:rust` 看推荐。首轮提示见 [examples/first-prompts.md](examples/first-prompts.md)。
+
+机械检查是 **E1/E2**（结构 + 磁盘 fixture），不是 E3 LLM 盲测：`./scripts/check-consistency.sh`。不得把绿灯写成「行为已验证」。
 
 ## 写授权：一条规则
 
 - **评审类**（`review` `audit` `triage` `doctor`）永远只读，只出报告。
-- **改造 / 语言语义 / 框架 / 交付类**（`harden` `modernize` `distill` `slim` `gate` `bench` `axum` `tauri` `seaorm` `sqlx` `serde` `concurrency` `process` `async` `ship` `xplat`）裸调用只体检、列计划；带 `--apply` 或明确说「改」才动代码。
+- **改造 / 语言语义 / 框架 / 交付类**（`harden` `modernize` `distill` `slim` `gate` `bench` `concurrency` `process` `async` `serde` `obs` `axum` `tauri` `seaorm` `sqlx` `cli` `ship` `xplat`）裸调用只体检、列计划；带 `--apply` 或明确说「改」才动代码。
 - **搭建 / 治理类**（`init` `document` `capture`）只写自己声明的文件：RUST.md 或项目 outbox。
-- `shape`、`crate` 只出建议。`crate` 你回复「拆」之后才改 workspace。
+- `shape`、`crate` 默认只出建议。`crate` 你回复「拆」之后才改 workspace。`stack` 回复「改」后只给缺失层加依赖，不删活栈。
 - `--record` 只额外写 RUST.md 的 managed 块，不改业务代码。
 
 ---
@@ -370,7 +372,7 @@ ln -s /path/to/rust-skills/skills/rust ~/.dsh/skills/rust
 ## 维护与升级
 
 - 踩坑/被打回 → `/rust-skills:rust capture`，先落项目 outbox，人工确认后才在源码仓库提升为规则与压力场景。
-- 每周：跑一遍 `tests/pressure-scenarios.md` 与 `./scripts/check-consistency.sh`（含 `eval-fixtures.py`）；`/rust-skills:rust doctor` 看漂移。本机装 ripgrep（`brew install ripgrep`）。
+- 每周：跑一遍 `tests/pressure-scenarios.md` 与 `./scripts/check-consistency.sh`（含 `eval-fixtures.py`、`eval-triggers.py`）；`/rust-skills:rust doctor` 看漂移。本机装 ripgrep（`brew install ripgrep`）。
 - 架构与规则治理细节见 [docs/DESIGN.md](docs/DESIGN.md)。
 - 版本从 `0.0.1` 起按补丁递增，权威文件是 `.claude-plugin/plugin.json`；改完后跑 `./scripts/sync-providers.py`（它会先重生成命令表）。
 - 仓库一致性检查：`./scripts/check-consistency.sh`。

@@ -1,0 +1,18 @@
+interface:
+  display_name: "rust-skills"
+  short_description: "Cargo/Rust engineering workflows — review, craft, axum, Tauri, stack"
+  default_prompt: "Use $rust-skills for Cargo/Rust work in the current repo; do not write code unless the user said 改/--apply/implement; skip non-Cargo repos."
+policy:
+  allow_implicit_invocation: true
+compatibility:
+  canonical_format: "agent-skills"
+  adapter_targets:
+    - "openai"
+    - "claude"
+    - "generic"
+  activation:
+    mode: "implicit-on-cargo"
+  trust:
+    source_tier: "local"
+    remote_inline_execution: "forbid"
+    writes: "user-authorized-project-files-only"

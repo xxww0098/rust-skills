@@ -12,6 +12,7 @@ EXPECTED = {
     "SKILL.md": "skills/rust/SKILL.md",
     "reference": "skills/rust/reference",
     "rules": "skills/rust/rules",
+    "agents": "skills/rust/agents",
 }
 
 

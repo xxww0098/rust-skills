@@ -1,0 +1,27 @@
+{
+  "evidence_level": "E1",
+  "note": "Phrase presence in SKILL description / routing table. Not LLM routing proof (E3).",
+  "must_activate": [
+    {"phrase": "编译报错", "where": "description"},
+    {"phrase": "代码审查", "where": "description"},
+    {"phrase": "技术栈", "where": "description"},
+    {"phrase": "borrow-checker", "where": "description"},
+    {"phrase": "axum", "where": "description"},
+    {"phrase": "Tauri v2", "where": "description"},
+    {"phrase": "/rust-skills:rust", "where": "description"}
+  ],
+  "must_not_activate": [
+    {"phrase": "Python/Go/JS reviews", "where": "description"},
+    {"phrase": "translation", "where": "description"},
+    {"phrase": "generic summaries", "where": "description"},
+    {"phrase": "language trivia", "where": "description"},
+    {"phrase": "non-Cargo repos", "where": "description"}
+  ],
+  "near_neighbors": [
+    {"prompt": "review this Python PR", "expect": "skip"},
+    {"prompt": "把这段中文翻译成英文", "expect": "skip"},
+    {"prompt": "总结一下 Rust 的历史", "expect": "skip"},
+    {"prompt": "帮我修这个 E0382", "expect": "activate"},
+    {"prompt": "这个项目该用什么技术栈", "expect": "activate"}
+  ]
+}

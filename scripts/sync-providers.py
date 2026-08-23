@@ -77,6 +77,7 @@ def root_compat_links() -> tuple[tuple[str, str], ...]:
         ("SKILL.md", "skills/rust/SKILL.md"),
         ("reference", "skills/rust/reference"),
         ("rules", "skills/rust/rules"),
+        ("agents", "skills/rust/agents"),
     )
 
 
@@ -310,7 +311,7 @@ def ensure_link(link_rel: str, target: str, check: bool, drifts: list[str]) -> N
     """
     link_path = REPO_ROOT / link_rel
     resolved_target = (link_path.parent / target).resolve()
-    prefer_copy = link_rel.startswith(".grok/") or link_rel in {"SKILL.md", "reference", "rules"}
+    prefer_copy = link_rel.startswith(".grok/") or link_rel in {"SKILL.md", "reference", "rules", "agents"}
 
     if prefer_copy:
         if link_path.exists() and not link_path.is_symlink() and _tree_equal(link_path, resolved_target):

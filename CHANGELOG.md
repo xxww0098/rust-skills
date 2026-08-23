@@ -1,6 +1,15 @@
 # Changelog
 
+## 0.0.41 — 2026-08-23
+
+- 用 dao-skill / yao-meta-skill 的元规范做最小补丁：触发面排除项、诚实证据级别（E1/E2 ≠ LLM 已验证）、agents 可移植、正负触发契约。
+- description 增加 Skip Python/Go/JS、translation、generic summaries；SKILL 增加「非目标」。
+- README 命令数 28→29；写授权补 `obs`/`cli`/`stack`。
+- 新增 `evals/triggers.json` + `scripts/eval-triggers.py`、`examples/first-prompts.md`、`SECURITY.md`、`skills/rust/agents/openai.yaml`。
+- **不**引入 yao.py / Skill IR / Review Studio（与 rust 工程技能的根问题无关）。
+
 ## 0.0.40 — 2026-08-22
+
 
 - `stack` 落地（ST-14）：默认仍只出表；「改」/`--apply` 只给**缺失层** `cargo add` 并钉 floor，不删活栈、死亡线不与绿场默认并列。接线仍走 `obs`/`axum`；`init` 不引入 web/cli/obs 依赖。
 - version-floor 补钉：tokio 1.53.1、tracing 0.1.44、tracing-subscriber 0.3.23、serde 1.0.229、serde_json 1.0.151、tower-http 0.6.11（不配 0.7）、reqwest 0.13.4。

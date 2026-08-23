@@ -391,6 +391,9 @@ fi
 if ! python3 "$repo_root/scripts/eval-fixtures.py"; then
   fail "fixture eval contracts drifted; see scripts/eval-fixtures.py"
 fi
+if ! python3 "$repo_root/scripts/eval-triggers.py"; then
+  fail "trigger eval drifted; see scripts/eval-triggers.py"
+fi
 
 if ! python3 "$repo_root/scripts/check-floor.py"; then
   fail "version floor drifted; see scripts/version-floor.json"
