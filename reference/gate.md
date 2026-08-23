@@ -14,7 +14,21 @@
 4. 未实现项列为 `NOT_IMPLEMENTED` 且不注册；若它属于用户要求的最低检查集，gate 必须非零退出，不能假绿。
 5. 可选棘轮：用 `cargo clippy --message-format=json` 生成基线；记录命令、工具链和时间。基线下降就收紧；放宽或移除须给理由与补偿证据（GATE-02）。
 6. hooks 只生成到版本化的项目路径（如 `scripts/hooks/`）并给安装说明。发现现有 `.git/hooks/*` 时绝不覆盖；只有用户明确同意安装后才写 Git 私有目录。
-7. CI 变更先展示计划；用户授权后复用同一门禁入口，不复制第二套规则。
+7. CI 变更先展示计划；用户授权后复用同一门禁入口，不复制第二套规则。有 `Cargo.lock` 的应用：构建/测试必须 `--locked`；扫 workflow 里的 `cargo update`（DEP-11/GATE-04）。冷却期不是默认基线：只在 artifact=service|cli|desktop 且用户要供应链闸时，把 RFC 3923 配进 `.cargo/config.toml`，并用 **G4 nightly** `cargo +nightly -Zmin-publish-age check --locked` 验证解析；默认 toolchain 仍是 stable。
+
+```toml
+# 应用侧候选（实验性；稳定前仅 G4 / 显式授权）
+[registry]
+global-min-publish-age = "14 days"
+
+[registries.crates-io]
+min-publish-age = "7 days"
+
+[resolver]
+incompatible-publish-age = "deny"
+```
+
+紧急热修（知情）：`CARGO_RESOLVER_INCOMPATIBLE_PUBLISH_AGE=allow cargo update -p foo --precise 1.2.3`，完后改回 deny。私有 registry 可 `min-publish-age = "0"`。无 `pubtime` 的 registry 静默跳过，须声明缺口。
 
 ## 增量（已有统一门禁）
 

@@ -1,4 +1,4 @@
-# Rust 工程规范（注入版 v0.0.41）
+# Rust 工程规范（注入版 v0.0.42）
 
 供按相关域渐进加载（先读同目录分文件，不要默认打开本合并件）；仅在明确的全规范审计时读取 `rules-full.md`。规则是决策约束，不是替代项目证据的检查表。
 分级：[M]=适用前提命中后 MUST，违反即阻断；[S]=默认 SHOULD，项目约定或证据可推翻并说明；[Y]=MAY。先证明前提，再引用编号；不适用不是违规。**本规范只以 edition 2024 为基线**（MSRV ≥ 1.85，可用 `rust-version` 或 `rust-toolchain.toml` 声明）。edition 2018/2021 是待迁移债务。新 workspace 用 `resolver = "3"`；已经 2024 且钉在 resolver 2 的成熟仓不迁 resolver。新代码按 2024 语义写（RPIT 全捕获、`if let` 短临时值、`#[unsafe(no_mangle)]`、`unsafe extern`、≥1.88 let chains）。Unix 多线程禁止靠 `env::set_var` 改环境。
@@ -144,6 +144,9 @@
 - DEP-08[M] edition 必须是 2024。MSRV（≥ 1.85）用 `rust-version` 或 `rust-toolchain.toml` 显式钉住，CI 有对应编译任务。resolver：新仓 3；已有 2024+resolver 2 不是违规。依赖自己的 MSRV 可以高于仓基线（sqlx 0.9 为 1.94）：不要为对齐「现行稳定线」把全仓 rust-version 抬到最严依赖；该依赖上一主线仍在范围内就留在上一主线，抬 MSRV 必须写入 RUST.md 或 rust-version 变更。
 - DEP-09[S] cargo hack --feature-powerset 每夜验证 feature 叠加性。
 - DEP-10[Y] 高保证场景用 cargo-vet/cargo-crev。
+- DEP-11[S] 已跟踪 lock 的应用：CI/`cargo` 调用必须 `--locked`（或等价 `--offline`）。禁无人值守 `cargo update` / 无 `--locked` 的解析。投毒窗口以小时计（arrayref 0.3.10 在线 86 分钟）；只有这段里跑过 update 的 lock 会吃进恶意版本。
+- DEP-12[S] `cargo deny`/`audit`/`vet` 依赖已收录或已审；零日投毒头几小时沉默。冷却期（DEP-13）挡「发布后立刻被选中」；提前数月的慢投毒仍走审查（DEP-10）+ deny（DEP-06）。多层，不是银弹。
+- DEP-13[S] 应用可设解析冷却期（Cargo RFC 3923，**实验性**：需 nightly `-Zmin-publish-age`，稳定前不改默认 toolchain）。crates.io 建议 7–14 days；安全敏感 ≥14；库作者短或不设；私有 registry 可 `0`。只影响新解析，不踢 lock 里已有版本。registry 无 `pubtime` 则静默失效。紧急热修：`CARGO_RESOLVER_INCOMPATIBLE_PUBLISH_AGE=allow cargo update -p <crate> --precise <ver>`，知情后改回 deny。git/path 源豁免。
 
 ## LINT 风格
 - LINT-01[M] 使用项目 rustfmt 配置并在现有门禁执行 `fmt --check`；是否使用 pre-commit 由项目决定，不覆盖本地 hooks。
@@ -172,7 +175,8 @@
 - GATE-01[S] 本地与 CI 应复用同一组检查入口；沿用项目已有脚本/任务系统，只有复杂度值得时才新增 `cargo xtask gate`。
 - GATE-02[M] 门禁覆盖不得静默减弱；删除过时检查或放宽阈值须显式记录理由、影响与补偿证据。
 - GATE-03[S] 棘轮基线文件入库，变更走评审。
-- 阶梯：G1 pre-commit ≤6s（fmt+文件系统检查）→ G2 pre-push ≤3min（xtask 全量+clippy+单测）→ G3 CI 阻塞（+deny+MSRV+doc）→ G4 每夜非阻塞（Miri/loom/powerset/semver-checks/bench）。
+- GATE-04[S] 已跟踪 lock 的应用：G3 CI 必须 `--locked`；禁流水线里的 `cargo update`（DEP-11）。G4 可选 `cargo +nightly -Zmin-publish-age` 验证解析冷却（DEP-13），**不**把 nightly 当默认构建工具链。
+- 阶梯：G1 pre-commit ≤6s（fmt+文件系统检查）→ G2 pre-push ≤3min（xtask 全量+clippy+单测）→ G3 CI 阻塞（+deny+MSRV+doc+`--locked`）→ G4 每夜非阻塞（Miri/loom/powerset/semver-checks/bench/可选 min-publish-age）。
 - 候选门禁集：no_orphan_modules（第一优先）、no_raw_path_deps、no_wildcard_opt_level、tests_layout、crate/module_direction、internal_doctest_off、internal_publish_false、no_test_code_in_lib、no_silent_test_skip、lints_inherited、lint_ratchet。只有实现、失败 fixture 与实跑证据齐全的检查才可注册。
 
 ## D 决策树

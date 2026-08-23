@@ -1,6 +1,13 @@
 # Changelog
 
+## 0.0.42 — 2026-08-23
+
+- 蒸馏 arrayref 投毒窗口 + Cargo RFC 3923：DEP-11 CI `--locked` / 禁无人值守 `cargo update`；DEP-12 deny/audit/vet 不覆盖零日头几小时；DEP-13 应用侧 min-publish-age（实验性 `-Z`，不改默认 toolchain）。
+- GATE-04：G3 `--locked`；G4 可选 nightly 冷却期解析。gate playbook 给出 `.cargo/config.toml` 候选与热修绕过。
+- audit deps/security、init、stack、harden 叠一层。场景 73。
+
 ## 0.0.41 — 2026-08-23
+
 
 - 用 dao-skill / yao-meta-skill 的元规范做最小补丁：触发面排除项、诚实证据级别（E1/E2 ≠ LLM 已验证）、agents 可移植、正负触发契约。
 - description 增加 Skip Python/Go/JS、translation、generic summaries；SKILL 增加「非目标」。

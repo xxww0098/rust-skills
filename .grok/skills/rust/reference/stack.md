@@ -52,7 +52,7 @@
 
 **ST-10 测试**：`cargo test`；已有 nextest 沿用。不默认加 mockall/wiremock/testcontainers 全家桶；测并发走 [testing.md](testing.md)。
 
-**ST-11** 推荐里的 crate 必须带线或 pinned，禁止「用最新 axum」。
+**ST-11** 推荐里的 crate 必须带线或 pinned，禁止「用最新 axum」。应用跟踪 Cargo.lock（DEP-07）；不把 `cargo update` 写进绿场脚本。
 
 **ST-15 配置**：业务配置由 **bin** 用 clap `env`（CL-13）注入到构造函数。库 crate 禁 `std::env::var("DATABASE_URL")` 当公共 API。`dotenv` / `dotenvy` 只许 dev；生产读编排注入的环境。密钥不进默认值、不进日志（OBS-02）。
 

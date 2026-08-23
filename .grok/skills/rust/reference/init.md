@@ -13,6 +13,7 @@
    - profile：禁通配 opt；package override 与 build-override 分别基于 timings 决定；CI profile 独立（BUILD-01/02/05）
    - 明确不发布的内部 crate 设 `publish = false`；只有无文档示例且成本可见时才关 doctest（WS-03、TEST-06）
    - **不**引入 web/cli/obs 依赖或 subscriber 骨架（那是 `stack` 落地 + `obs`/`cli`/`axum` 接线）。缺 tracing 的 service/cli 在下一步推 `stack`
+   - **不**把 nightly / `-Zmin-publish-age` 写进默认 toolchain。应用（service/cli/desktop）缺 CI `--locked` 标缺口（DEP-11）；冷却期是偏好，走 `gate` 展示后再落 `.cargo/config.toml`
 4. **冻结写入**：默认只纳入根/成员 Cargo.toml 与 RUST.md；仅有证据且逐项展示后才纳入现有 rust-toolchain、`.cargo`、CI 或门禁配置。源码与测试不属于 init 写入范围；fmt/lint/test 的既有失败进债务或棘轮，不为“跑绿 init”顺手修代码。
 5. **展示再落盘**：区分“错误/风险”“缺失基线”和“偏好差异”；前两类给证据化最小修改，偏好差异默认保留。可能破坏构建、发布或工具链的改动逐条征求同意；无 delta 时不触碰工程文件。Cargo.lock 是否纳入由 artifact、可复现交付和项目约定决定：publish-only library 明确不跟踪时排除；已有跟踪策略、依赖解析变化，或 service/CLI/desktop 选择可复现交付但 lock 缺失时，先把 lock 冻结进写入清单，再生成/更新并展示 diff（DEP-07）。
 6. **验证 actual state**：fmt/lint 只用 check 模式；按改动范围运行 lock-safe metadata、最小 `cargo check` 与项目已有门禁，区分本次失败和既有失败。lock 未纳入写入清单且 Cargo 会生成/更新它时，改在隔离源码副本验证并报告。存量 lint 可建棘轮，不强制引入 xtask；现有门禁无法承载时才建议 `gate`。

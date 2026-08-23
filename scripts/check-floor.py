@@ -26,7 +26,7 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parent.parent
 FLOOR = REPO_ROOT / "scripts" / "version-floor.json"
 CRATES_IO = "https://crates.io/api/v1/crates/{name}"
-UA = "rust-skills-check-floor/0.0.41 (https://github.com/xxww0098/rust-skills)"
+UA = "rust-skills-check-floor/0.0.42 (https://github.com/xxww0098/rust-skills)"
 
 
 def fail(msg: str) -> None:

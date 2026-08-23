@@ -36,9 +36,9 @@ unsafe extern "C" {
 pub extern "C" fn plugin_init() {}
 ```
 
-## audit deps（DEP-01..10）
+## audit deps（DEP-01..13）
 
-`cargo tree -d` 重复版本先判断是否造成类型不兼容、体积或安全影响，再给有收益的收敛路径；检查多成员共享版本是否应收口、有意局部差异是否有理由；核对 default feature 的实际内容、optional 配对与 feature 叠加性。仅在项目已配置时运行 `cargo deny check`；审 Cargo.lock 新传递依赖；现代化替代表扫一遍（lazy_static/once_cell/failure…→ 建议 `/rust-skills:rust modernize`）。
+`cargo tree -d` 重复版本先判断是否造成类型不兼容、体积或安全影响，再给有收益的收敛路径；检查多成员共享版本是否应收口、有意局部差异是否有理由；核对 default feature 的实际内容、optional 配对与 feature 叠加性。仅在项目已配置时运行 `cargo deny check`；审 Cargo.lock 新传递依赖；现代化替代表扫一遍（lazy_static/once_cell/failure…→ 建议 `/rust-skills:rust modernize`）。供应链窗口（DEP-11..13）：CI/`Makefile` 是否无人值守 `cargo update` 或无 `--locked` 的构建；有 lock 的应用必须 `--locked`。`deny`/`audit`/`vet` 未配置标 MAY，不假装已扫零日。冷却期是解析策略不是审计替代；未启用不判红，只给应用侧候选（GATE-04）。
 
 ## audit tests（TEST-01..16）
 
@@ -64,7 +64,7 @@ guard 跨 await 全扫（clippy await_holding_lock + 人工确认 parking_lot）
 - 认证授权：新密码哈希优先 argon2id；**存量 bcrypt 可保留**，要求登录后渐进重哈希或兼容论证，勿机械判红。token 过期与轮换；authz 统一前置层或**可证明等价**的类型化 extractor，不散落 ad-hoc 检查。axum 证据时叠加 [axum/auth.md](axum/auth.md)（JWT/session/RBAC 的具体缺陷表）。
 - 浏览器/边缘：CORS 精确白名单（携凭据禁 Any）、安全响应头、TLS 终止与**可信代理**是否剥离伪造转发头——须结合部署拓扑；拓扑未知只标假设缺口。
 - tauri 面：capabilities/ACL 最小化（TA-12）、CSP、shell/fs 白名单；深审清单与 capability 样板见 [tauri/security.md](tauri/security.md)。
-- 依赖面：已配置则跑 cargo-deny advisories（DEP-06）；未配置标 MAY 候选，不假装已扫。
+- 依赖面：已配置则跑 cargo-deny advisories（DEP-06）；未配置标 MAY 候选，不假装已扫。有 lock 的应用 CI 无 `--locked` 或有 `cargo update` → DEP-11。冷却期未开不判红（DEP-13）。
 
 规则号列：能映射到 OBS/SE/DEP/API/TA 则写该号；否则写 `security/<子面>`（secrets|authn|authz|exposure|supply-chain）。输出同各域表格 + 置信度。
 
