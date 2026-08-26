@@ -1,6 +1,16 @@
 # Changelog
 
+## 0.0.44 — 2026-08-26
+
+- 蒸馏 ChatGPT 对 v0.0.43 内核审查（转译/透传/上下文）。P0 only。
+- `scripts/activation.json` 成为 description 唯一事实源；plugin / SKILL / openai.yaml 由 sync 生成。description **不再**写 Python/翻译等负向词（embedding 假阳性）。
+- `eval-triggers.py` 改测：正样本在 description；skip 在「非目标」；`near_neighbors` 被消费。
+- `sync-providers.py`：无 symlink 时 **copy**，`--check` 缺文件即失败；为全部命令生成 slash pin。
+- 路由固定优先级：显式命令 > 写入意图 > rustc > 动词 > 领域。`review --apply` 仍只读。
+- **未做**：RoutePlan IR、staging 事务同步、SKILL 8KB 硬预算、把 check-consistency.sh 改成 Python 薄包装。
+
 ## 0.0.43 — 2026-08-26
+
 
 - 蒸馏 Cursor `thermo-nuclear-code-quality-review`：可移植机制是「删复杂度，不搬家」。**不**新开命令，**不**把「go for it」写进只读 `review`。
 - SIMP-09 文件跨 1000 行红旗（处置仍 WS-11）；SIMP-10 spaghetti 特判；SIMP-11 层/helper；SIMP-12 无故串行/半应用。

@@ -1,0 +1,17 @@
+## TEST 测试
+- TEST-01[S] 单元测试靠近实现；修复优先追加到覆盖该行为的现有测试文件，只有新的隔离/链接边界才新建测试目标；当测试体积妨碍阅读时移到同模块的 `tests.rs`。
+- TEST-02[S] 集成测试按隔离需求组织；启动/链接成本明显时合并为较少测试二进制。
+- TEST-03[M] 共享辅助：test-util crate > it 内模块 > 遗留 tests/common/mod.rs；禁 tests/common.rs。
+- TEST-04[M]【最高优先级】每个 .rs 必须可被 mod 图到达（孤儿文件=静默失效）。
+- TEST-05[M] 测试辅助不进生产 pub API（test-util crate 或非默认 feature）。
+- TEST-06[Y] 无文档示例且 doctest 成本可见的内部 crate 可设 `[lib] doctest = false`。
+- TEST-07[M] 外部服务测试：fail-loud（panic 指明缺什么）或 `#[ignore = "原因"]`；禁静默 return 变绿。
+- TEST-08[M] 禁套套逻辑测试：期望值来自规格/手算/对偶实现，不得复述实现输出；每个断言都必须可失败并检查最强可观察不变量。修 bug 时须证明回归测试命中旧缺陷（改前、隔离旧版本或受控回滚见红）；无法安全见红则把它列为验证缺口。
+- TEST-09[M] 确定性：固定种子；优先等待可观察事件/条件，无事件才带 deadline 轮询；tokio::time::pause 替代 sleep；不依赖执行顺序。
+- TEST-10[S] 配比：大量快单测 + 适量公共 API 契约集成测试 + 少量端到端/bench。一次行为改动默认 1–3 个测试；想加更多先列出不变量再问，禁按函数名一人一个。
+- TEST-11[S] 不变量/编解码→proptest；结构化输出→insta（diff 人审）；并发原语小状态→loom，状态空间大→shuttle；unsafe→Miri；多机/网络→turmoil/madsim；并行加速比→bench（PERF-01）。形状见 [testing.md](../reference/testing.md)。
+- TEST-12[Y] 项目已采用 nextest 时沿用；否则 `cargo test` 足够。对外文档示例用 `cargo test --doc` 验证。nextest 的 retry 默认 0；确认 flaky 走隔离而不是重跑变绿。
+- TEST-13[S] 补测预算：先 `rg` 现有测试是否已锁同一不变量——已覆盖则改夹具/加断言，禁新文件、禁新 `#[test]` 只为「看起来测了」。每个新测试必须能用一句话说「它会因哪条规格失败」。被新性质完全包含的旧测试删或合并。Agent 尤其禁止：镜像实现的套套测试、每个 getter 一条、为覆盖率凑分支。
+- TEST-14[M] 火焰山（偶发变红）：根因是真实时间、未 join 的并发、进程级共享（env/cwd/端口/OnceLock），不是「再跑一次」。确认 flaky 先 `#[ignore = "flake: …"]` 或 nextest quarantine 移出阻断路径，再修生产代码或测法。禁止：删测试让 CI 绿、放宽断言、包 retry、加 `sleep` 碰运气。Agent 看见红必须先分「回归 / flake / 缺环境」（TEST-07），缺证据不改生产。
+- TEST-15[S] 并发测试选层（由上到下，能停就停）：① 顺序规格/模型等价（同一串操作，并发结果 = 单线程模型）；② loom 穷举（锁/atomic，状态必须小）；③ shuttle 随机调度 + 固定种子（loom 炸了才上）；④ Miri `--many-seeds`（unsafe / 数据竞争）；⑤ tokio `start_paused` + `advance`（超时/重试，禁真实 sleep）；⑥ turmoil 等 DST（网络/多主机）。`thread::spawn` + `sleep` hammer 只冒烟，失败必须能用种子复现，否则不算证明。
+- TEST-16[M] 默认并行跑测试。共享进程级状态的测试才串行（`serial_test` 或独立进程）；`#[tokio::test(flavor = "multi_thread")]` 只在测真并行调度时用，与 `serial` 组合要按插件文档排属性顺序，否则死锁。每测必须 join/cancel 自己 spawn 的任务，runtime Drop 时不许留孤儿。

@@ -1,0 +1,11 @@
+## FFI 边界
+- FFI-01[M] panic 不得跨 FFI 展开：`unsafe extern "C"` 体内 catch_unwind 收口翻译为错误码，或按 ABI 用 `extern "C-unwind"`。2024 裸 `extern "C" {` 是迁移债务（FFI-10）。
+- FFI-02[M] 跨界类型稳定布局：#[repr(C)]/#[repr(transparent)]；平台类型用 std::ffi/libc 别名。
+- FFI-03[M] 字符串走 CString/CStr；C 端会保存指针或指针逃逸当前调用时，CString 必须由明确所有者绑定并活过全部使用期。仅在 FFI 契约明确“不保留指针”时，`c_api(CString::new(s)?.as_ptr())` 的语句内借用才成立；契约必须记录。
+- FFI-04[M] 所有权单边：谁分配谁释放；包装 C 指针实现 Drop 调对方 free；交给 C 的用 into_raw/ManuallyDrop 解除析构；禁 String/Vec 接管外部内存。
+- FFI-05[M] 外部输入先验证再进强不变量类型：enum 用 TryFrom 禁 transmute；字节流用 from_utf8 禁 _unchecked。
+- FFI-06[M] 不透明句柄必须隐藏布局并记录空值、别名、线程与生命周期契约；可用绑定生成的 opaque 类型或 `c_void` 指针，避免伪造可实例化布局。
+- FFI-07[M] 错误跨界走错误码/out 参数；Result/Option/panic 语义不过 ABI。
+- FFI-08[M] 回调过界数据与代码分离：函数指针 + user_data 成对（trampoline）；禁闭包/trait object 过界。
+- FFI-09[S] 绑定用 bindgen/cbindgen 生成入库，不手写 extern。
+- FFI-10[M] 2024 的 extern 块必须是 `unsafe extern "ABI"`。块内逐项标 `safe fn`（任意合法参数都健全，如 libm `sqrt`）或 `unsafe fn`（调用方须满足前置条件）；未标注默认 unsafe。`cargo fix --edition` 只加关键字，不证明签名正确，迁移后必须人工复核 ABI。

@@ -1,7 +1,7 @@
 interface:
   display_name: "rust-skills"
   short_description: "Cargo/Rust engineering workflows — review, craft, axum, Tauri, stack"
-  default_prompt: "Use $rust-skills for Cargo/Rust work in the current repo; do not write code unless the user said 改/--apply/implement; skip non-Cargo repos."
+  default_prompt: "Use $rust-skills for Cargo/Rust work in the current repo. Write only if the user said 实现/修/改/生成/应用 or implement/fix/change/generate/apply or --apply. Explicit review/audit/triage/doctor stay read-only even with --apply. Skip non-Cargo work and language trivia."
 policy:
   allow_implicit_invocation: true
 compatibility:

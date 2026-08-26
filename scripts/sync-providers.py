@@ -56,12 +56,14 @@ PROVIDER_NAMES = tuple(p["name"] for p in PROVIDERS)
 
 
 def harness_links() -> tuple[tuple[str, str], ...]:
+    command_pins = sorted(p.name for p in (REPO_ROOT / "commands").glob("*.md"))
     links: list[tuple[str, str]] = []
     for provider in PROVIDERS:
         config_dir = provider["dir"]
         links.append((f"{config_dir}/skills/rust", "../../skills/rust"))
         if provider["commands"]:
-            links.append((f"{config_dir}/commands/review.md", "../../commands/review.md"))
+            for name in command_pins:
+                links.append((f"{config_dir}/commands/{name}", f"../../commands/{name}"))
     return tuple(links)
 
 
@@ -305,13 +307,17 @@ def _copy_replace(src: Path, dst: Path) -> None:
 def ensure_link(link_rel: str, target: str, check: bool, drifts: list[str]) -> None:
     """Grok and pack-root compat materialize as real copies.
 
-    Other harness discovery links stay symlinks. If the filesystem cannot
-    create symlinks, those optional harness links are skipped (not copied),
-    so a no-symlink sandbox does not duplicate skills/rust 13 times.
+    Other harness discovery links prefer symlinks. If the filesystem cannot
+    create them, **copy** instead of skipping. `--check` must fail when the
+    discovery path is missing or not content-equal — never skip as success.
     """
     link_path = REPO_ROOT / link_rel
     resolved_target = (link_path.parent / target).resolve()
-    prefer_copy = link_rel.startswith(".grok/") or link_rel in {"SKILL.md", "reference", "rules", "agents"}
+    prefer_copy = (
+        link_rel.startswith(".grok/")
+        or link_rel in {"SKILL.md", "reference", "rules", "agents"}
+        or not symlink_supported()
+    )
 
     if prefer_copy:
         if link_path.exists() and not link_path.is_symlink() and _tree_equal(link_path, resolved_target):
@@ -325,17 +331,9 @@ def ensure_link(link_rel: str, target: str, check: bool, drifts: list[str]) -> N
 
     if link_path.is_symlink() and os.readlink(link_path) == target:
         return
-
-    if not symlink_supported():
-        if check:
-            return
-        print(f"skip {link_rel} (symlink unsupported)")
-        return
-
     if check:
         drifts.append(link_rel)
         return
-
     if link_path.exists() or link_path.is_symlink():
         if link_path.is_dir() and not link_path.is_symlink():
             shutil.rmtree(link_path)
@@ -344,6 +342,74 @@ def ensure_link(link_rel: str, target: str, check: bool, drifts: list[str]) -> N
     link_path.parent.mkdir(parents=True, exist_ok=True)
     os.symlink(target, link_path)
     print(f"linked {link_rel} -> {target}")
+
+
+def generate_command_pins() -> None:
+    """Materialize slash pins for every command. review.md stays handwritten."""
+    meta = json.loads((REPO_ROOT / "scripts" / "command-metadata.json").read_text(encoding="utf-8"))
+    commands_dir = REPO_ROOT / "commands"
+    commands_dir.mkdir(exist_ok=True)
+    for name, spec in meta["commands"].items():
+        path = commands_dir / f"{name}.md"
+        if name == "review" and path.is_file():
+            continue
+        hint = spec.get("argumentHint") or ""
+        summary = spec.get("summary") or name
+        path.write_text(
+            f"""---
+description: /rust-skills:rust {name} pin
+---
+
+# /{name}
+
+Pin. Load the rust skill and run `reference/{name}.md` on `$ARGUMENTS`.
+{summary}. Args `{hint}`. Write policy is SKILL's — this pin cannot widen writes.
+Equiv: `/rust-skills:rust {name} $ARGUMENTS`.
+""",
+            encoding="utf-8",
+        )
+
+
+def apply_activation(plugin: dict, check: bool, drifts: list[str]) -> None:
+    act_path = REPO_ROOT / "scripts" / "activation.json"
+    act = json.loads(act_path.read_text(encoding="utf-8"))
+    desc = act["description"]
+    if plugin.get("description") != desc:
+        if check:
+            drifts.append(".claude-plugin/plugin.json")
+        else:
+            plugin["description"] = desc
+            CANONICAL_PLUGIN.write_text(dumps(plugin), encoding="utf-8")
+            print("wrote .claude-plugin/plugin.json description from activation.json")
+    verbs = "/".join(act["write_verbs_zh"]) + " or " + "/".join(act["write_verbs_en"])
+    openai = (
+        "interface:\n"
+        '  display_name: "rust-skills"\n'
+        '  short_description: "Cargo/Rust engineering workflows — review, craft, axum, Tauri, stack"\n'
+        f'  default_prompt: "Use $rust-skills for Cargo/Rust work in the current repo. '
+        f"Write only if the user said {verbs} or --apply. Explicit "
+        f'review/audit/triage/doctor stay read-only even with --apply. Skip non-Cargo work and language trivia."\n'
+        "policy:\n"
+        "  allow_implicit_invocation: true\n"
+        "compatibility:\n"
+        '  canonical_format: "agent-skills"\n'
+        "  adapter_targets:\n"
+        '    - "openai"\n'
+        '    - "claude"\n'
+        '    - "generic"\n'
+        "  activation:\n"
+        '    mode: "implicit-on-cargo"\n'
+        "  trust:\n"
+        '    source_tier: "local"\n'
+        '    remote_inline_execution: "forbid"\n'
+        '    writes: "user-authorized-project-files-only"\n'
+    )
+    write_or_check(REPO_ROOT / "skills" / "rust" / "agents" / "openai.yaml", openai, check, drifts)
+    text = SKILL_MD.read_text(encoding="utf-8")
+    new, n = re.subn(r"^description:.*$", f"description: {desc}", text, count=1, flags=re.M)
+    if n != 1:
+        raise SystemExit("SKILL.md missing description line")
+    write_or_check(SKILL_MD, new, check, drifts)
 
 
 def regenerate_command_tables() -> None:
@@ -365,6 +431,13 @@ def main() -> int:
 
     if not args.check:
         regenerate_command_tables()
+        generate_command_pins()
+    else:
+        meta = json.loads((REPO_ROOT / "scripts" / "command-metadata.json").read_text(encoding="utf-8"))
+        for name in meta["commands"]:
+            if not (REPO_ROOT / "commands" / f"{name}.md").is_file():
+                drifts.append(f"commands/{name}.md")
+    apply_activation(plugin, args.check, drifts)
     set_skill_version(version, args.check, drifts)
     set_spec_version(version, args.check, drifts)
     for path, content in expected_files(plugin).items():
