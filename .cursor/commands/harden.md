@@ -2,6 +2,7 @@
 description: /rust-skills:rust harden pin
 ---
 
+
 # /harden
 
 Pin. Load the rust skill and run `reference/harden.md` on `$ARGUMENTS`.

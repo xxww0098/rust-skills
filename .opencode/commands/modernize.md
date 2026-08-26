@@ -2,6 +2,7 @@
 description: /rust-skills:rust modernize pin
 ---
 
+
 # /modernize
 
 Pin. Load the rust skill and run `reference/modernize.md` on `$ARGUMENTS`.

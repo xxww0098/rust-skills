@@ -2,6 +2,7 @@
 description: /rust-skills:rust async pin
 ---
 
+
 # /async
 
 Pin. Load the rust skill and run `reference/async.md` on `$ARGUMENTS`.

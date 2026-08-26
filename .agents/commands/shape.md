@@ -2,6 +2,7 @@
 description: /rust-skills:rust shape pin
 ---
 
+
 # /shape
 
 Pin. Load the rust skill and run `reference/shape.md` on `$ARGUMENTS`.

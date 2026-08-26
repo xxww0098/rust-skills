@@ -2,6 +2,7 @@
 description: /rust-skills:rust obs pin
 ---
 
+
 # /obs
 
 Pin. Load the rust skill and run `reference/obs.md` on `$ARGUMENTS`.

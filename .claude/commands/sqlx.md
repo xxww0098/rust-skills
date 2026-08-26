@@ -2,6 +2,7 @@
 description: /rust-skills:rust sqlx pin
 ---
 
+
 # /sqlx
 
 Pin. Load the rust skill and run `reference/sqlx.md` on `$ARGUMENTS`.

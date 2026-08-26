@@ -1,6 +1,14 @@
 # Changelog
 
+## 0.0.45 — 2026-08-26
+
+- 蒸馏：[Anthropic skill authoring](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices)（body ≤500 行、description ≤1024）；[Jesse Vincent](https://www.ksred.com/best-claude-code-skills-which-ones-are-actually-worth-installing/) Claude Code 15k 描述预算静默丢 skill；[Macroscope AI Rust review](https://macroscope.com/content/ai-code-review-rust) 信任边界 panic；[Microsoft Rust Engineering](https://microsoft.github.io/RustTraining/engineering-book/) + [cargo-hack](https://github.com/taiki-e/cargo-hack) powerset。
+- ERR-09 `xs[i]` / 入站 `/`；SIMP-13 AI 过编译器味；GATE-05 `cargo hack --feature-powerset --no-dev-deps`。
+- `eval-triggers.py` 卡住 SKILL 体量与 pin description 总长。
+- **未做**：覆盖率棘轮、heapless MUST、RoutePlan IR、把 SKILL 再砍到 8KB（当前 body 138 行，已低于 500）。
+
 ## 0.0.44 — 2026-08-26
+
 
 - 蒸馏 ChatGPT 对 v0.0.43 内核审查（转译/透传/上下文）。P0 only。
 - `scripts/activation.json` 成为 description 唯一事实源；plugin / SKILL / openai.yaml 由 sync 生成。description **不再**写 Python/翻译等负向词（embedding 假阳性）。

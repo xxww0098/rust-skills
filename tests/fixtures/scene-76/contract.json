@@ -1,0 +1,13 @@
+{
+  "id": "76",
+  "title": "信任边界下标/除法 + indexed loop 是 AI slop",
+  "commands": ["review"],
+  "fixture": "hits.rs",
+  "fixture_needles": ["items[idx]", "a / b", "for i in 0..xs.len()"],
+  "skill_needles": {
+    "skills/rust/rules/err.md": ["ERR-09", "checked_div", "xs[i]"],
+    "skills/rust/rules/simp.md": ["SIMP-13", "for i in 0..len"],
+    "skills/rust/rules/gate.md": ["GATE-05", "cargo hack", "feature-powerset"],
+    "tests/pressure-scenarios.md": ["### 场景 76", "ERR-09"]
+  }
+}

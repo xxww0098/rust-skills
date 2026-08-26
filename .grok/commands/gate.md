@@ -2,6 +2,7 @@
 description: /rust-skills:rust gate pin
 ---
 
+
 # /gate
 
 Pin. Load the rust skill and run `reference/gate.md` on `$ARGUMENTS`.

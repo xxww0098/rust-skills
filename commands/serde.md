@@ -2,6 +2,7 @@
 description: /rust-skills:rust serde pin
 ---
 
+
 # /serde
 
 Pin. Load the rust skill and run `reference/serde.md` on `$ARGUMENTS`.

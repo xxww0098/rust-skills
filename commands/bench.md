@@ -2,6 +2,7 @@
 description: /rust-skills:rust bench pin
 ---
 
+
 # /bench
 
 Pin. Load the rust skill and run `reference/bench.md` on `$ARGUMENTS`.

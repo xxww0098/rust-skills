@@ -2,6 +2,7 @@
 description: /rust-skills:rust slim pin
 ---
 
+
 # /slim
 
 Pin. Load the rust skill and run `reference/slim.md` on `$ARGUMENTS`.

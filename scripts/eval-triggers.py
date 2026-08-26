@@ -66,6 +66,24 @@ def main() -> int:
     if ": " in desc.replace("/rust-skills:rust", ""):
         fail("description contains colon-space")
         failed += 1
+    if len(desc) > 1024:
+        fail(f"description {len(desc)} chars > 1024 (Anthropic skill spec)")
+        failed += 1
+    body = skill.split("---", 2)[-1]
+    body_lines = body.count("\n")
+    if body_lines > 500:
+        fail(f"SKILL.md body {body_lines} lines > 500 (progressive disclosure)")
+        failed += 1
+    pin_chars = 0
+    for pin in (REPO_ROOT / "commands").glob("*.md"):
+        for line in pin.read_text(encoding="utf-8").splitlines():
+            if line.startswith("description:"):
+                pin_chars += len(line.split(":", 1)[1].strip())
+                break
+    combined = len(desc) + pin_chars
+    if combined > 12000:
+        fail(f"skill+command descriptions {combined} chars; Claude Code silent-drop budget is 15000")
+        failed += 1
     for item in data.get("must_activate", []):
         phrase = item["phrase"]
         if phrase not in desc:

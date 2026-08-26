@@ -2,6 +2,7 @@
 description: /rust-skills:rust ship pin
 ---
 
+
 # /ship
 
 Pin. Load the rust skill and run `reference/ship.md` on `$ARGUMENTS`.

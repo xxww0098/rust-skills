@@ -2,6 +2,7 @@
 description: /rust-skills:rust crate pin
 ---
 
+
 # /crate
 
 Pin. Load the rust skill and run `reference/crate.md` on `$ARGUMENTS`.

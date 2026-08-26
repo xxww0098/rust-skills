@@ -2,6 +2,7 @@
 description: /rust-skills:rust tauri pin
 ---
 
+
 # /tauri
 
 Pin. Load the rust skill and run `reference/tauri.md` on `$ARGUMENTS`.

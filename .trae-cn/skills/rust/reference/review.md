@@ -1,6 +1,6 @@
 # /rust-skills:rust review [target] [--record] — 规范评审
 
-目的：用 139 条分级规则作候选检索，做证据驱动的只读评审；不是为了把每条偏好套到代码上。无 target 时评审当前改动；给路径时评审该路径的完整内容；只有用户明确说“全仓”才扩到整个 workspace。永远只读；`--apply` 不适用，`--record` 只授权写 RUST.md 评审快照，不授权修改代码。用户说「热核 / thermo-nuclear / 严格可维护性 / spaghetti」时打开下方热核档：结构门槛升高，仍然只出报告。
+目的：用 142 条分级规则作候选检索，做证据驱动的只读评审；不是为了把每条偏好套到代码上。无 target 时评审当前改动；给路径时评审该路径的完整内容；只有用户明确说“全仓”才扩到整个 workspace。永远只读；`--apply` 不适用，`--record` 只授权写 RUST.md 评审快照，不授权修改代码。用户说「热核 / thermo-nuclear / 严格可维护性 / spaghetti」时打开下方热核档：结构门槛升高，仍然只出报告。编译绿仍审：clone-to-compile（OWN-01）、`xs[i]`（ERR-09）、indexed loop / `Box<dyn>`（SIMP-13）。
 
 ## 作用域解析
 

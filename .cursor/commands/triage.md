@@ -2,6 +2,7 @@
 description: /rust-skills:rust triage pin
 ---
 
+
 # /triage
 
 Pin. Load the rust skill and run `reference/triage.md` on `$ARGUMENTS`.

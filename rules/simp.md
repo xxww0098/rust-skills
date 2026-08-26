@@ -11,3 +11,4 @@
 - SIMP-10[M] 禁把特判 `if` / 布尔 flag / 租户名钉进无关共享路径（spaghetti growth）。新分支进专用抽象、enum 状态机或策略对象；在已忙函数中间加窄边案当设计问题，不是风格。
 - SIMP-11[M] 逻辑住在拥有不变量的一层（D-1）；复用已有 helper，禁近重复与 identity wrapper（SIMP-02）。feature 逻辑漏进通用模块、实现细节漏出 API = 边界漂移。
 - SIMP-12[S] 无故把独立工作串成编排、或相关更新半应用，当设计味。能并行且独立则不要为「看起来有序」串行；部分成功状态比一次事务更难推理。不是微优化许可。
+- SIMP-13[S] AI 过编译器味：`for i in 0..len` 复述 iterator、`clone()` 只为消 E0382（OWN-01）、`Vec<Box<dyn Trait>>` 而闭集 enum 够用（SIMP-04）。编译绿不是 idiomatic。

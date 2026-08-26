@@ -2,6 +2,7 @@
 description: /rust-skills:rust audit pin
 ---
 
+
 # /audit
 
 Pin. Load the rust skill and run `reference/audit.md` on `$ARGUMENTS`.

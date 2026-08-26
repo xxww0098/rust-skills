@@ -16,6 +16,7 @@
 - 参数 `&str` / `&[T]` / `&Path`，不要 `&String` / `&Vec<T>` / `&PathBuf`（OWN-02）。
 - 互斥状态用 enum，不用 `bool` + `Option` 组合（API-01）。
 - 不要在共享路径钉租户名/flag 特判；新分支进专用抽象（SIMP-10）。identity wrapper 直接删（SIMP-02/11）。
+- 信任边界不要 `xs[i]` / 入站 `/`（ERR-09）。不要 `for i in 0..len` 复述 iterator，不要 `Vec<Box<dyn Trait>>` 代替闭集 enum（SIMP-13）。编译过不是 Rust 写对了。
 - 「拿走再放回」用 `mem::take` / `mem::replace`（OWN-03）。
 - newtype 用 `as_str` / `AsRef`，不为点语法 `impl Deref`（OWN-04）。
 - 内部可变性是拆分失败后的工具，引入时写互斥假设（OWN-05）。

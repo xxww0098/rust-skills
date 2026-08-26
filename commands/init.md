@@ -2,6 +2,7 @@
 description: /rust-skills:rust init pin
 ---
 
+
 # /init
 
 Pin. Load the rust skill and run `reference/init.md` on `$ARGUMENTS`.

@@ -23,7 +23,7 @@
 覆盖: crates/sdk=artifact:lib, crates/app=artifact:desktop
 待确认: <crate + 不确定项 + 影响；没有则省略>
 ## 基线
-edition <项目值> · MSRV <项目值> · resolver <项目值> · 规范版本 v<当前 SKILL frontmatter version>（139 条分级规则）
+edition <项目值> · MSRV <项目值> · resolver <项目值> · 规范版本 v<当前 SKILL frontmatter version>（142 条分级规则）
 ## Crate 图
 core-domain ← storage ← server（叶子在左；出度 0 仅作候选素材）
 ## 域划分

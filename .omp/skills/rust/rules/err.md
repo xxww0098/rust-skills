@@ -7,3 +7,4 @@
 - ERR-06[S] 公共错误 enum 加 #[non_exhaustive]；消息小写、无尾句号、不重复 source 内容。
 - ERR-07[S] builder/guard/句柄类返回值标 #[must_use]。
 - ERR-08[S] anyhow/thiserror 不是精简前提：先 `Result` + `?`。变体少且调用方不必 `match` → 手写 enum 或具体类型，不新加 crate。禁止为「看起来专业」在同一产物里同时引入两个；禁止把 anyhow/eyre 当库的公共错误类型。项目已有其一则沿用。
+- ERR-09[S] 信任边界禁裸 `xs[i]` / 入站整数 `/` `%`：用 `get`、`checked_div`、`checked_add`。库与生产路径里下标 panic 和除零 = bug（ERR-04），不是「下标当然合法」。

@@ -2,6 +2,7 @@
 description: /rust-skills:rust document pin
 ---
 
+
 # /document
 
 Pin. Load the rust skill and run `reference/document.md` on `$ARGUMENTS`.

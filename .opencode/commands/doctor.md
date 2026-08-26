@@ -2,6 +2,7 @@
 description: /rust-skills:rust doctor pin
 ---
 
+
 # /doctor
 
 Pin. Load the rust skill and run `reference/doctor.md` on `$ARGUMENTS`.

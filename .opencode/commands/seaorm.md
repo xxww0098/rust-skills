@@ -2,6 +2,7 @@
 description: /rust-skills:rust seaorm pin
 ---
 
+
 # /seaorm
 
 Pin. Load the rust skill and run `reference/seaorm.md` on `$ARGUMENTS`.

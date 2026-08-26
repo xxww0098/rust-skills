@@ -2,6 +2,7 @@
 description: /rust-skills:rust capture pin
 ---
 
+
 # /capture
 
 Pin. Load the rust skill and run `reference/capture.md` on `$ARGUMENTS`.

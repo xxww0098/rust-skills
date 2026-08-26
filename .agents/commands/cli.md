@@ -2,6 +2,7 @@
 description: /rust-skills:rust cli pin
 ---
 
+
 # /cli
 
 Pin. Load the rust skill and run `reference/cli.md` on `$ARGUMENTS`.

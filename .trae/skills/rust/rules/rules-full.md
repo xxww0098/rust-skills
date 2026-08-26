@@ -1,4 +1,4 @@
-# Rust 工程规范（注入版 v0.0.44）
+# Rust 工程规范（注入版 v0.0.45）
 
 供按相关域渐进加载（先读同目录分文件，不要默认打开本合并件）；仅在明确的全规范审计时读取 `rules-full.md`。规则是决策约束，不是替代项目证据的检查表。
 分级：[M]=适用前提命中后 MUST，违反即阻断；[S]=默认 SHOULD，项目约定或证据可推翻并说明；[Y]=MAY。先证明前提，再引用编号；不适用不是违规。**本规范只以 edition 2024 为基线**（MSRV ≥ 1.85，可用 `rust-version` 或 `rust-toolchain.toml` 声明）。edition 2018/2021 是待迁移债务。新 workspace 用 `resolver = "3"`；已经 2024 且钉在 resolver 2 的成熟仓不迁 resolver。新代码按 2024 语义写（RPIT 全捕获、`if let` 短临时值、`#[unsafe(no_mangle)]`、`unsafe extern`、≥1.88 let chains）。Unix 多线程禁止靠 `env::set_var` 改环境。
@@ -58,6 +58,7 @@
 - ERR-06[S] 公共错误 enum 加 #[non_exhaustive]；消息小写、无尾句号、不重复 source 内容。
 - ERR-07[S] builder/guard/句柄类返回值标 #[must_use]。
 - ERR-08[S] anyhow/thiserror 不是精简前提：先 `Result` + `?`。变体少且调用方不必 `match` → 手写 enum 或具体类型，不新加 crate。禁止为「看起来专业」在同一产物里同时引入两个；禁止把 anyhow/eyre 当库的公共错误类型。项目已有其一则沿用。
+- ERR-09[S] 信任边界禁裸 `xs[i]` / 入站整数 `/` `%`：用 `get`、`checked_div`、`checked_add`。库与生产路径里下标 panic 和除零 = bug（ERR-04），不是「下标当然合法」。
 
 ## API 接口与类型
 - API-01[M] 非法状态不可表示：enum 替连环 bool/魔法值；互斥字段合并建模。
@@ -89,6 +90,7 @@
 - SIMP-10[M] 禁把特判 `if` / 布尔 flag / 租户名钉进无关共享路径（spaghetti growth）。新分支进专用抽象、enum 状态机或策略对象；在已忙函数中间加窄边案当设计问题，不是风格。
 - SIMP-11[M] 逻辑住在拥有不变量的一层（D-1）；复用已有 helper，禁近重复与 identity wrapper（SIMP-02）。feature 逻辑漏进通用模块、实现细节漏出 API = 边界漂移。
 - SIMP-12[S] 无故把独立工作串成编排、或相关更新半应用，当设计味。能并行且独立则不要为「看起来有序」串行；部分成功状态比一次事务更难推理。不是微优化许可。
+- SIMP-13[S] AI 过编译器味：`for i in 0..len` 复述 iterator、`clone()` 只为消 E0382（OWN-01）、`Vec<Box<dyn Trait>>` 而闭集 enum 够用（SIMP-04）。编译绿不是 idiomatic。
 
 ## ASYNC 并发
 - ASYNC-01[S] 先按状态所有权与一致性需求选择消息传递、锁或 atomics；复杂度更高的原语须有正确性或性能理由。
@@ -180,7 +182,8 @@
 - GATE-02[M] 门禁覆盖不得静默减弱；删除过时检查或放宽阈值须显式记录理由、影响与补偿证据。
 - GATE-03[S] 棘轮基线文件入库，变更走评审。
 - GATE-04[S] 已跟踪 lock 的应用：G3 CI 必须 `--locked`；禁流水线里的 `cargo update`（DEP-11）。G4 可选 `cargo +nightly -Zmin-publish-age` 验证解析冷却（DEP-13），**不**把 nightly 当默认构建工具链。
-- 阶梯：G1 pre-commit ≤6s（fmt+文件系统检查）→ G2 pre-push ≤3min（xtask 全量+clippy+单测）→ G3 CI 阻塞（+deny+MSRV+doc+`--locked`）→ G4 每夜非阻塞（Miri/loom/powerset/semver-checks/bench/可选 min-publish-age）。
+- GATE-05[S] G4 feature 矩阵用 `cargo hack check --feature-powerset --no-dev-deps`（[taiki-e/cargo-hack](https://github.com/taiki-e/cargo-hack)）；库有可选 feature 才加，不默认引入。`--each-feature` 不够（漏组合）。未采用不强迫。
+- 阶梯：G1 pre-commit ≤6s（fmt+文件系统检查）→ G2 pre-push ≤3min（xtask 全量+clippy+单测）→ G3 CI 阻塞（+deny+MSRV+doc+`--locked`）→ G4 每夜非阻塞（Miri/loom/cargo-hack powerset/semver-checks/bench/可选 min-publish-age）。
 - 候选门禁集：no_orphan_modules（第一优先）、no_raw_path_deps、no_wildcard_opt_level、tests_layout、crate/module_direction、internal_doctest_off、internal_publish_false、no_test_code_in_lib、no_silent_test_skip、lints_inherited、lint_ratchet。只有实现、失败 fixture 与实跑证据齐全的检查才可注册。
 
 ## D 决策树

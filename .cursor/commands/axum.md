@@ -2,6 +2,7 @@
 description: /rust-skills:rust axum pin
 ---
 
+
 # /axum
 
 Pin. Load the rust skill and run `reference/axum.md` on `$ARGUMENTS`.

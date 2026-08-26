@@ -292,16 +292,28 @@ def _tree_equal(a: Path, b: Path) -> bool:
 
 
 def _copy_replace(src: Path, dst: Path) -> None:
-    if dst.exists() or dst.is_symlink():
-        if dst.is_dir() and not dst.is_symlink():
-            shutil.rmtree(dst)
-        else:
-            dst.unlink()
-    dst.parent.mkdir(parents=True, exist_ok=True)
-    if src.is_dir():
-        shutil.copytree(src, dst, dirs_exist_ok=True)
-    else:
+    if src.is_file():
+        dst.parent.mkdir(parents=True, exist_ok=True)
+        if dst.is_file() and _file_equal(src, dst):
+            return
+        if dst.exists() or dst.is_symlink():
+            if dst.is_dir() and not dst.is_symlink():
+                shutil.rmtree(dst)
+            else:
+                dst.unlink()
         shutil.copy2(src, dst)
+        return
+    dst.mkdir(parents=True, exist_ok=True)
+    src_files = {p.relative_to(src).as_posix() for p in src.rglob("*") if p.is_file()}
+    dst_files = {p.relative_to(dst).as_posix() for p in dst.rglob("*") if p.is_file()} if dst.exists() else set()
+    for rel in dst_files - src_files:
+        (dst / rel).unlink(missing_ok=True)
+    for rel in src_files:
+        s, d = src / rel, dst / rel
+        d.parent.mkdir(parents=True, exist_ok=True)
+        if d.is_file() and _file_equal(s, d):
+            continue
+        shutil.copy2(s, d)
 
 
 def ensure_link(link_rel: str, target: str, check: bool, drifts: list[str]) -> None:
@@ -359,6 +371,7 @@ def generate_command_pins() -> None:
             f"""---
 description: /rust-skills:rust {name} pin
 ---
+
 
 # /{name}
 
