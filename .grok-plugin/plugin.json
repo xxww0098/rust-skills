@@ -1,6 +1,6 @@
 {
   "name": "rust-skills",
-  "version": "0.0.42",
+  "version": "0.0.43",
   "description": "Use for Cargo/Rust work in a repo — implement, debug, rustc/borrow-checker, clippy, review, unsafe/FFI, axum/sqlx/tokio, clap/tracing, Tauri v2, edition 2024, or /rust-skills:rust. Skip non-Cargo repos, Python/Go/JS reviews, language trivia, translation, and generic summaries.",
   "author": {
     "name": "xxww"

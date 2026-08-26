@@ -1,6 +1,6 @@
 # /rust-skills:rust review [target] [--record] — 规范评审
 
-目的：用 135 条分级规则作候选检索，做证据驱动的只读评审；不是为了把每条偏好套到代码上。无 target 时评审当前改动；给路径时评审该路径的完整内容；只有用户明确说“全仓”才扩到整个 workspace。永远只读；`--apply` 不适用，`--record` 只授权写 RUST.md 评审快照，不授权修改代码。
+目的：用 139 条分级规则作候选检索，做证据驱动的只读评审；不是为了把每条偏好套到代码上。无 target 时评审当前改动；给路径时评审该路径的完整内容；只有用户明确说“全仓”才扩到整个 workspace。永远只读；`--apply` 不适用，`--record` 只授权写 RUST.md 评审快照，不授权修改代码。用户说「热核 / thermo-nuclear / 严格可维护性 / spaghetti」时打开下方热核档：结构门槛升高，仍然只出报告。
 
 ## 作用域解析
 
@@ -32,4 +32,21 @@
 
 M 违规在前；每条给适用前提、代码证据和后果，不给感觉。表后给总评、逐域覆盖/不适用表、验证结果和置信度（低必列未验证假设）。未发现问题也要列已检查范围和剩余风险。
 
-默认只输出一条可粘贴的 RUST.md 快照建议；只有显式 `--record` 才按 SKILL 的投影契约，在「最近评审」upsert `review:<date>:<scope-hash>`（日期、M/S/Y 计数和要点），不同键与其他 managed 节保持不变。是否存在值得 `/rust-skills:rust capture` 的教训只作为建议，不自动捕获。结尾注明「未改动任何文件」。
+## 热核档（SIMP-09..12；默认也用优先级）
+
+测试绿 / 「能跑」不是批准。发现按此排序，结构问题未写完之前不要堆命名/格式 nits：
+
+1. 结构回退（更耦、更绕、概念变多）
+2. 可见的 code-judo：整枝删除优于搬家（建议 `/rust-skills:rust distill`，本命令不改码）
+3. spaghetti：无关路径上的特判 if/flag（SIMP-10）
+4. 边界 / 类型契约变糊（SIMP-11；TS `any`/`unknown` 对 Rust 是过度 `Option`、入站 `unwrap`、`serde_json::Value`、无契约 `as`）
+5. 文件从 <1000 行被本 diff 推过 1000（SIMP-09；处置 WS-11，不拆 crate）
+6. 无故串行编排或半应用更新（SIMP-12）
+
+默认挡板（作者不能一句话说清就保持 M）：本 diff 把文件推过 1000 行；在共享路径钉租户/flag 特判；新增 identity wrapper 或近重复 helper；把复杂度挪走但概念数没减。
+
+热核评论模板（可粘贴，仍只读）：「这里有 judo：这几枝 if 能不能变成默认路径？」「这是搬家不是删除。」「共享 handler 不该认识租户名。」
+
+禁止：在 `review` 里直接重构；为 1000 行阈值新建 crate；把 Cursor 插件的「go for it」当成写入授权。
+
+默认只输出一条可粘贴的 RUST.md 快照建议；只有显式 `--record` 才按 SKILL 的投影契约，在「最近评审」upsert `review:<date>:<scope-hash>`（日期、M/S/Y 计数和要点），不同键与其他 managed 节保持不变。是否存在值得 `/rust-skills:rust capture` 的教训只作为建议，不自动捕获。结尾注明「未改动任何文件」。下一步若有 judo 候选，给完整 `/rust-skills:rust distill <path>`。

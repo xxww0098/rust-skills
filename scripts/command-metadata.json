@@ -97,12 +97,16 @@
         "帮我 review",
         "评审这次改动",
         "这段 diff 有没有问题",
-        "代码审查"
+        "代码审查",
+        "热核评审",
+        "严格可维护性"
       ],
       "triggers_en": [
         "review this PR",
         "code review",
-        "review this diff"
+        "review this diff",
+        "thermo-nuclear",
+        "thermonuclear review"
       ]
     },
     "audit": {
@@ -212,13 +216,16 @@
         "精简代码",
         "去掉仪式",
         "优化旧代码",
-        "整理遗留模块"
+        "整理遗留模块",
+        "删复杂度",
+        "code judo"
       ],
       "triggers_en": [
         "too much abstraction",
         "simplify legacy",
         "remove ceremony",
-        "clean up this module"
+        "clean up this module",
+        "code judo"
       ]
     },
     "gate": {

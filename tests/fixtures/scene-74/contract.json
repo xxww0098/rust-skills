@@ -1,0 +1,13 @@
+{
+  "id": "74",
+  "title": "热核评审：跨 1000 行 + spaghetti + identity wrapper",
+  "commands": ["review", "distill"],
+  "fixture": "hits.rs",
+  "fixture_needles": ["FILE_LINES", "tenant == \"acme\"", "fn identity_wrap"],
+  "skill_needles": {
+    "skills/rust/rules/simp.md": ["SIMP-09", "SIMP-10", "SIMP-11", "1000"],
+    "skills/rust/reference/review.md": ["热核档", "code-judo", "未改动任何文件"],
+    "skills/rust/reference/distill.md": ["judo", "SIMP-09"],
+    "tests/pressure-scenarios.md": ["### 场景 74", "SIMP-09", "SIMP-10"]
+  }
+}

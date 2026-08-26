@@ -1,6 +1,14 @@
 # Changelog
 
+## 0.0.43 — 2026-08-26
+
+- 蒸馏 Cursor `thermo-nuclear-code-quality-review`：可移植机制是「删复杂度，不搬家」。**不**新开命令，**不**把「go for it」写进只读 `review`。
+- SIMP-09 文件跨 1000 行红旗（处置仍 WS-11）；SIMP-10 spaghetti 特判；SIMP-11 层/helper；SIMP-12 无故串行/半应用。
+- `review` 热核档：结构优先、测试绿不是批准；judo 候选指向 `distill`。
+- 场景 74。
+
 ## 0.0.42 — 2026-08-23
+
 
 - 蒸馏 arrayref 投毒窗口 + Cargo RFC 3923：DEP-11 CI `--locked` / 禁无人值守 `cargo update`；DEP-12 deny/audit/vet 不覆盖零日头几小时；DEP-13 应用侧 min-publish-age（实验性 `-Z`，不改默认 toolchain）。
 - GATE-04：G3 `--locked`；G4 可选 nightly 冷却期解析。gate playbook 给出 `.cargo/config.toml` 候选与热修绕过。

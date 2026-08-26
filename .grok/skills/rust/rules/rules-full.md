@@ -1,4 +1,4 @@
-# Rust 工程规范（注入版 v0.0.42）
+# Rust 工程规范（注入版 v0.0.43）
 
 供按相关域渐进加载（先读同目录分文件，不要默认打开本合并件）；仅在明确的全规范审计时读取 `rules-full.md`。规则是决策约束，不是替代项目证据的检查表。
 分级：[M]=适用前提命中后 MUST，违反即阻断；[S]=默认 SHOULD，项目约定或证据可推翻并说明；[Y]=MAY。先证明前提，再引用编号；不适用不是违规。**本规范只以 edition 2024 为基线**（MSRV ≥ 1.85，可用 `rust-version` 或 `rust-toolchain.toml` 声明）。edition 2018/2021 是待迁移债务。新 workspace 用 `resolver = "3"`；已经 2024 且钉在 resolver 2 的成熟仓不迁 resolver。新代码按 2024 语义写（RPIT 全捕获、`if let` 短临时值、`#[unsafe(no_mangle)]`、`unsafe extern`、≥1.88 let chains）。Unix 多线程禁止靠 `env::set_var` 改环境。
@@ -85,6 +85,10 @@
 - SIMP-06[S] 仪式最小化：builder/宏/getter-setter 只有在减少重复或编码约束时引入；参数多或单处 struct 只是审视信号。
 - SIMP-07[S] 不需要 async 不 async（async 传染整条调用链）；不需要并发不并发；同步直到度量说不行。
 - SIMP-08[S] `match` 不是更高级的 `if`：`bool`/比较用 `if`；互斥 enum/多种形状用 `match`（穷尽）；只要一种变体往下走用 `let-else` 或 `?`。禁把 `true`/`false` 写成 `match`，也禁对三态 enum 用一串 `if let` 漏分支。2024 里为延长 `if let` 临时值才改 `match`，不是审美。2024 + rustc ≥1.88 可用 let chains 把 `if let` 与布尔条件串在同一 `if`/`while`，减少嵌套；这不是把 enum 穷尽改成 if 链的许可。
+- SIMP-09[S] 本 diff 把手写源文件从 <1000 行推过 1000 行 → 默认评审红旗。处置走 WS-11：先抽函数，两不变量才拆 `mod`；**禁止为凑行数拆 crate**。生成代码 / bindings / 测试表豁免并声明。1000 不是 MUST 上限，是「必须问该不该分解」。
+- SIMP-10[M] 禁把特判 `if` / 布尔 flag / 租户名钉进无关共享路径（spaghetti growth）。新分支进专用抽象、enum 状态机或策略对象；在已忙函数中间加窄边案当设计问题，不是风格。
+- SIMP-11[M] 逻辑住在拥有不变量的一层（D-1）；复用已有 helper，禁近重复与 identity wrapper（SIMP-02）。feature 逻辑漏进通用模块、实现细节漏出 API = 边界漂移。
+- SIMP-12[S] 无故把独立工作串成编排、或相关更新半应用，当设计味。能并行且独立则不要为「看起来有序」串行；部分成功状态比一次事务更难推理。不是微优化许可。
 
 ## ASYNC 并发
 - ASYNC-01[S] 先按状态所有权与一致性需求选择消息传递、锁或 atomics；复杂度更高的原语须有正确性或性能理由。

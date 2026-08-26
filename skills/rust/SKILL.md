@@ -2,7 +2,7 @@
 name: rust
 description: Use for Cargo/Rust work in a repo — implement, debug, rustc/borrow-checker, clippy, review, unsafe/FFI, axum/sqlx/tokio, clap/tracing, Tauri v2, edition 2024, 技术栈, 编译报错, 代码审查, or /rust-skills:rust. Engage without a subcommand. Skip non-Cargo repos, Python/Go/JS reviews, language trivia with no project, translation, and generic summaries.
 license: MIT
-version: 0.0.42
+version: 0.0.43
 metadata:
   type: workflow
 argument-hint: "[搭建与设计: init|shape|crate|document|stack · 评审: review|audit|triage|doctor · 改造: harden|slim|modernize|distill|gate · 语言语义: concurrency|process|async|serde|obs · 框架: axum|tauri|seaorm|sqlx|cli · 交付: bench|ship|xplat · 治理: docs|capture] [target]"
@@ -108,14 +108,14 @@ facets 按当前 crate 取值：`artifact=lib|service|cli|desktop` 决定 API/�
 | `crate` | 搭建与设计 | 「要不要拆 crate」 · 「这个模块独立成库」 · 「值不值得新建 crate」 · should this be a crate · extract this module into a library | [reference/crate.md](reference/crate.md) |
 | `document` | 搭建与设计 | 「生成项目画像」 · 「RUST.md」 · 「了解这个项目的结构」 · 「更新画像」 · generate project portrait · update RUST.md · explain this repo structure | [reference/document.md](reference/document.md) |
 | `stack` | 搭建与设计 | 「技术栈」 · 「用什么框架」 · 「最佳技术栈」 · 「选 axum 还是 actix」 · 「这个项目该用什么 crate」 · tech stack · which framework · best rust stack · axum vs actix · what crates should this project use | [reference/stack.md](reference/stack.md) |
-| `review` | 评审 | 「帮我 review」 · 「评审这次改动」 · 「这段 diff 有没有问题」 · 「代码审查」 · review this PR · code review · review this diff | [reference/review.md](reference/review.md) |
+| `review` | 评审 | 「帮我 review」 · 「评审这次改动」 · 「这段 diff 有没有问题」 · 「代码审查」 · 「热核评审」 · 「严格可维护性」 · review this PR · code review · review this diff · thermo-nuclear · thermonuclear review | [reference/review.md](reference/review.md) |
 | `audit` | 评审 | 「深审 unsafe」 · 「依赖审计」 · 「测试质量」 · 「安全审计」 · audit unsafe · dependency audit · security audit · test quality audit | [reference/audit.md](reference/audit.md) |
 | `triage` | 评审 | 「编译报错」 · 「这个错误怎么修」 · 「borrow checker 打架」 · compiler error · how do I fix this rustc error · borrow checker fight · E0382 | [reference/triage.md](reference/triage.md) |
 | `doctor` | 评审 | 「体检」 · 「检查漂移」 · 「画像过期了没」 · health check · check drift · is the portrait stale | [reference/doctor.md](reference/doctor.md) |
 | `harden` | 改造 | 「能跑但要上生产」 · 「补错误处理」 · 「补边界检查」 · 「加可观测性」 · production-ready · add error handling · boundary checks · add observability | [reference/harden.md](reference/harden.md) |
 | `slim` | 改造 | 「编译太慢」 · 「构建时间太长」 · 「构建减肥」 · 「target 目录太大」 · compile too slow · slow builds · shrink target dir | [reference/slim.md](reference/slim.md) |
 | `modernize` | 改造 | 「lazy_static 换 OnceLock」 · 「过时写法现代化」 · 「升级到现代 Rust」 · 「升到 edition 2024」 · lazy_static to OnceLock · upgrade to edition 2024 · modernize outdated APIs | [reference/modernize.md](reference/modernize.md) |
-| `distill` | 改造 | 「过度设计了」 · 「删到本质」 · 「精简代码」 · 「去掉仪式」 · 「优化旧代码」 · 「整理遗留模块」 · too much abstraction · simplify legacy · remove ceremony · clean up this module | [reference/distill.md](reference/distill.md) |
+| `distill` | 改造 | 「过度设计了」 · 「删到本质」 · 「精简代码」 · 「去掉仪式」 · 「优化旧代码」 · 「整理遗留模块」 · 「删复杂度」 · 「code judo」 · too much abstraction · simplify legacy · remove ceremony · clean up this module · code judo | [reference/distill.md](reference/distill.md) |
 | `gate` | 改造 | 「上 CI 门禁」 · 「xtask」 · 「提交前自动检查」 · 「clippy 基线只收紧」 · add CI gates · xtask · pre-commit checks · tighten clippy baseline | [reference/gate.md](reference/gate.md) |
 | `concurrency` | 语言语义 | 「多线程」 · 「并发」 · 「rayon/tokio」 · 「锁竞争」 · 「火焰山」 · 「loom」 · multithreading · rayon/tokio · lock contention · flaky concurrent tests · loom | [reference/concurrency.md](reference/concurrency.md) |
 | `process` | 语言语义 | 「多进程」 · 「子进程」 · 「fork/Command」 · 「进程池」 · 「IPC/管道」 · subprocess · fork/Command · process pool · IPC pipes | [reference/process.md](reference/process.md) |

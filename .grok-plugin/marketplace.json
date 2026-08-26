@@ -8,7 +8,7 @@
     {
       "name": "rust-skills",
       "description": "Scoped Rust engineering playbooks with review, triage, framework overlays, project-local state, and evidence-driven validation",
-      "version": "0.0.42",
+      "version": "0.0.43",
       "category": "development",
       "source": {
         "type": "local",
