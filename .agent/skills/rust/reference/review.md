@@ -160,7 +160,7 @@ M 违规在前；每条给适用前提、代码证据和后果，不给感觉。
 - 门禁 → `/rust-skills:rust gate --apply`
 - crate 边界 → 先 `/rust-skills:rust crate <target>`，用户确认“拆”后再迁移
 - 纯编译错误没有独立写命令时，给一条明确的自然语言修复请求与目标路径；不要虚构 `/craft`
-- audit/doctor/triage 本身仍只读，不得给它们拼 `--apply`
+- audit/doctor/triage 本身仍只读；写参数不适用，不能把只读诊断伪装成落地命令
 
 ## 9. 热核档（SIMP-09..12；严格度修饰，不是另一路由）
 
