@@ -1,0 +1,12 @@
+# anti-pattern: G4 tools on every push + overlapping advisories + pedantic deny
+on: [push]
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - run: rustup component add clippy
+      - run: cargo clippy --all-features -- -D clippy::pedantic
+      - run: cargo audit
+      - run: cargo deny check advisories
+      - run: cargo +nightly miri test
+      - run: cargo kani

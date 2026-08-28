@@ -1,6 +1,13 @@
 # Changelog
 
+## 0.0.50 — 2026-08-28
+
+- 蒸馏 Rust 静态分析工具链：一层一职（rustc → fmt → clippy → deny → 选择性 Miri/semver-checks/hack/Kani）。
+- LINT-07 同层不双跑（deny advisories 覆盖 cargo-audit）；LINT-08 工具链钉 clippy/rustfmt；GATE-06 禁止 G4 进每次 push。
+- **未做**：默认装 Kani/Sonar、cargo-geiger 当门禁。
+
 ## 0.0.49 — 2026-08-28
+
 
 - 深度闭环：inspect 增加 fan-in 与 unwrap/println 信号；`render_rust_md.py` 钉死 RUST.md 四个投影节；`check_patch.py` 机械拒绝 clone/unwrap/println。
 - `kernel/verification.md`：写完必须跑 check_patch + Patch 里的 cargo 命令。document 禁止手绘 crate 图。

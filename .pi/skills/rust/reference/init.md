@@ -9,7 +9,8 @@
 3. **计算最小 delta**（只改缺失且适用的项）：
    - 新建多 crate 项目可采用虚拟 workspace + `crates/`；现有项目不为布局偏好迁移（WS-01/02）
    - `edition = "2024"`（WS-05）；新仓 `resolver = "3"`；MSRV ≥ 1.85 有 toolchain 或 rust-version 其一即可（DEP-08）；共享依赖可 workspace 收口（WS-09、DEP-01）
-   - `[workspace.lints]` 基线集（LINT-06：all + dbg_macro/print_stdout/unwrap_used/undocumented_unsafe_blocks/await_holding_lock/missing_safety_doc/transmute_ptr_to_ptr）+ 成员 `[lints] workspace = true`（LINT-02）
+   - `[workspace.lints]` 基线集（LINT-06）+ 成员 `[lints] workspace = true`（LINT-02）。新建或改 `rust-toolchain.toml` 时带 `components = ["clippy","rustfmt"]`（LINT-08），不另装一套 CI clippy。
+
    - profile：禁通配 opt；package override 与 build-override 分别基于 timings 决定；CI profile 独立（BUILD-01/02/05）
    - 明确不发布的内部 crate 设 `publish = false`；只有无文档示例且成本可见时才关 doctest（WS-03、TEST-06）
    - **不**引入 web/cli/obs 依赖或 subscriber 骨架（那是 `stack` 落地 + `obs`/`cli`/`axum` 接线）。缺 tracing 的 service/cli 在下一步推 `stack`

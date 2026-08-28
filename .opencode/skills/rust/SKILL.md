@@ -2,7 +2,7 @@
 name: rust
 description: Use for Cargo/Rust work in a repo — implement, debug, rustc/borrow-checker, clippy, review, unsafe/FFI, axum/sqlx/tokio, clap/tracing, Tauri v2, edition 2024, 技术栈, 编译报错, 代码审查, or /rust-skills:rust. Engage without a subcommand. Skip non-Cargo work and language trivia.
 license: MIT
-version: 0.0.49
+version: 0.0.50
 metadata:
   type: workflow
 argument-hint: "[搭建与设计: init|shape|crate|document|stack · 评审: review|audit|triage|doctor · 改造: harden|slim|modernize|distill|gate · 语言语义: concurrency|process|async|serde|obs · 框架: axum|tauri|seaorm|sqlx|cli · 交付: bench|ship|xplat · 治理: docs|capture] [target]"
@@ -93,7 +93,7 @@ argument-hint: "[搭建与设计: init|shape|crate|document|stack · 评审: rev
 | `slim` | 改造 | 「编译太慢」 · 「构建时间太长」 · 「构建减肥」 · 「target 目录太大」 · compile too slow · slow builds · shrink target dir | [reference/slim.md](reference/slim.md) |
 | `modernize` | 改造 | 「lazy_static 换 OnceLock」 · 「过时写法现代化」 · 「升级到现代 Rust」 · 「升到 edition 2024」 · lazy_static to OnceLock · upgrade to edition 2024 · modernize outdated APIs | [reference/modernize.md](reference/modernize.md) |
 | `distill` | 改造 | 「过度设计了」 · 「删到本质」 · 「精简代码」 · 「去掉仪式」 · 「优化旧代码」 · 「整理遗留模块」 · 「删复杂度」 · 「code judo」 · too much abstraction · simplify legacy · remove ceremony · clean up this module · code judo | [reference/distill.md](reference/distill.md) |
-| `gate` | 改造 | 「上 CI 门禁」 · 「xtask」 · 「提交前自动检查」 · 「clippy 基线只收紧」 · add CI gates · xtask · pre-commit checks · tighten clippy baseline | [reference/gate.md](reference/gate.md) |
+| `gate` | 改造 | 「上 CI 门禁」 · 「xtask」 · 「提交前自动检查」 · 「clippy 基线只收紧」 · 「静态分析」 · 「静态分析工具链」 · add CI gates · xtask · pre-commit checks · tighten clippy baseline · static analysis · static analysis toolchain | [reference/gate.md](reference/gate.md) |
 | `concurrency` | 语言语义 | 「多线程」 · 「并发」 · 「rayon/tokio」 · 「锁竞争」 · 「火焰山」 · 「loom」 · multithreading · rayon/tokio · lock contention · flaky concurrent tests · loom | [reference/concurrency.md](reference/concurrency.md) |
 | `process` | 语言语义 | 「多进程」 · 「子进程」 · 「fork/Command」 · 「进程池」 · 「IPC/管道」 · subprocess · fork/Command · process pool · IPC pipes | [reference/process.md](reference/process.md) |
 | `async` | 语言语义 | 「异步」 · 「取消安全」 · 「Future/Stream」 · 「结构化并发」 · cancellation safety · structured concurrency · Future/Stream | [reference/async.md](reference/async.md) |

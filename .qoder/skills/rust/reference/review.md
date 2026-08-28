@@ -1,6 +1,6 @@
 # /rust-skills:rust review [target] [--record] — 规范评审
 
-目的：用 145 条分级规则作候选检索，对 **同一份 ProjectSnapshot** 的变更切片做证据驱动的只读评审；不是为了把每条偏好套到代码上。无 target 时评审当前改动；给路径时评审该路径的完整内容；只有用户明确说“全仓”才扩到整个 workspace。永远只读；`--apply` 不适用，`--record` 只授权写 RUST.md 评审快照，不授权修改代码。用户说「热核 / thermo-nuclear / 严格可维护性 / spaghetti」时打开下方热核档：结构门槛升高，仍然只出报告。编译绿仍审：clone-to-compile（OWN-01）、`xs[i]`（ERR-09）、indexed loop / `Box<dyn>`（SIMP-13）。
+目的：用 148 条分级规则作候选检索，对 **同一份 ProjectSnapshot** 的变更切片做证据驱动的只读评审；不是为了把每条偏好套到代码上。无 target 时评审当前改动；给路径时评审该路径的完整内容；只有用户明确说“全仓”才扩到整个 workspace。永远只读；`--apply` 不适用，`--record` 只授权写 RUST.md 评审快照，不授权修改代码。用户说「热核 / thermo-nuclear / 严格可维护性 / spaghetti」时打开下方热核档：结构门槛升高，仍然只出报告。编译绿仍审：clone-to-compile（OWN-01）、`xs[i]`（ERR-09）、indexed loop / `Box<dyn>`（SIMP-13）。
 
 先读 [kernel/scope.md](../kernel/scope.md) 冻结范围，再按 [kernel/evidence.md](../kernel/evidence.md) **本轮只采集一次**快照（`scripts/inspect_project.py` 出 crate 图/孤儿/入口）。Findings 用 [kernel/finding.md](../kernel/finding.md)：每条必须有前提、证据、反证、所有权层。禁止本命令另画 crate 图。
 

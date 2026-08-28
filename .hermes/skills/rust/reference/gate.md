@@ -30,6 +30,35 @@ incompatible-publish-age = "deny"
 
 紧急热修（知情）：`CARGO_RESOLVER_INCOMPATIBLE_PUBLISH_AGE=allow cargo update -p foo --precise 1.2.3`，完后改回 deny。私有 registry 可 `min-publish-age = "0"`。无 `pubtime` 的 registry 静默跳过，须声明缺口。
 
+## 静态分析工具链（LINT-07/08 · GATE-06）
+
+一层一个职责。缺哪层补哪层；不要为「看起来专业」叠 GitHub Action。
+
+| 层 | 工具 | 何时 | 不要 |
+|---|---|---|---|
+| 类型 | `cargo check` / rustc | 每次本地与 CI | 用 rust-analyzer 当 CI |
+| G1 | `cargo fmt --check` | pre-commit | 在 CI 再跑一遍不同 rustfmt 版本 |
+| G2 | `cargo clippy --all-targets` | pre-push / CI | `-D clippy::pedantic`；无 lock 却 `--all-features` |
+| G3 | `cargo deny check`（有供应链要求）+ `--locked` + MSRV | CI 阻塞 | deny 已开 advisories 再跑 `cargo audit` |
+| G4 | Miri / cargo-hack / semver-checks / 可选 Kani、min-publish-age | 每夜或发布前 | 每次 push 跑 Miri/Kani |
+
+钉工具链，避免「本机 clippy 绿、CI 红」：
+
+```toml
+# rust-toolchain.toml（与 rustc 同版本的 clippy/rustfmt）
+[toolchain]
+channel = "1.85"
+components = ["clippy", "rustfmt"]
+```
+
+```bash
+# G2。有 Cargo.lock 加 --locked。feature 互斥不要 --all-features。
+CARGO_BUILD_WARNINGS=deny cargo clippy --all-targets --locked
+```
+
+`clippy.toml` 放项目策略（`msrv`、`disallowed-methods` 挡 `Command::spawn`/`canonicalize`），不要靠散落 `#[allow]`。cargo-geiger 只计数 unsafe，不是门禁。未采用的形式化工具（Kani/Creusot/Prusti）标 MAY，不装进默认 CI。
+
+
 ## 增量（已有统一门禁）
 
 - 新规则可机械判定 → 先补失败 fixture，再实现检查并注册；不可机械判定 → 保持 review/eval 清单，不塞假检查。

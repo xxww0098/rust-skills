@@ -236,14 +236,19 @@
         "上 CI 门禁",
         "xtask",
         "提交前自动检查",
-        "clippy 基线只收紧"
+        "clippy 基线只收紧",
+        "静态分析",
+        "静态分析工具链"
       ],
       "triggers_en": [
         "add CI gates",
         "xtask",
         "pre-commit checks",
-        "tighten clippy baseline"
+        "tighten clippy baseline",
+        "static analysis",
+        "static analysis toolchain"
       ]
+
     },
     "concurrency": {
       "category": "语言语义",

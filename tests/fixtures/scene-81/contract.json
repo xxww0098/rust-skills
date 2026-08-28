@@ -1,0 +1,13 @@
+{
+  "id": "81",
+  "title": "静态分析分层：deny 覆盖 audit，Miri 不进每次 push",
+  "commands": ["gate"],
+  "fixture": "ci.yml",
+  "fixture_needles": ["clippy::pedantic", "cargo audit", "miri test", "cargo kani"],
+  "skill_needles": {
+    "skills/rust/rules/lint.md": ["LINT-07", "LINT-08", "cargo-audit"],
+    "skills/rust/rules/gate.md": ["GATE-06", "G4"],
+    "skills/rust/reference/gate.md": ["静态分析工具链", "components", "CARGO_BUILD_WARNINGS"],
+    "tests/pressure-scenarios.md": ["### 场景 81", "LINT-07"]
+  }
+}

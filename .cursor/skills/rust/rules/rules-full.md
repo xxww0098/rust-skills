@@ -1,4 +1,4 @@
-# Rust 工程规范（注入版 v0.0.49）
+# Rust 工程规范（注入版 v0.0.50）
 
 供按相关域渐进加载（先读同目录分文件，不要默认打开本合并件）；仅在明确的全规范审计时读取 `rules-full.md`。规则是决策约束，不是替代项目证据的检查表。
 分级：[M]=适用前提命中后 MUST，违反即阻断；[S]=默认 SHOULD，项目约定或证据可推翻并说明；[Y]=MAY。先证明前提，再引用编号；不适用不是违规。**本规范只以 edition 2024 为基线**（MSRV ≥ 1.85，可用 `rust-version` 或 `rust-toolchain.toml` 声明）。edition 2018/2021 是待迁移债务。新 workspace 用 `resolver = "3"`；已经 2024 且钉在 resolver 2 的成熟仓不迁 resolver。新代码按 2024 语义写（RPIT 全捕获、`if let` 短临时值、`#[unsafe(no_mangle)]`、`unsafe extern`、≥1.88 let chains）。Unix 多线程禁止靠 `env::set_var` 改环境。
@@ -163,6 +163,8 @@
 - LINT-04[M] 存量违规用棘轮：基线入库，只降不升。
 - LINT-05[S] 每个 #[allow] 必须带 reason。
 - LINT-06[S] 基线集：clippy::all + dbg_macro/print_stdout/unwrap_used/undocumented_unsafe_blocks/await_holding_lock/missing_safety_doc/transmute_ptr_to_ptr；棘轮推进，不一次拉满 pedantic。
+- LINT-07[S] 静态分析按层叠加，禁止同层重复工具。rustc=类型；rustfmt=G1；clippy=G2；cargo-deny=G3（advisories+license+bans）。deny 已开 advisories 则不再跑 cargo-audit。G4 按证据：有 unsafe→Miri；发布 lib→semver-checks；可选 feature→cargo-hack；项目已用 Kani 才保留。rust-analyzer / cargo-geiger / Rudra / MIRAI / Prusti / Sonar 不是默认 CI。
+- LINT-08[S] clippy/rustfmt 与 rustc **同工具链**：`rust-toolchain.toml` `components = ["clippy","rustfmt"]`。调用 `cargo clippy --all-targets`（有 lock 加 `--locked`）。`--all-features` 仅当 feature 可组合；互斥 feature 走 GATE-05。CI 用 `RUSTFLAGS=-Dwarnings` 或 `CARGO_BUILD_WARNINGS=deny`，禁止源码 `#![deny(warnings)]`（LINT-03）。项目策略进 `clippy.toml`（`msrv`、`disallowed-methods`），不靠一长串 `#[allow]`。
 
 ## OBS 可观测性
 - OBS-01[M] 生产运行路径使用项目统一的可观测机制；服务端不以临时 println/dbg 代替日志，CLI 的 stdout/stderr 属于用户接口。
@@ -186,6 +188,8 @@
 - GATE-03[S] 棘轮基线文件入库，变更走评审。
 - GATE-04[S] 已跟踪 lock 的应用：G3 CI 必须 `--locked`；禁流水线里的 `cargo update`（DEP-11）。G4 可选 `cargo +nightly -Zmin-publish-age` 验证解析冷却（DEP-13），**不**把 nightly 当默认构建工具链。
 - GATE-05[S] G4 feature 矩阵用 `cargo hack check --feature-powerset --no-dev-deps`（[taiki-e/cargo-hack](https://github.com/taiki-e/cargo-hack)）；库有可选 feature 才加，不默认引入。`--each-feature` 不够（漏组合）。未采用不强迫。
+- GATE-06[S] 静态分析阶梯不可把 G4 工具塞进每次 push。Miri 只跑有 `unsafe` 的 crate；Kani/形式化验证仅已采用才留；clippy pedantic 不当 `-D`。同层不双跑（LINT-07）。
+
 - 阶梯：G1 pre-commit ≤6s（fmt+文件系统检查）→ G2 pre-push ≤3min（xtask 全量+clippy+单测）→ G3 CI 阻塞（+deny+MSRV+doc+`--locked`）→ G4 每夜非阻塞（Miri/loom/cargo-hack powerset/semver-checks/bench/可选 min-publish-age）。
 - 候选门禁集：no_orphan_modules（第一优先）、no_raw_path_deps、no_wildcard_opt_level、tests_layout、crate/module_direction、internal_doctest_off、internal_publish_false、no_test_code_in_lib、no_silent_test_skip、lints_inherited、lint_ratchet。只有实现、失败 fixture 与实跑证据齐全的检查才可注册。
 

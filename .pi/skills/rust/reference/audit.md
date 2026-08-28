@@ -38,7 +38,8 @@ pub extern "C" fn plugin_init() {}
 
 ## audit deps（DEP-01..13）
 
-`cargo tree -d` 重复版本先判断是否造成类型不兼容、体积或安全影响，再给有收益的收敛路径；检查多成员共享版本是否应收口、有意局部差异是否有理由；核对 default feature 的实际内容、optional 配对与 feature 叠加性。仅在项目已配置时运行 `cargo deny check`；审 Cargo.lock 新传递依赖；现代化替代表扫一遍（lazy_static/once_cell/failure…→ 建议 `/rust-skills:rust modernize`）。供应链窗口（DEP-11..13）：CI/`Makefile` 是否无人值守 `cargo update` 或无 `--locked` 的构建；有 lock 的应用必须 `--locked`。`deny`/`audit`/`vet` 未配置标 MAY，不假装已扫零日。冷却期是解析策略不是审计替代；未启用不判红，只给应用侧候选（GATE-04）。
+`cargo tree -d` 重复版本先判断是否造成类型不兼容、体积或安全影响，再给有收益的收敛路径；检查多成员共享版本是否应收口、有意局部差异是否有理由；核对 default feature 的实际内容、optional 配对与 feature 叠加性。仅在项目已配置时运行 `cargo deny check`；审 Cargo.lock 新传递依赖；现代化替代表扫一遍（lazy_static/once_cell/failure…→ 建议 `/rust-skills:rust modernize`）。供应链窗口（DEP-11..13）：CI/`Makefile` 是否无人值守 `cargo update` 或无 `--locked` 的构建；有 lock 的应用必须 `--locked`。`deny` 已覆盖 advisories 则 **不要**再跑 `cargo audit`（LINT-07）；二者都未配置标 MAY。冷却期是解析策略不是审计替代；未启用不判红，只给应用侧候选（GATE-04）。
+
 
 ## audit tests（TEST-01..16）
 
