@@ -318,11 +318,12 @@ def _copy_replace(src: Path, dst: Path) -> None:
 
 
 def ensure_link(link_rel: str, target: str, check: bool, drifts: list[str]) -> None:
-    """Grok and pack-root compat materialize as real copies.
+    """Validate provider projections by content, without migrating representation.
 
-    Other harness discovery links prefer symlinks. If the filesystem cannot
-    create them, **copy** instead of skipping. `--check` must fail when the
-    discovery path is missing or not content-equal — never skip as success.
+    Grok and pack-root compatibility paths remain materialized copies. Other
+    harness paths prefer symlinks when first created, but an existing checked-in
+    copy is equally valid when its content exactly matches the canonical target.
+    Missing or content-drifted paths still fail `--check`.
     """
     link_path = REPO_ROOT / link_rel
     resolved_target = (link_path.parent / target).resolve()
@@ -343,6 +344,8 @@ def ensure_link(link_rel: str, target: str, check: bool, drifts: list[str]) -> N
         return
 
     if link_path.is_symlink() and os.readlink(link_path) == target:
+        return
+    if link_path.exists() and not link_path.is_symlink() and _tree_equal(link_path, resolved_target):
         return
     if check:
         drifts.append(link_rel)
