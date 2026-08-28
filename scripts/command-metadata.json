@@ -342,6 +342,26 @@
         "tracing subscriber"
       ]
     },
+    "name": {
+      "category": "语言语义",
+      "summary": "函数/方法命名：as_/to_/into_、getter 禁 get_、From 构造器；按 API Guidelines 体检或改名",
+      "argumentHint": "[target] [--apply]",
+      "triggers": [
+        "函数命名",
+        "方法命名",
+        "改名",
+        "as_ to_ into_",
+        "get_ 前缀",
+        "命名规范"
+      ],
+      "triggers_en": [
+        "function naming",
+        "rename this function",
+        "as_ to_ into_",
+        "get_ prefix",
+        "API guidelines naming"
+      ]
+    },
     "axum": {
       "category": "框架",
       "summary": "axum 0.8 服务：状态、边界防护、流式、超时；按信号深入路由/提取器/中间件/鉴权/实时/测试/迁移",

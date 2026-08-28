@@ -55,11 +55,12 @@ fn first_word(s: &str) -> Option<&str> {
 | rayon/锁/runtime | [concurrency.md](concurrency.md) |
 | 补测试 / 竞态 / flaky / 火焰山 / 测文件越写越多 | [testing.md](testing.md) |
 | `sqlx` / `sea-orm` / axum / Tauri / clap / tracing 证据 | 对应框架/语言 reference；axum/Tauri 的 owner 再按「深入」表加载子 playbook（一次 1–2 个） |
+| `get_` 字段读取 / `as_` 却分配 / `row_to_user` 自由函数 | [name.md](name.md) |
 | 用户要评审而不是改 | [review.md](review.md)，只读 |
 
 ## 权威源（有争议时以这些为准）
 
-- 所有权/API：Rust API Guidelines `C-DEREF`、`C-NEWTYPE`、`C-CONV` / `C-CONV-TRAITS`
+- 所有权/API：Rust API Guidelines `C-DEREF`、`C-NEWTYPE`、`C-CONV` / `C-CONV-TRAITS` / `C-GETTER`；函数命名走 [name.md](name.md)
 - 2024 版次：Edition Guide「RPIT lifetime capture」、「if let temporary scope」、「Unsafe attributes」、「Unsafe extern blocks」、「unsafe_op_in_unsafe_fn」、「never type fallback」；1.88 let chains；1.95 `if let` guards / `cfg_select!`
 - 错误：thiserror 文档（库）、anyhow 文档（应用）；eyre 视为 anyhow 等价。二者都不是必依赖（ERR-08）
 - 数据层：sqlx `Pool` 文档（默认非生产）、`query!` + `SQLX_OFFLINE`

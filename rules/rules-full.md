@@ -1,4 +1,4 @@
-# Rust 工程规范（注入版 v0.0.54）
+# Rust 工程规范（注入版 v0.0.55）
 
 供按相关域渐进加载（先读同目录分文件，不要默认打开本合并件）；仅在明确的全规范审计时读取 `rules-full.md`。规则是决策约束，不是替代项目证据的检查表。
 分级：[M]=适用前提命中后 MUST，违反即阻断；[S]=默认 SHOULD，项目约定或证据可推翻并说明；[Y]=MAY。先证明前提，再引用编号；不适用不是违规。**本规范只以 edition 2024 为基线**（MSRV ≥ 1.85，可用 `rust-version` 或 `rust-toolchain.toml` 声明）。edition 2018/2021 是待迁移债务。新 workspace 用 `resolver = "3"`；已经 2024 且钉在 resolver 2 的成熟仓不迁 resolver。新代码按 2024 语义写（RPIT 全捕获、`if let` 短临时值、`#[unsafe(no_mangle)]`、`unsafe extern`、≥1.88 let chains）。Unix 多线程禁止靠 `env::set_var` 改环境。
@@ -69,7 +69,7 @@
 - API-04[S] 评估 #[non_exhaustive]；不许外部实现的 trait 用 sealed。
 - API-05[S] 标准 trait 尽量派生：Debug 必须（敏感字段脱敏），Clone/PartialEq/Eq/Hash/Default 按语义。
 - API-06[Y] >3 个可选参数用 builder。
-- API-07[S] 命名遵循 Rust API Guidelines（as_/to_/into_ 等）。
+- API-07[S] 命名遵循 Rust API Guidelines（C-CASE / C-CONV as_·to_·into_ / C-GETTER）。细节与改名走 `/rust-skills:rust name`。
 - API-08[S] parse, don't validate：信任边界用 `parse`/`TryFrom`/newtype 构造器产出领域类型；业务函数只收已合法类型，不再对同一 `String` 重复校验。wire / row / 领域 / 响应类型分离，不把 `FromRow`+`Serialize` 挂同一结构当 API。
 
 ## OWN 所有权

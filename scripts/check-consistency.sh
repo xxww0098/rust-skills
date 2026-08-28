@@ -306,7 +306,7 @@ while IFS= read -r reference; do
   rg -q '^目的：' "$reference" || fail "reference lacks an explicit purpose: ${reference#$repo_root/}"
 done <"$_consis_tmp/ref_files"
 
-for domain in async concurrency process axum tauri seaorm sqlx serde obs cli ship xplat; do
+for domain in async concurrency process axum tauri seaorm sqlx serde obs name cli ship xplat; do
   domain_file="$reference_dir/$domain.md"
   if ! rg -q '只读调用' "$domain_file" || ! rg -q '明确“修/改/实现”' "$domain_file"; then
     fail "domain reference lacks explicit read/apply output modes: ${domain_file#$repo_root/}"
@@ -330,7 +330,7 @@ readonly = ("review", "audit", "triage", "doctor")
 advice = ("shape", "crate", "stack")
 inspect_first = (
     "harden", "modernize", "distill", "slim", "gate", "bench",
-    "concurrency", "process", "async", "serde", "obs", "axum", "tauri",
+    "concurrency", "process", "async", "serde", "obs", "name", "axum", "tauri",
     "seaorm", "sqlx", "cli", "ship", "xplat",
 )
 

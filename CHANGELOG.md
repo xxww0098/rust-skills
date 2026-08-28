@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.0.55 — 2026-08-28
+
+- 新命令 `name`：函数/方法命名体检。权威 [Rust API Guidelines Naming](https://rust-lang.github.io/api-guidelines/naming.html)（C-CASE / C-CONV / C-GETTER / C-ITER / C-CTOR）。
+- X：[Raphael Luba](https://x.com/LubaRaphael/status/2048444288866934979) `Thing::from_stuff` 对齐类型，不要 `stuff_to_thing`；方法优于 C 式 `type_verb`。
+- API-07 指向本命令。场景 86。触发：「函数命名 / get_ 前缀 / as_ to_ into_」。
+
 ## 0.0.54 — 2026-08-28
 
 - 命令级 swarm：`kernel/swarm.md` 给需要并行取证的命令列出车道；子 agent 只读，合并进同一份 ProjectSnapshot。
