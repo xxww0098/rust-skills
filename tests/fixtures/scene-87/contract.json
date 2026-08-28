@@ -1,0 +1,29 @@
+{
+  "id": "87",
+  "title": "crate 包名 kebab、禁 -rs/utils/common，feature 不要 use-std",
+  "commands": ["name"],
+  "fixture": "hits.toml",
+  "fixture_needles": [
+    "name = \"utils\"",
+    "name = \"my-app-rs\"",
+    "name = \"rust-common\"",
+    "use-std",
+    "no-foo"
+  ],
+  "skill_needles": {
+    "skills/rust/reference/name.md": [
+      "NM-11",
+      "NM-12",
+      "NM-14",
+      "C-CRATE",
+      "Every crate is Rust",
+      "acme-cli"
+    ],
+    "tests/pressure-scenarios.md": [
+      "### 场景 87",
+      "NM-11",
+      "NM-12",
+      "my-app-rs"
+    ]
+  }
+}

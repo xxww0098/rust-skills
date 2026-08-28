@@ -5,6 +5,7 @@
     {"phrase": "编译报错", "where": "description"},
     {"phrase": "代码审查", "where": "description"},
     {"phrase": "函数命名", "where": "description"},
+    {"phrase": "crate命名", "where": "description"},
     {"phrase": "技术栈", "where": "description"},
     {"phrase": "borrow-checker", "where": "description"},
     {"phrase": "axum", "where": "description"},
@@ -20,6 +21,7 @@
     {"prompt": "帮我修这个 E0382", "expect": "activate", "token": "borrow-checker"},
     {"prompt": "这个项目该用什么技术栈", "expect": "activate", "token": "技术栈"},
     {"prompt": "这些函数命名不合规范", "expect": "activate", "token": "函数命名"},
+    {"prompt": "这个 workspace 的 crate 该怎么命名", "expect": "activate", "token": "crate命名"},
     {"prompt": "/rust-skills:rust review --apply", "expect": "readonly", "token": "--apply"}
   ]
 }

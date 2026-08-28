@@ -1,5 +1,5 @@
 {
-  "description": "Use for Cargo/Rust work in a repo — implement, debug, rustc/borrow-checker, clippy, review, unsafe/FFI, axum/sqlx/tokio, clap/tracing, Tauri v2, edition 2024, 技术栈, 函数命名, 编译报错, 代码审查, or /rust-skills:rust. Engage without a subcommand. Skip non-Cargo work and language trivia.",
+  "description": "Use for Cargo/Rust work in a repo — implement, debug, rustc/borrow-checker, clippy, review, unsafe/FFI, axum/sqlx/tokio, clap/tracing, Tauri v2, edition 2024, 技术栈, 函数命名, crate命名, 编译报错, 代码审查, or /rust-skills:rust. Engage without a subcommand. Skip non-Cargo work and language trivia.",
   "write_verbs_zh": ["实现", "修", "改", "生成", "应用"],
   "write_verbs_en": ["implement", "fix", "change", "generate", "apply"],
   "read_only_commands": ["review", "audit", "triage", "doctor"],

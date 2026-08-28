@@ -1,8 +1,8 @@
 ---
 name: rust
-description: Use for Cargo/Rust work in a repo — implement, debug, rustc/borrow-checker, clippy, review, unsafe/FFI, axum/sqlx/tokio, clap/tracing, Tauri v2, edition 2024, 技术栈, 函数命名, 编译报错, 代码审查, or /rust-skills:rust. Engage without a subcommand. Skip non-Cargo work and language trivia.
+description: Use for Cargo/Rust work in a repo — implement, debug, rustc/borrow-checker, clippy, review, unsafe/FFI, axum/sqlx/tokio, clap/tracing, Tauri v2, edition 2024, 技术栈, 函数命名, crate命名, 编译报错, 代码审查, or /rust-skills:rust. Engage without a subcommand. Skip non-Cargo work and language trivia.
 license: MIT
-version: 0.0.55
+version: 0.0.56
 metadata:
   type: workflow
 argument-hint: "[搭建与设计: init|shape|crate|document|stack · 评审: review|audit|triage|doctor · 改造: harden|slim|modernize|distill|gate · 语言语义: concurrency|process|async|serde|obs|name · 框架: axum|tauri|seaorm|sqlx|cli · 交付: bench|ship|xplat · 治理: docs|capture] [target]"
@@ -99,7 +99,7 @@ argument-hint: "[搭建与设计: init|shape|crate|document|stack · 评审: rev
 | `async` | 语言语义 | 「异步」 · 「取消安全」 · 「Future/Stream」 · 「结构化并发」 · cancellation safety · structured concurrency · Future/Stream | [reference/async.md](reference/async.md) |
 | `serde` | 语言语义 | 「序列化」 · 「serde」 · 「JSON 性能」 · 「协议兼容」 · serialization · JSON performance · wire compatibility | [reference/serde.md](reference/serde.md) |
 | `obs` | 语言语义 | 「tracing」 · 「日志乱」 · 「RUST_LOG」 · 「OpenTelemetry」 · 「span 对不上」 · 「日志丢了」 · 「subscriber」 · tracing · structured logging · RUST_LOG · OpenTelemetry · logs dropped · tracing subscriber | [reference/obs.md](reference/obs.md) |
-| `name` | 语言语义 | 「函数命名」 · 「方法命名」 · 「改名」 · 「as_ to_ into_」 · 「get_ 前缀」 · 「命名规范」 · function naming · rename this function · as_ to_ into_ · get_ prefix · API guidelines naming | [reference/name.md](reference/name.md) |
+| `name` | 语言语义 | 「函数命名」 · 「方法命名」 · 「crate命名」 · 「改名」 · 「as_ to_ into_」 · 「get_ 前缀」 · 「命名规范」 · 「-rs 后缀」 · function naming · crate naming · package name · rename this function · as_ to_ into_ · get_ prefix · API guidelines naming | [reference/name.md](reference/name.md) |
 | `axum` | 框架 | 「axum」 · 「web 服务」 · 「路由/状态/超时」 · 「鉴权/JWT/session」 · 「WebSocket/SSE」 · 「中间件/tower」 · 「0.7 升 0.8」 · 「分层路由」 · 「全局异常」 · 「统一错误处理」 · axum · web service · JWT/session auth · WebSocket/SSE · tower middleware · 0.7 to 0.8 · layered routing · global exception handler · unified error handling | [reference/axum.md](reference/axum.md) |
 | `tauri` | 框架 | 「Tauri」 · 「桌面应用」 · 「体积/启动/IPC」 · 「capabilities/权限」 · 「插件/托盘/菜单」 · 「Android/iOS」 · 「v1 升 v2」 · 「localStorage」 · Tauri · desktop app · capabilities/permissions · tray/menu plugins · Android/iOS · v1 to v2 · WKWebView localStorage | [reference/tauri.md](reference/tauri.md) |
 | `seaorm` | 框架 | 「SeaORM」 · 「数据库查询」 · 「N+1」 · SeaORM · ORM N+1 · SeaORM query | [reference/seaorm.md](reference/seaorm.md) |
@@ -119,4 +119,4 @@ argument-hint: "[搭建与设计: init|shape|crate|document|stack · 评审: rev
 - 显式命令：按路由表「触发」列匹配用户语言后加载对应 reference。改造/语言语义/框架/交付命令裸调用为只读体检；`--apply` 或同一请求明确「修/改/实现」时直接在冻结范围应用该清单，无需单独的 apply 子命令。
 - 普通 Rust 任务：先 [reference/engage.md](reference/engage.md)，再 [reference/craft.md](reference/craft.md)；编译错误叠加 [reference/triage.md](reference/triage.md)。不要求用户先选子命令，也不因缺少 RUST.md 拒绝修改。
 - 叠加顺序：engage（主动）→ craft（普通实现）→ 全局规则 → 语言语义（concurrency/process/async/serde/obs/name）→ 框架（axum/tauri/seaorm/sqlx/cli，owner 清单 → 命中的子 playbook）→ 交付（ship/xplat）。重复问题只保留证据更具体的一条。
-- 改造四条互斥：「编译/构建太慢」→ `slim`；「升 edition / OnceLock / 过时 API」→ `modernize`；「能跑要上生产（错误、边界、观测）」→ `harden`；「旧代码过度设计、删仪式」→ `distill`。用户只说「优化」且点了旧模块 → `distill`，未点路径先问一次。「函数名 / get_ / as_ to_ into_」→ `name`，不走 distill。
+- 改造四条互斥：「编译/构建太慢」→ `slim`；「升 edition / OnceLock / 过时 API」→ `modernize`；「能跑要上生产（错误、边界、观测）」→ `harden`；「旧代码过度设计、删仪式」→ `distill`。用户只说「优化」且点了旧模块 → `distill`，未点路径先问一次。「函数名 / crate 名 / get_ / as_ to_ into_ / -rs」→ `name`，不走 distill，也不走 `/crate`（`/crate` 只管拆不拆）。

@@ -4,7 +4,7 @@
 
 编排：多文件时按 [kernel/swarm.md](../kernel/swarm.md) — 三路对抗各一条车道：赞成 · 反对 · 依赖方向。未回复「拆」不改 workspace。 单文件或已有快照则跳过。
 
-本命令只管 **crate 边界**。文件太长、函数太长走 WS-11（抽函数 / 拆 `mod`），不要把 `/crate` 当通用拆分器，也不要另开 `/split`。无 `<module>`（路径、`mod` 名或拟建 crate 名）→ 问一次就停（CK-01）。
+本命令只管 **crate 边界**。文件太长、函数太长走 WS-11（抽函数 / 拆 `mod`），不要把 `/crate` 当通用拆分器，也不要另开 `/split`。拟建 crate 的 `[package].name` 走 [name.md](name.md) NM-11/12（kebab、禁 `-rs`/`utils`/`common`）。无 `<module>`（路径、`mod` 名或拟建 crate 名）→ 问一次就停（CK-01）。
 
 ## 对抗审查（必须三路独立，禁止先写结论）
 
@@ -45,7 +45,7 @@
 
 ## 若用户确认拆
 
-这是**新的写入授权**，不是 crate 命令的默认行为：按已展示映射移动模块 → 新 member `publish = false`（除非用户要发布）→ 修好依赖方向 → `cargo check -p <new> -p <旧调用方>`。edition 2024 + workspace 继承。不做与拆分无关的重构。
+这是**新的写入授权**，不是 crate 命令的默认行为：按已展示映射移动模块 → 新 member 名过 NM-11/12 且 `publish = false`（除非用户要发布）→ 修好依赖方向 → `cargo check -p <new> -p <旧调用方>`。edition 2024 + workspace 继承。不做与拆分无关的重构。
 
 ## 输出
 

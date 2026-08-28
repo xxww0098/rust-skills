@@ -36,7 +36,7 @@
 | `async` | spawn/JoinHandle · `select!` 取消 · 阻塞 IO | 把不该 async 的改成 async |
 | `serde` | `Value`/入站 unwrap · enum 表示 · 版本字段 | 把领域类型直接上线 |
 | `obs` | `init()` 站点 · span 名/字段基数 · 测试 subscriber | 库里再装一层 |
-| `name` | 转换前缀 · getter/`get_` · 谓词/from_ 构造器 | 改行为；公开 API 未授权就改 |
+| `name` | 转换前缀 · getter/`get_` · 包名/`-rs`/workspace 成员 | 改行为；公开 API 或已发布包名未授权就改 |
 | `axum` | 路由/错误所有权 · 中间件次序 · 测试 `app()` | 整目录读 `axum/` |
 | `tauri` | capabilities · IPC/命令 · 窗口/托盘 | 整目录读 `tauri/` |
 | `seaorm` | Loader/N+1 · `execute` vs raw · 池 | 顺手再加 sqlx |

@@ -30,6 +30,7 @@
 - 填不出「这条测试会因哪条规格失败」的测试（TEST-13）。
 - `Span::enter()` 跨 `.await`；`fmt().init()` 当生产 subscriber（TR-05/19）。
 - 新函数 `get_foo` 读字段、转换却叫错 `as_`/`to_`/`into_`（API-07 / NM-02/03）。
+- 新建 crate 名叫 `utils`/`common`/`helpers`/`*-rs`/`rust-*`（NM-11/12）。
 
 ## 规范形状（直接按这个写）
 

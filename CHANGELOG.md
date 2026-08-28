@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.0.56 — 2026-08-28
+
+- `/name` 覆盖项目 crate 命名：NM-11 C-CRATE（kebab、禁 `-rs`/`-rust`）、NM-12 成员按职责+产品前缀（禁 `utils`/`common`）、NM-13 包名/ident/模块对齐、NM-14 C-FEATURE。
+- 权威 [C-CASE](https://rust-lang.github.io/api-guidelines/naming.html)「Every crate is Rust」+ Cargo [`-sys`](https://doc.rust-lang.org/cargo/reference/build-scripts.html#-sys-packages)。`--apply` 仍只改函数；改包名必须说「改 crate 名」。
+- 场景 87。触发：「crate命名 / 包名 / -rs 后缀」。
+
 ## 0.0.55 — 2026-08-28
 
 - 新命令 `name`：函数/方法命名体检。权威 [Rust API Guidelines Naming](https://rust-lang.github.io/api-guidelines/naming.html)（C-CASE / C-CONV / C-GETTER / C-ITER / C-CTOR）。

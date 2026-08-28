@@ -344,18 +344,22 @@
     },
     "name": {
       "category": "语言语义",
-      "summary": "函数/方法命名：as_/to_/into_、getter 禁 get_、From 构造器；按 API Guidelines 体检或改名",
+      "summary": "函数/方法/crate 命名：as_/to_/into_、getter 禁 get_、From 构造器、包名 kebab 禁 -rs；按 API Guidelines 体检或改名",
       "argumentHint": "[target] [--apply]",
       "triggers": [
         "函数命名",
         "方法命名",
+        "crate命名",
         "改名",
         "as_ to_ into_",
         "get_ 前缀",
-        "命名规范"
+        "命名规范",
+        "-rs 后缀"
       ],
       "triggers_en": [
         "function naming",
+        "crate naming",
+        "package name",
         "rename this function",
         "as_ to_ into_",
         "get_ prefix",

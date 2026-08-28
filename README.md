@@ -227,7 +227,7 @@ axum 子 playbook：scaffold / routing / extractors / handlers / middleware / re
 | 「要不要拆 crate」+ 模块 | `crate` |
 | 「文件太长要拆吗」 | 写码中 → craft；旧文件 → `distill` |
 | 「帮我 review」 | `review` |
-| 「函数名 / get_xx / as_ 还是 into_」 | `name` |
+| 「函数名 / crate 名 / get_xx / as_ 还是 into_」 | `name` |
 | 「鉴权 / WebSocket / 中间件次序 / 0.8 迁移」 | `axum`（自动深入子 playbook） |
 | 「capabilities / 插件 / 托盘 / 移动端 / v1 迁移」 | `tauri`（自动深入子 playbook） |
 | 「新项目 / 补基线」 | `init` |
@@ -243,7 +243,7 @@ axum 子 playbook：scaffold / routing / extractors / handlers / middleware / re
 | 搭建与设计 | 进项目、动手前：`init` 搭基线、`document` 生成画像、`shape` 先设计、`crate` 决定拆不拆 |
 | 评审 | 只想看有没有问题，永远只读 |
 | 改造 | 要动手改（加固/减肥/现代化/精简/门禁），裸调用只体检 |
-| 语言语义 | 任何 Rust 项目的通用深层问题：并发、多进程、异步、序列化、函数命名 |
+| 语言语义 | 任何 Rust 项目的通用深层问题：并发、多进程、异步、序列化、函数/crate 命名 |
 | 框架 | 项目用了对应框架才有证据加载：axum / Tauri / SeaORM / SQLx |
 | 交付 | 测性能（bench）、发版（ship）、跨平台一致性（xplat） |
 | 治理 | 文档集合治理（docs）、踩坑沉淀（capture） |
@@ -279,7 +279,7 @@ axum 子 playbook：scaffold / routing / extractors / handlers / middleware / re
 /rust-skills:rust async [target]             # 异步深审：取消安全、结构化停机、Stream 背压
 /rust-skills:rust serde [target]             # 序列化边界：零拷贝、enum 表示、字段纪律、兼容演进
 /rust-skills:rust obs [target]               # tracing 接线：只在 main 装一次、EnvFilter、json/pretty、字段/span 基数、WorkerGuard、测试 try_init
-/rust-skills:rust name [target] [--apply]    # 函数/方法命名：as_/to_/into_、getter 禁 get_、From 构造器；按 API Guidelines 体检或改名
+/rust-skills:rust name [target] [--apply]    # 函数/方法/crate 命名：as_/to_/into_、getter 禁 get_、From 构造器、包名 kebab 禁 -rs；按 API Guidelines 体检或改名
 
 #### 框架
 /rust-skills:rust axum [target]              # axum 0.8 服务：状态、边界防护、流式、超时；按信号深入路由/提取器/中间件/鉴权/实时/测试/迁移
