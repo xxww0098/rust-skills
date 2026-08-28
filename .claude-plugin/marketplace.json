@@ -1,7 +1,7 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "rust-skills",
-  "version": "0.0.52",
+  "version": "0.0.53",
   "description": "Personal Rust engineering skills marketplace",
   "owner": {
     "name": "xxww"
@@ -10,7 +10,7 @@
     {
       "name": "rust-skills",
       "description": "Scoped Rust engineering playbooks with review, triage, framework overlays, project-local state, and evidence-driven validation",
-      "version": "0.0.52",
+      "version": "0.0.53",
       "source": "./",
       "category": "development"
     }

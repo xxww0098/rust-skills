@@ -1,6 +1,7 @@
 # tauri/window — tauri.conf.json、窗口、菜单、托盘与启动体验
 
-目的：diff 里出现 `tauri.conf.json`、`WebviewWindowBuilder`、`decorations: false`、`TrayIconBuilder`、`MenuBuilder`、`tauri-plugin-window-state|positioner|single-instance`，或用户提到白屏/启动页/托盘/多开/关窗隐形时加载。体积、IPC、命令纪律归 owner [../tauri.md](../tauri.md)（TA-01..TA-46），三端 webview/文件系统差异归 [../xplat.md](../xplat.md)（XP-01/04/09）；本文只写配置、窗口与系统集成面。
+目的：diff 里出现 `tauri.conf.json`、`WebviewWindowBuilder`、`decorations: false`、`TrayIconBuilder`、`MenuBuilder`、`tauri-plugin-window-state|positioner|single-instance`，或用户提到白屏/启动页/托盘/多开/关窗隐形时加载。体积、IPC、命令纪律归 owner [../tauri.md](../tauri.md)（TA-01..TA-47），三端 webview/文件系统差异归 [../xplat.md](../xplat.md)（XP-01/04/09）；本文只写配置、窗口与系统集成面。
+
 
 ## tauri.conf.json（v2 结构；TA-28、TA-33）
 
@@ -67,7 +68,9 @@ fn open_settings(app: &tauri::AppHandle) -> tauri::Result<()> {
 
 1. 两条路线二选一：**全平台无边框** `decorations: false` + 自绘三键；或 **macOS 保留红绿灯** `decorations: true` + `titleBarStyle: "Overlay"` + `hiddenTitle: true`（仅 macOS 生效，直接写在 `tauri.conf.json` 的窗口项里，其他平台忽略；放进 `tauri.macos.conf.json` 会整体替换 `app.windows`）。`decorations: false` 会连红绿灯一起去掉，Overlay 随之失效。
 2. 拖拽区只对带 `data-tauri-drag-region` 的元素本身生效，不继承到子元素；按钮禁带该属性（点击变拖拽、双击触发最大化）。固定在顶栏的 portal（toast/popover）必须落在标题栏高度之下，并标 `data-tauri-drag-region="false"`：叠进 Overlay 拖拽带时关闭点击会被当成拖窗口。
-3. JS 三键需要 ACL：`core:default` 只含只读 getter，capability 里必须显式加 `core:window:allow-start-dragging`/`allow-minimize`/`allow-toggle-maximize`/`allow-close`（`allow-show` 给 ready→show）。
+3. **跨会话偏好禁 renderer `localStorage`（TA-47）**：macOS WKWebView 把它放进 `~/Library/WebKit/{identifier}/WebsiteData/`，该容器会被系统整体删除重建（未重启机器也会发生）。必须记住的设置走宿主 command，落 `app.path().app_data_dir()` 下的 JSON；`localStorage` 只配当会话缓存。Windows/Linux 的 Chromium/WebKitGTK 存储路径不同，更不能靠「Mac 上 localStorage 还在」推断三端耐久。
+4. JS 三键需要 ACL：`core:default` 只含只读 getter，capability 里必须显式加 `core:window:allow-start-dragging`/`allow-minimize`/`allow-toggle-maximize`/`allow-close`（`allow-show` 给 ready→show）。
+
 4. Windows：`decorations: false` 后 `shadow: true`（默认）仍给边缘阴影与可拖拽边框；再加 `transparent: true` 阴影即消失，圆角/阴影要自己画。`skipTaskbar` 只 Windows/Linux 有效。
 5. macOS `transparent: true` 需 `app.macOSPrivateApi: true` + Cargo feature `macos-private-api`（App Store 审核风险自担）；`windowEffects` vibrancy 只 macOS，Windows 用 `mica`/`acrylic`（Win11），Linux 无特效且透明依赖合成器——逐平台验收（XP-09）。
 

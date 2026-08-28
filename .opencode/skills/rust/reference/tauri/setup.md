@@ -14,7 +14,8 @@
 | iOS | 见 macOS 行；真机需 Apple Developer team 与签名 | Apple Silicon 模拟器用 `aarch64-apple-ios-sim`，不是 `x86_64` |
 
 1. 自检只认 `cargo tauri info`（npm 项目 `pnpm tauri info`）：一次列出 OS/webview 版本、rustc、Node、`tauri`/`tauri-build`/`@tauri-apps/api`/`@tauri-apps/cli` 版本与 conf 摘要；报障先贴这份，不要逐个 `--version`。
-2. 桌面包在各自 OS 上构建：macOS 包只能在 macOS 出，Windows 包在 Windows；mac/Linux→Windows 的 `cargo-xwin` 只出**未签名 NSIS**（SH-14），WiX/MSI 与 Authenticode 仍要 Windows。声明几端就要几端 CI（XP-03、SH-07）。WSL2 能跑 `tauri dev`，不能出 Windows 安装包。
+2. 桌面包在各自 OS 上构建：macOS 包只能在 macOS 出，Windows 签名包在 Windows。mac/Linux→Windows 的 `cargo-xwin` 只出**未签名 NSIS**（SH-14/16），WiX/MSI 与 Authenticode 仍要 Windows。声明几端就要几端 CI（XP-03、SH-07）。WSL2 能跑 `tauri dev`，不能出 Windows 安装包。
+
 3. Linux 黑/白窗（Nvidia、虚拟机）先用 `WEBKIT_DISABLE_DMABUF_RENDERER=1` 复现定位，确认是驱动问题再决定是否在启动代码里按条件设置。
 
 ## create-tauri-app：按手头工具选入口（TA-28、TA-29）

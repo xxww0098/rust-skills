@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.0.53 — 2026-08-28
+
+- SH-16 桌面构建矩阵：macOS「双端」= 原生 mac 包 + cargo-xwin **未签名** NSIS。Tauri 只认 MSVC；WiX/MSI 与 Authenticode 必须 Windows。
+- 交叉链前提：`lld`（Homebrew llvm 不含 lld-link）、`nasm`、`cargo fetch --target` 先于 offline、UTF-8 locale、产物在 `target/<triple>/release/bundle/nsis/`。
+- TA-47 renderer `localStorage` 不是设置存储；跨会话偏好走宿主 command 写 `app_data_dir`。
+- 触发：「交叉编译 / 双端编译 / cargo-xwin / NSIS / localStorage」。场景 83。
+
 ## 0.0.52 — 2026-08-28
 
 - 合并 [#1](https://github.com/xxww0098/rust-skills/pull/1)：`/cargo`、`/test`、`/cargo tools` 作为 `slim` 子模式，不增加隐式路由。

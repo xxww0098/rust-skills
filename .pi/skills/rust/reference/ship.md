@@ -11,7 +11,8 @@
 - SH-05 配置分层：环境变量优先，typed config 启动校验；secrets 不进镜像、不进日志（OBS-02）、不进 git——注入走运行时。fail-fast vs warn：`maturity=production` 或用户点名生产时，空密钥/弱密钥应硬失败；prototype/dev 路径允许 warn，但须在报告中标明「可带病启动」。
 - SH-06 CI 产线：沿用项目已有入口（xtask/make/脚本）；若已定义 `[profile.ci]` 则建议 CI 显式 `--profile ci`（BUILD-05），未接线标改进而非虚构新工具链。rust-cache/sccache 按现状。镜像漏洞扫描 trivy、crate 层 cargo-deny 均为 [MAY]——勿假设仓库已有，缺了只列候选（DEP-06）。
 
-## 桌面形态（SH-07..15）
+## 桌面形态（SH-07..16）
+
 
 构建产物矩阵、sidecar 命名、updater 插件接线等开发侧前置见 [tauri/develop.md](tauri/develop.md) 与 [tauri/plugins.md](tauri/plugins.md)；本节只管发布链。
 
@@ -22,8 +23,42 @@
 - SH-11 版本单源：tag 驱动发布；Cargo.toml / tauri.conf / CHANGELOG 版本一致性做成 xtask 检查（→ `/rust-skills:rust gate`）。
 - SH-12 回滚预案先于发布存在：服务 = 镜像 tag 回退（无 registry 时 compose/文档中的回退步骤亦可）；桌面 = updater 可发紧急版本覆盖；冒烟清单跑完才更新 latest.json。
 - SH-13 macOS DMG：create-dmg 调 Finder AppleScript 摆图标。无 GUI / agent 会话里 `osascript` 报「访达正忙」(-15260)，bundler 把脚本输出藏在 debug，表面只剩 `failed to run bundle_dmg.sh`。CI/无头打包必须 `CI=true`（bundler 加 `--skip-jenkins`）。scratch 放本机 `/tmp`，不要放外置卷（TA-46）。
-- SH-14 在 macOS 上交叉出 Windows NSIS（cargo-xwin）是备用链，**不是**签名发布物：只能 NSIS（WiX/MSI 必须在 Windows 上做）；产物未 Authenticode，须 `signing = none` 并在真机至少跑一遍安装→本地 IO→一次 TLS。`brew install llvm` 不够——新 formula 不含 `lld-link`，要另装 `lld`；`nasm` 给 ring。`makensis` 在 `LANG`/`LC_ALL` 为空或 `C` 时编 Unicode 脚本会 `std::bad_alloc`（NSIS #1165），命令必须带 UTF-8 locale。首轮会拉 MSVC CRT+SDK 到 `~/Library/Caches/cargo-xwin`。交叉包与真机包语义大致等价（C 依赖的 CRT helper 名可能不同），交给用户前必须 Windows 实测。
+- SH-14 在 macOS/Linux 上交叉出 Windows NSIS 是**备用链**（官方：[Windows Installer](https://v2.tauri.app/distribute/windows-installer/) — last resort，优先 Windows CI/真机）。只能 NSIS；WiX/MSI 与 Authenticode **必须 Windows**。详见下方「构建矩阵」。
 - SH-15 GUI 父进程不得 spawn 未设 `CREATE_NO_WINDOW` 的 console-subsystem 工具（XP-07）；`windows_subsystem = "windows"` 的**自身**子进程继承管道不闪窗（TA-43）。`webviewInstallMode: downloadBootstrapper` 离线机会失败，改 `embedBootstrapper`/`offlineInstaller`。NSIS `currentUser` 免管理员。macOS 直接分发 + 回环服务 + 用户自选文件时：`hardenedRuntime: true` 只开 WebKit 需要的 `allow-jit`，**不要**开 App Sandbox（沙盒会掐回环与任意路径）。
+- SH-16 桌面构建矩阵：宿主机决定能出什么包。macOS「双端」= 原生 mac 包 + cargo-xwin 未签名 NSIS，**不是**两端都签、都能公证。
+
+| 宿主 → 产物 | macOS .app/DMG | Windows NSIS | Windows MSI/WiX | Linux deb/AppImage |
+|---|---|---|---|---|
+| macOS | 原生；签名+公证（SH-09）；无头 `CI=true`（SH-13） | 备用：cargo-xwin，未 Authenticode | 否 | 需 Linux sysroot/VM，非默认 |
+| Windows | 否（Apple SDK 许可，非 Mac 编不出） | 原生 + Authenticode（SH-08） | **仅此宿主** | 否 |
+| Linux | 否 | 备用：同 cargo-xwin | 否 | 原生 |
+
+Tauri 官方只认 Windows **MSVC** 目标（`x86_64-pc-windows-msvc` / `aarch64-pc-windows-msvc`）。`*-pc-windows-gnu` 不是 Tauri 支持线。优先 SH-07 的 `tauri-action` 多 OS runner，交叉编译是 last resort。
+
+**macOS → Windows NSIS 前提**
+
+1. `brew install nsis llvm lld nasm`：Homebrew `llvm` **不含** `lld-link`，必须另装 `lld`；`nasm` 给 `ring` 0.17。Linux：`nsis` + `llvm` + `clang`（有 C 依赖时）+ 发行版可能缺 NSIS stubs。
+2. `rustup target add x86_64-pc-windows-msvc`（要 ARM64 Windows 再加 `aarch64-pc-windows-msvc`）。
+3. `cargo install --locked cargo-xwin`。SDK/CRT 默认同仓库缓存；多项目设 `XWIN_CACHE_DIR`。
+4. 在打开 `CARGO_NET_OFFLINE` 之前：`cargo fetch --locked --target x86_64-pc-windows-msvc`。脚本若先按**宿主** `cargo tree --offline` 判定可离线，Windows 专属 crate 会编到一半才缺包。
+5. locale：`LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8`。`makensis` 在空/`C` locale 编 Unicode 脚本会 `std::bad_alloc`（NSIS #1165），tauri 只转述 `failed to bundle project (os error 2)`。
+6. 发布配置：`signing = none`。交叉链签不了 Authenticode。
+
+**怎么做**
+
+```bash
+export PATH="/opt/homebrew/opt/llvm/bin:/opt/homebrew/opt/lld/bin:$PATH"
+LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8 \
+  cargo tauri build --bundles nsis --runner cargo-xwin --target x86_64-pc-windows-msvc
+```
+
+产物在 `target/x86_64-pc-windows-msvc/release/bundle/nsis/`，**不在** `target/release/`。脚本扫错目录会以为没打出包。
+
+**能做到什么程度**
+
+- 能：同一 rustc + 按**目标** `cfg` 出 PE；C 依赖走 `clang-cl`/`nasm`；`lld-link` 链接；NSIS `-setup.exe`。导入 DLL / manifest / 节表 / VERSIONINFO 可与真机包对齐。
+- 不能：Authenticode、SmartScreen、MSI、mac 公证、WebView2 安装路径、真机 IO/TLS。CRT 启动代码版本（xwin vs VS Build Tools）和 `Fls*`/`Tls*` helper 名会不同——同类差异升级一次 VS 也会出现，所以**语义近似 ≠ 已验收**。
+- 交给用户前在 Windows 至少：安装 → 启动 → 读写本地 SQLite → 一次 TLS。`cfg(windows)` 分支宿主机 `cargo check` 不会类型检查（XP-03）。
 
 ```dockerfile
 # ✓ SH-01 骨架示例（chef 非唯一合法形态）

@@ -2,7 +2,7 @@
 name: rust
 description: Use for Cargo/Rust work in a repo — implement, debug, rustc/borrow-checker, clippy, review, unsafe/FFI, axum/sqlx/tokio, clap/tracing, Tauri v2, edition 2024, 技术栈, 编译报错, 代码审查, or /rust-skills:rust. Engage without a subcommand. Skip non-Cargo work and language trivia.
 license: MIT
-version: 0.0.52
+version: 0.0.53
 metadata:
   type: workflow
 argument-hint: "[搭建与设计: init|shape|crate|document|stack · 评审: review|audit|triage|doctor · 改造: harden|slim|modernize|distill|gate · 语言语义: concurrency|process|async|serde|obs · 框架: axum|tauri|seaorm|sqlx|cli · 交付: bench|ship|xplat · 治理: docs|capture] [target]"
@@ -100,12 +100,12 @@ argument-hint: "[搭建与设计: init|shape|crate|document|stack · 评审: rev
 | `serde` | 语言语义 | 「序列化」 · 「serde」 · 「JSON 性能」 · 「协议兼容」 · serialization · JSON performance · wire compatibility | [reference/serde.md](reference/serde.md) |
 | `obs` | 语言语义 | 「tracing」 · 「日志乱」 · 「RUST_LOG」 · 「OpenTelemetry」 · 「span 对不上」 · 「日志丢了」 · 「subscriber」 · tracing · structured logging · RUST_LOG · OpenTelemetry · logs dropped · tracing subscriber | [reference/obs.md](reference/obs.md) |
 | `axum` | 框架 | 「axum」 · 「web 服务」 · 「路由/状态/超时」 · 「鉴权/JWT/session」 · 「WebSocket/SSE」 · 「中间件/tower」 · 「0.7 升 0.8」 · 「分层路由」 · 「全局异常」 · 「统一错误处理」 · axum · web service · JWT/session auth · WebSocket/SSE · tower middleware · 0.7 to 0.8 · layered routing · global exception handler · unified error handling | [reference/axum.md](reference/axum.md) |
-| `tauri` | 框架 | 「Tauri」 · 「桌面应用」 · 「体积/启动/IPC」 · 「capabilities/权限」 · 「插件/托盘/菜单」 · 「Android/iOS」 · 「v1 升 v2」 · Tauri · desktop app · capabilities/permissions · tray/menu plugins · Android/iOS · v1 to v2 | [reference/tauri.md](reference/tauri.md) |
+| `tauri` | 框架 | 「Tauri」 · 「桌面应用」 · 「体积/启动/IPC」 · 「capabilities/权限」 · 「插件/托盘/菜单」 · 「Android/iOS」 · 「v1 升 v2」 · 「localStorage」 · Tauri · desktop app · capabilities/permissions · tray/menu plugins · Android/iOS · v1 to v2 · WKWebView localStorage | [reference/tauri.md](reference/tauri.md) |
 | `seaorm` | 框架 | 「SeaORM」 · 「数据库查询」 · 「N+1」 · SeaORM · ORM N+1 · SeaORM query | [reference/seaorm.md](reference/seaorm.md) |
 | `sqlx` | 框架 | 「sqlx」 · 「query! 宏」 · 「编译期 SQL」 · 「连接池饿死」 · sqlx · query! macro · compile-time SQL · pool starvation | [reference/sqlx.md](reference/sqlx.md) |
 | `cli` | 框架 | 「clap」 · 「命令行」 · 「子命令」 · 「shell 补全」 · 「CLI 参数」 · clap · CLI args · subcommands · shell completion | [reference/cli.md](reference/cli.md) |
 | `bench` | 交付 | 「性能对比」 · 「benchmark」 · 「这改动快了多少」 · benchmark · before/after perf · how much faster | [reference/bench.md](reference/bench.md) |
-| `ship` | 交付 | 「要发版」 · 「打镜像」 · 「签名/公证/updater」 · 「发布链路」 · release · container image · signing/notarization/updater | [reference/ship.md](reference/ship.md) |
+| `ship` | 交付 | 「要发版」 · 「打镜像」 · 「签名/公证/updater」 · 「发布链路」 · 「交叉编译」 · 「双端编译」 · 「cargo-xwin」 · 「NSIS」 · release · container image · signing/notarization/updater · cross-compile Windows · cargo-xwin · NSIS from macOS | [reference/ship.md](reference/ship.md) |
 | `xplat` | 交付 | 「Windows 报错 Mac 正常」 · 「跨平台」 · 「CI 矩阵」 · Windows fails Mac works · cross-platform · CI matrix | [reference/xplat.md](reference/xplat.md) |
 | `docs` | 治理 | 「整理文档」 · 「docs 首页」 · 「链接失效」 · 「文档治理」 · docs index · broken links · documentation governance | [reference/docs.md](reference/docs.md) |
 | `capture` | 治理 | 「踩坑了记下来」 · 「沉淀教训」 · 「值得写进规则」 · record a pitfall · promote a lesson to a rule | [reference/capture.md](reference/capture.md) |

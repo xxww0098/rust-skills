@@ -57,7 +57,8 @@
 - TA-43 同二进制 worker（argv 分发）优先于 sidecar；`Child::kill` 只杀直接子进程；协议未完成（超时/强杀）的 worker 禁回池。详见 [tauri/develop.md](tauri/develop.md) 与 [process.md](process.md)。
 - TA-44 偏好端口 `listen` 遇 `AddrInUse` 必须回退 `127.0.0.1:0` 并记录实际端口，禁把绑定失败扩成 setup panic。详见 [tauri/develop.md](tauri/develop.md)。
 - TA-45 原子替换：临时文件与目标同卷（否则 `EXDEV`）；Windows 不能 rename 覆盖已存在项，先 `remove` 或 move-aside。详见 [xplat.md](xplat.md)。
-- TA-46 桌面打包：无 GUI 会话打 DMG 必须 `CI=true`（create-dmg `--skip-jenkins`）；mac 上 cargo-xwin 只出未签名 NSIS；GUI 父进程禁派 console 子进程除非 `CREATE_NO_WINDOW`。详见 [ship.md](ship.md)。
+- TA-46 桌面打包：无 GUI 会话打 DMG 必须 `CI=true`（create-dmg `--skip-jenkins`）；mac 上 cargo-xwin 只出未签名 NSIS；GUI 父进程禁派 console 子进程除非 `CREATE_NO_WINDOW`。详见 [ship.md](ship.md) SH-13..16。
+- TA-47 renderer `localStorage` 不是设置存储：macOS WKWebView 落在 `~/Library/WebKit/{identifier}/WebsiteData/`，系统可整体删重建。跨会话偏好必须走宿主 command 写 `app_data_dir` 下的 JSON；`localStorage` 只配当缓存。详见 [tauri/window.md](tauri/window.md)。
 
 ## 深入（按信号加载）
 
@@ -75,7 +76,9 @@
 | 「路径分裂 / LOCALAPPDATA / app_data_dir / EXDEV / Windows 覆盖 rename」 | [xplat.md](xplat.md) |
 | 「rfd / FileDialog / 同步还是异步 command」 | [tauri/ipc.md](tauri/ipc.md) |
 | 「关窗变隐形 / Dock 点不回来 / Reopen」 | [tauri/window.md](tauri/window.md) |
-| 「DMG Finder 忙 / cargo-xwin / makensis / 交叉打 Windows」 | [ship.md](ship.md) |
+| 「DMG Finder 忙 / cargo-xwin / makensis / 交叉打 Windows / 双端编译」 | [ship.md](ship.md) |
+| 「localStorage 丢了 / WKWebView WebsiteData / 图库偏好」 | [tauri/window.md](tauri/window.md) |
+
 
 ## 验证（PERF-01，全部同机）
 

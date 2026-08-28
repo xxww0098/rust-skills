@@ -382,7 +382,8 @@
         "capabilities/权限",
         "插件/托盘/菜单",
         "Android/iOS",
-        "v1 升 v2"
+        "v1 升 v2",
+        "localStorage"
       ],
       "triggers_en": [
         "Tauri",
@@ -390,7 +391,8 @@
         "capabilities/permissions",
         "tray/menu plugins",
         "Android/iOS",
-        "v1 to v2"
+        "v1 to v2",
+        "WKWebView localStorage"
       ]
     },
     "seaorm": {
@@ -466,12 +468,19 @@
         "要发版",
         "打镜像",
         "签名/公证/updater",
-        "发布链路"
+        "发布链路",
+        "交叉编译",
+        "双端编译",
+        "cargo-xwin",
+        "NSIS"
       ],
       "triggers_en": [
         "release",
         "container image",
-        "signing/notarization/updater"
+        "signing/notarization/updater",
+        "cross-compile Windows",
+        "cargo-xwin",
+        "NSIS from macOS"
       ]
     },
     "xplat": {
