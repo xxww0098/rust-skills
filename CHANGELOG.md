@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.0.56 — 2026-08-28
+
+- `/name` 覆盖项目 crate 命名：NM-11 C-CRATE（kebab、禁 `-rs`/`-rust`）、NM-12 成员按职责+产品前缀（禁 `utils`/`common`）、NM-13 包名/ident/模块对齐、NM-14 C-FEATURE。
+- 权威 [C-CASE](https://rust-lang.github.io/api-guidelines/naming.html)「Every crate is Rust」+ Cargo [`-sys`](https://doc.rust-lang.org/cargo/reference/build-scripts.html#-sys-packages)。`--apply` 仍只改函数；改包名必须说「改 crate 名」。
+- 场景 87。触发：「crate命名 / 包名 / -rs 后缀」。
+
+## 0.0.55 — 2026-08-28
+
+- 新命令 `name`：函数/方法命名体检。权威 [Rust API Guidelines Naming](https://rust-lang.github.io/api-guidelines/naming.html)（C-CASE / C-CONV / C-GETTER / C-ITER / C-CTOR）。
+- X：[Raphael Luba](https://x.com/LubaRaphael/status/2048444288866934979) `Thing::from_stuff` 对齐类型，不要 `stuff_to_thing`；方法优于 C 式 `type_verb`。
+- API-07 指向本命令。场景 86。触发：「函数命名 / get_ 前缀 / as_ to_ into_」。
+
+## 0.0.54 — 2026-08-28
+
+- 命令级 swarm：`kernel/swarm.md` 给需要并行取证的命令列出车道；子 agent 只读，合并进同一份 ProjectSnapshot。
+- 开：document/review/doctor/crate/stack/audit/harden/slim/distill/gate/modernize 与语言/框架/交付体检。禁：craft/triage/shape/capture/init 与火焰图改帧循环。
+- bench 火焰图子 playbook（profile/read/loop/optimize）+ PERF-06：`[unknown]` 禁止改码，agent 不 sudo。
+
 ## 0.0.53 — 2026-08-28
 
 - SH-16 桌面构建矩阵：macOS「双端」= 原生 mac 包 + cargo-xwin **未签名** NSIS。Tauri 只认 MSVC；WiX/MSI 与 Authenticode 必须 Windows。

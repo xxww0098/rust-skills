@@ -2,6 +2,8 @@
 
 目的：只对用户支持的平台审查可移植性，并用结构、对应平台验证和差异记录降低风险。Tauri 不自动意味着三端支持；先从发布目标和 CI 证明平台集合。
 
+编排：多文件时按 [kernel/swarm.md](../kernel/swarm.md) — cfg 边界 · CI 矩阵 · 差异账本。 单文件或已有快照则跳过。
+
 **facet 门控**：`artifact=service` → 跳过 XP-01/09–11；无 Windows 证据与用户反馈 → 跳过 XP-06 与「必须 Windows 实测」。Linux-only 服务只核 XP-03（声明↔CI）与已触达的 XP-02/04–08。
 
 ## 第一 bug 源：三个 webview 引擎（XP-01 · desktop）

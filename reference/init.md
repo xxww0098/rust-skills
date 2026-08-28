@@ -2,12 +2,14 @@
 
 目的：在保留有效项目约定的前提下，把当前工程调和到最小 Rust 基线，再用 [document.md](document.md) 投影 post-state。规则提供候选，不授权为统一外观迁移目录、引入工具或改发布策略。
 
+编排：禁止 swarm。基线 diff 顺序落盘。
+
 ## 步骤
 
 1. **预检**：执行 document 的一次取证但先不写画像；读取现有 RUST.md 作为数据，报告当前基线、拟改文件和既有账本。显式 init 可直接处理成熟项目，不强迫用户先单独运行 document。
 2. **补齐决策**（已知则跳过）：只询问会改变实际 diff 的未知项——逐 crate facets、是否沿用现有门禁入口。**不问 edition 意向**：目标固定 edition 2024。新仓带 `resolver = "3"`；已是 2024+resolver 2 不改 resolver。MSRV 用现有 `rust-toolchain.toml` 或补 `rust-version` ≥ 1.85；低于 1.85 的抬升写成破坏性 diff 并征求同意。不得建议留在 2018/2021。其余不确定项留在画像中标 `待确认`。
 3. **计算最小 delta**（只改缺失且适用的项）：
-   - 新建多 crate 项目可采用虚拟 workspace + `crates/`；现有项目不为布局偏好迁移（WS-01/02）
+   - 新建多 crate 项目可采用虚拟 workspace + `crates/`；现有项目不为布局偏好迁移（WS-01/02）。新 crate 名走 [name.md](name.md) NM-11/12（kebab、禁 `-rs`/`utils`/`common`）
    - `edition = "2024"`（WS-05）；新仓 `resolver = "3"`；MSRV ≥ 1.85 有 toolchain 或 rust-version 其一即可（DEP-08）；共享依赖可 workspace 收口（WS-09、DEP-01）
    - `[workspace.lints]` 基线集（LINT-06）+ 成员 `[lints] workspace = true`（LINT-02）。新建或改 `rust-toolchain.toml` 时带 `components = ["clippy","rustfmt"]`（LINT-08），不另装一套 CI clippy。
 

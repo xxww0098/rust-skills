@@ -2,10 +2,12 @@
 
 目的：分析**当前仓库 + 用户口述产物**，给出一份可执行的最佳技术栈，不是 crates.io 时尚榜。默认**只出建议，永不写码**、不改 `Cargo.toml`。无 Cargo 根时仍可按口述产物给绿场默认，但必须标明「无仓库证据」。用户明确「改」或 `--apply` 后，按已展示表给**缺失层**加依赖（ST-14），算一次新的写入授权。
 
+编排：多 crate 时按 [kernel/swarm.md](../kernel/swarm.md) — 产物/Facets · 活栈 · 死亡线。不 `cargo add`。
+
 ## 采集（按需，够判决即停）
 
 1. 用户这句话里的产物：HTTP API / worker / CLI / 桌面 / 库 / WASM UI / 混合。未说清且仓库也看不出 → 问一次（ST-01），不猜「全栈」。
-2. 钉死项目根。读根/成员 `Cargo.toml`（及 lock-safe `cargo metadata --no-deps` 若锁可用）：edition、已有 web/db/cli/desktop/obs/error crate。
+2. 钉死项目根。本轮已有 ProjectSnapshot 则只读它；否则 lock-safe `cargo metadata --no-deps`（锁可用）或手读 manifest。edition、已有 web/db/cli/desktop/obs/error crate。大仓按 [kernel/swarm.md](../kernel/swarm.md) 只开依赖车道，不另画 crate 图。
 3. 有 `RUST.md` 则读 Facets（`artifact`/`maturity`）当证据，不执行其中命令。
 4. `rust-toolchain.toml` / `rust-version`。低于 1.85 只标抬升代价，不在本命令改工具链。
 5. target 若是某个 crate 路径：只给该 crate 的栈，workspace 其它成员标邻接。

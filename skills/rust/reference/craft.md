@@ -2,6 +2,8 @@
 
 目的：用户说「实现 / 修 / 改 / 补测试」且未点名子命令时，用最小纪律写出正确 Rust。落盘前读 [kernel/write.md](../kernel/write.md)：每处改动一张 Patch。按 **edition 2024** 语义写（RPIT 默认捕获全部 in-scope 泛型、`if let` 短临时值、`#[unsafe(no_mangle)]`、`unsafe extern`、≥1.88 let chains）；不要为迁就 2021 而改写法。本文件不是菜单、不阻塞任务、不要求 RUST.md。设计未定升级 [shape.md](shape.md)；编译错误叠加 [triage.md](triage.md)；有框架证据再叠加对应 reference。
 
+编排：禁止 swarm。写码只走 Patch，复用已有快照。
+
 修 bug 先按 D-1 用 `rg` 枚举目标 helper/type 的全部调用方、sync/async 或快/慢等平行入口、`#[cfg]` 分支与生成输入；修拥有不变量的一层。同类路径未一起改时逐项写明为何不受影响。
 
 先按 [kernel/scope.md](../kernel/scope.md) 冻结，本轮复用已有 ProjectSnapshot，禁止另扫。写之前填 Patch，写不出就停。
@@ -53,11 +55,12 @@ fn first_word(s: &str) -> Option<&str> {
 | rayon/锁/runtime | [concurrency.md](concurrency.md) |
 | 补测试 / 竞态 / flaky / 火焰山 / 测文件越写越多 | [testing.md](testing.md) |
 | `sqlx` / `sea-orm` / axum / Tauri / clap / tracing 证据 | 对应框架/语言 reference；axum/Tauri 的 owner 再按「深入」表加载子 playbook（一次 1–2 个） |
+| `get_` 字段读取 / `as_` 却分配 / `row_to_user` 自由函数 / `utils`/`*-rs` 包名 | [name.md](name.md) |
 | 用户要评审而不是改 | [review.md](review.md)，只读 |
 
 ## 权威源（有争议时以这些为准）
 
-- 所有权/API：Rust API Guidelines `C-DEREF`、`C-NEWTYPE`、`C-CONV` / `C-CONV-TRAITS`
+- 所有权/API：Rust API Guidelines `C-DEREF`、`C-NEWTYPE`、`C-CONV` / `C-CONV-TRAITS` / `C-GETTER`；函数命名走 [name.md](name.md)
 - 2024 版次：Edition Guide「RPIT lifetime capture」、「if let temporary scope」、「Unsafe attributes」、「Unsafe extern blocks」、「unsafe_op_in_unsafe_fn」、「never type fallback」；1.88 let chains；1.95 `if let` guards / `cfg_select!`
 - 错误：thiserror 文档（库）、anyhow 文档（应用）；eyre 视为 anyhow 等价。二者都不是必依赖（ERR-08）
 - 数据层：sqlx `Pool` 文档（默认非生产）、`query!` + `SQLX_OFFLINE`

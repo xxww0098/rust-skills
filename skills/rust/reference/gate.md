@@ -2,6 +2,8 @@
 
 目的：把**适合机器判定**的规则落成真实检查。按 META-01，规则默认是 review/eval；只有实现、失败 fixture 与注册三者齐全才升级为 machine gate，不要求所有规则伪装成自动化。裸调用只输出 ENABLED / NOT_IMPLEMENTED / REVIEW_ONLY 体检；`--apply` 或明确写入授权后才改入口、CI 或 hooks。
 
+编排：多文件时按 [kernel/swarm.md](../kernel/swarm.md) — CI 现状 · clippy 基线 · deny/hooks。 单文件或已有快照则跳过。
+
 ## 首次（项目无统一门禁）
 
 1. 先盘点 Cargo alias、Makefile/justfile、CI、hooks、lint 与测试脚本。能在已有入口加一条命令就复用；只有多项自定义检查需要共享 Rust 逻辑时才生成零依赖 xtask。调用 alias 入口时：`cargo --manifest-path` **不能**驱动 `.cargo/config.toml` alias——须先 `cd` 到项目根，或用 `cargo run -p <xtask包> --manifest-path <根>/Cargo.toml -- …`。

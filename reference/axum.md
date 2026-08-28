@@ -3,6 +3,8 @@
 目的：在冻结范围内审查或优化 axum 服务。现行稳定线 **0.8.x**（crates.io 0.8.9，2026-04）；0.7 仍按本清单审（差异处注释 `// axum 0.7`），0.6 及更早的 `axum::Server` 是迁移债务（改 `axum::serve(listener, app)`）。本清单是 ASYNC/OBS/PERF/SIMP/ERR/TEST 域的特化；`review`/`audit`/`harden` 有 axum 证据时加载相关节，再按文末「深入」表叠加 1–2 个子 playbook。组合根/超时/停机证据常在邻接 crate（如 `*-server`）：可读并标「邻接证据」，写入仍限冻结 target。
 不要读：Cargo.toml 与当前改动都没有 `axum` 证据时停，不要凭「这是 web」加载。
 
+编排：多文件时按 [kernel/swarm.md](../kernel/swarm.md) — 路由/错误所有权 · 中间件 · 测试 app()。仍只加载 1–2 个子 playbook。 单文件或已有快照则跳过。
+
 ## AX 检查单（体检输出：位置｜编号｜问题｜修复）
 
 本文件是 owner：编号定义在这里。细节、代码与反例只在命中的 1–2 个子 playbook 里读，不要把 `reference/axum/` 整目录读进来。

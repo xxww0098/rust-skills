@@ -1,0 +1,29 @@
+{
+  "id": "86",
+  "title": "函数命名走 as_/to_/into_ 与 from_，不要 get_ 和 type_verb",
+  "commands": ["name"],
+  "fixture": "hits.rs",
+  "fixture_needles": [
+    "fn get_name",
+    "fn as_owned",
+    "fn row_to_user",
+    "fn user_save",
+    "fn check_empty"
+  ],
+  "skill_needles": {
+    "skills/rust/reference/name.md": [
+      "NM-02",
+      "NM-03",
+      "NM-04",
+      "NM-08",
+      "C-CONV",
+      "Thing::from_stuff"
+    ],
+    "tests/pressure-scenarios.md": [
+      "### 场景 86",
+      "NM-03",
+      "NM-04",
+      "get_name"
+    ]
+  }
+}

@@ -2,6 +2,8 @@
 
 目的：只读检查本技能库自身、以及它与项目之间的漂移。**不做修复、设计或代码工作**。项目侧必须用与 `document`/`review` **同一份** ProjectSnapshot（[kernel/evidence.md](../kernel/evidence.md)），禁止另画 crate 图。
 
+编排：多文件时按 [kernel/swarm.md](../kernel/swarm.md) — 技能仓脚本 · 快照 vs RUST.md · toolchain。不修 DRIFT。 单文件或已有快照则跳过。
+
 ## 检查项
 
 

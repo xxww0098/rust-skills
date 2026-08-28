@@ -1,6 +1,10 @@
 # /rust-skills:rust bench <target> — 性能纪律
 
-目的：给性能主张装上数据（PERF-01..05）。两种形态：**搭基准**（target 尚无 bench）与**验证改动**（有 bench，出前后对比）。脏工作区且无 before 基线时：**只读停在采集方案**，禁止 stash / 清 target / 用 after 冒充 before（场景 24）；无 `--apply`/「修/改/实现」不落盘 bench 代码。
+目的：给性能主张装上数据（PERF-01..06）。两种形态：**搭基准**（target 尚无 bench）与**验证改动**（有 bench，出前后对比）。用户说「火焰图 / samply / 读图 / 热点」时走文末闭环，不新开命令。脏工作区且无 before 基线时：**只读停在采集方案**，禁止 stash / 清 target / 用 after 冒充 before（场景 24）；无 `--apply`/「修/改/实现」不落盘 bench 代码。构建慢 → `slim`。旧代码删仪式 → `distill`。
+
+编排：多文件时按 [kernel/swarm.md](../kernel/swarm.md) — 只扇出盘点（已有装置 · profiling profile）。火焰图改帧循环必须串行。 单文件或已有快照则跳过。
+
+必须有 target。无 target 只问一次路径，不扫全仓。
 
 ## 搭基准
 
@@ -16,9 +20,18 @@
 3. 结论只认区间不重叠的差异；噪声范围内的「提升」如实报告为无显著变化。
 4. 改动违背优化次序（PERF-02：算法→分配→并行→微调）时提醒：上游还有更大的鱼（贴证据，如火焰图热点）。`collect` 完立刻再扫一遍、或冷路径为省 clone 拧设计，都算次序错。
 
-## 深挖工具（需要定位时）
+## 火焰图闭环（按信号加载 1–2 个）
 
-CPU：`samply record` / `cargo flamegraph`。先用 `profiling`（inherits release + `debug = "line-tables-only"` + 帧指针）出图，点名最宽 **self** 符号，只改那一帧，再用同一条命令测墙钟。堆：dhat。构建性能不归本命令管 → `/rust-skills:rust slim`。
+CPU：`samply record` / `cargo flamegraph`。堆：dhat。本文件是 owner；细节只在命中的子 playbook。
+
+| 用户信号 / 代码证据 | 加载 |
+|---|---|
+| 「怎么采 / samply / cargo flamegraph / 空栈 / [unknown]」 | [bench/profile.md](bench/profile.md) |
+| 「这张图怎么看 / self / 最宽的条」 | [bench/read.md](bench/read.md) |
+| 「测→看→改→再测 / 闭环」 | [bench/loop.md](bench/loop.md) |
+| 「按热点改一帧 / `--apply` 优化这一帧」 | [bench/optimize.md](bench/optimize.md) |
+
+默认路径：先 [bench/loop.md](bench/loop.md)，采集细节不够再叠 profile；已有图只叠 read。Linux `perf_event_paranoid` / `setcap` **只打印给用户，禁止 agent sudo**。
 
 ## 输出
 
@@ -26,3 +39,4 @@ CPU：`samply record` / `cargo flamegraph`。先用 `profiling`（inherits relea
 
 - **无 before / 脏树未授权副本**：停止因果结论；输出采集步骤 + 可选装置候选；不改文件。
 - **有数据后**：bench 代码（若已授权）+ 前后对比表（均值、区间、显著性）+ 结论一句话；PR 可粘贴数据段。无显著提升的改动建议回滚。
+- **火焰图只读**：点名 self 符号 + 建议 Patch + 复测命令；未改文件。

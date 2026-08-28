@@ -2,6 +2,8 @@
 
 目的：`review` 是评审总控，不要求用户先懂 29 条命令。它先从用户提示中分离**范围、主目标、深度与执行约束**，再把当前评审只读委派给最贴近的 playbook；仍只消费**同一份 ProjectSnapshot、同一份冻结范围、同一份验证账本**。规则是候选约束，不是把所有 playbook 全开。无 target 时评审当前改动；给路径时评审该路径的完整内容；只有用户明确说“全仓”才扩到整个 workspace。
 
+编排：多文件时按 [kernel/swarm.md](../kernel/swarm.md) — 无单文件 target 才开：调用方 · 触达域 · CI 邻接。永远只读。 单文件或已有快照则跳过。
+
 显式 `review` 的只读性会粘住整条路由：`--apply` 不适用；即使提示里同时出现“修 / 改 / 重构”，本轮也只给 Finding 与最小修复方案。`--record` 只授权写 RUST.md 评审快照，不授权修改代码、测试、Cargo 或 CI。需要落地时，结尾给最贴近的**写能力命令**，由用户另行授权。
 
 先读 [kernel/scope.md](../kernel/scope.md) 冻结范围，再按 [kernel/evidence.md](../kernel/evidence.md) **本轮只采集一次**快照（`scripts/inspect_project.py` 出 crate 图/孤儿/入口）。Findings 用 [kernel/finding.md](../kernel/finding.md)：每条必须有前提、证据、反证、所有权层。禁止本命令或被委派 playbook 另画 crate 图。编译绿仍审：clone-to-compile（OWN-01）、`xs[i]`（ERR-09）、indexed loop / `Box<dyn>`（SIMP-13）。

@@ -1,0 +1,19 @@
+# anti-patterns for /name crate naming
+[workspace]
+members = ["crates/utils", "crates/my-app-rs", "crates/common"]
+
+# crates/utils/Cargo.toml
+[package]
+name = "utils"
+
+# crates/my-app-rs/Cargo.toml
+[package]
+name = "my-app-rs"
+
+# crates/common/Cargo.toml
+[package]
+name = "rust-common"
+
+[features]
+use-std = []
+no-foo = []

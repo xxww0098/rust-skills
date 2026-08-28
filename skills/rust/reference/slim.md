@@ -2,6 +2,8 @@
 
 目的：用数据把构建时间和 Rust 开发反馈成本打下来。构建性能铁律：**无 `--timings` 不改性能配置**（BUILD-04/META-02）；冷构建与热增量分开诊治（BUILD-03）。`/cargo tools` 可以按仓库事实做工具盘点、命令去重、版本/安装源归一和孤儿配置清理，但只要声称“更快”仍必须给同指纹前后基线。
 
+编排：多文件时按 [kernel/swarm.md](../kernel/swarm.md) — 三条 pin 即三条车道：cargo 指纹 · test 证明集 · tooling owner。禁止各跑一遍 metadata。`--timings` 与复测必须串行、同一 target-dir。 单文件或已有快照则跳过。
+
 ## 显式快捷入口与 Cargo 子模式
 
 `slim` 仍是统一 owner；下面的 pin/子模式只缩短入口，不复制规则、不扩大隐式路由：

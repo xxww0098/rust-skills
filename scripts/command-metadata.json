@@ -342,6 +342,30 @@
         "tracing subscriber"
       ]
     },
+    "name": {
+      "category": "语言语义",
+      "summary": "函数/方法/crate 命名：as_/to_/into_、getter 禁 get_、From 构造器、包名 kebab 禁 -rs；按 API Guidelines 体检或改名",
+      "argumentHint": "[target] [--apply]",
+      "triggers": [
+        "函数命名",
+        "方法命名",
+        "crate命名",
+        "改名",
+        "as_ to_ into_",
+        "get_ 前缀",
+        "命名规范",
+        "-rs 后缀"
+      ],
+      "triggers_en": [
+        "function naming",
+        "crate naming",
+        "package name",
+        "rename this function",
+        "as_ to_ into_",
+        "get_ prefix",
+        "API guidelines naming"
+      ]
+    },
     "axum": {
       "category": "框架",
       "summary": "axum 0.8 服务：状态、边界防护、流式、超时；按信号深入路由/提取器/中间件/鉴权/实时/测试/迁移",
@@ -447,17 +471,22 @@
     },
     "bench": {
       "category": "交付",
-      "summary": "性能纪律：搭基准、出同机前后对比",
+      "summary": "性能纪律：同机前后对比；火焰图测→看 self 帧→改一处→墙钟复测",
       "argumentHint": "<target>",
       "triggers": [
         "性能对比",
         "benchmark",
-        "这改动快了多少"
+        "这改动快了多少",
+        "火焰图",
+        "samply",
+        "读火焰图"
       ],
       "triggers_en": [
         "benchmark",
         "before/after perf",
-        "how much faster"
+        "how much faster",
+        "flamegraph",
+        "samply"
       ]
     },
     "ship": {

@@ -3,6 +3,8 @@
 目的：在有 `tracing` / `log` / `println!` 生产路径、或用户问「日志 / span / RUST_LOG / OpenTelemetry / 日志丢了」时审查或接线。现行线 **tracing 0.1.x**（crates.io 0.1.44）+ **tracing-subscriber 0.3.x**（crates.io 0.3.23；`env-filter` 必开，生产加 `json`）。axum 的 TraceLayer / request-id 走 [axum/observability.md](axum/observability.md)；本命令管进程级 subscriber、库/二进制分界、字段纪律、测试与 CLI/服务分界。裸调用只体检。
 不要读：当前改动没有日志/tracing 证据、且用户没问可观测性时停。CLI 的 stdout 是用户接口，不要当成日志缺口。
 
+编排：多文件时按 [kernel/swarm.md](../kernel/swarm.md) — init 站点 · span 基数 · 测试 subscriber。 单文件或已有快照则跳过。
+
 ## TR 检查单（体检输出：位置｜编号｜问题｜修复）
 
 **谁装 subscriber（进程一次）**

@@ -89,13 +89,42 @@ for required in "$skill_file" "$rules_file" "$namespace_file" "$scenarios_file";
 done
 [[ -d "$reference_dir" ]] || fail "required directory missing: ${reference_dir#$repo_root/}"
 [[ -d "$kernel_dir" ]] || fail "required directory missing: ${kernel_dir#$repo_root/}"
-for kf in scope.md evidence.md finding.md write.md verification.md; do
+for kf in scope.md evidence.md finding.md write.md verification.md swarm.md; do
   [[ -f "$kernel_dir/$kf" ]] || fail "kernel file missing: kernel/$kf"
 done
 rg -q 'Patch' "$kernel_dir/write.md" || fail "kernel/write.md missing Patch contract"
 rg -q 'check_patch' "$kernel_dir/verification.md" || fail "kernel/verification.md missing check_patch"
+rg -q 'inspect_project.py' "$kernel_dir/swarm.md" || fail "kernel/swarm.md missing inspect_project merge"
+rg -q 'kernel/swarm.md' "$skill_file" || fail "SKILL.md does not load kernel/swarm.md"
 rg -q 'kernel/write.md' "$reference_dir/craft.md" || fail "craft.md does not load kernel/write.md"
 rg -q 'render_rust_md.py' "$reference_dir/document.md" || fail "document.md does not use render_rust_md.py"
+rg -q '编排：禁止 swarm' "$reference_dir/craft.md" || fail "craft.md must forbid swarm"
+rg -q '编排：禁止 swarm' "$reference_dir/triage.md" || fail "triage.md must forbid swarm"
+
+if ! python3 - "$kernel_dir/swarm.md" "$reference_dir" <<'PY'
+from pathlib import Path
+import re, sys
+swarm, refdir = Path(sys.argv[1]), Path(sys.argv[2])
+text = swarm.read_text(encoding="utf-8")
+# rows like | `review` | ...
+open_cmds = re.findall(r"^\| `([a-z]+)` \|", text, re.M)
+failed = 0
+for name in open_cmds:
+    p = refdir / f"{name}.md"
+    if not p.is_file():
+        print(f"FAIL: swarm open command missing playbook: {name}", file=sys.stderr)
+        failed = 1
+        continue
+    body = p.read_text(encoding="utf-8")
+    if "kernel/swarm.md" not in body:
+        print(f"FAIL: {name}.md is in swarm open table but does not load kernel/swarm.md", file=sys.stderr)
+        failed = 1
+raise SystemExit(failed)
+PY
+then
+  fail "swarm open-table playbooks missing kernel/swarm.md pointer"
+fi
+
 
 
 for pb in review document doctor crate; do
@@ -277,7 +306,7 @@ while IFS= read -r reference; do
   rg -q '^目的：' "$reference" || fail "reference lacks an explicit purpose: ${reference#$repo_root/}"
 done <"$_consis_tmp/ref_files"
 
-for domain in async concurrency process axum tauri seaorm sqlx serde obs cli ship xplat; do
+for domain in async concurrency process axum tauri seaorm sqlx serde obs name cli ship xplat; do
   domain_file="$reference_dir/$domain.md"
   if ! rg -q '只读调用' "$domain_file" || ! rg -q '明确“修/改/实现”' "$domain_file"; then
     fail "domain reference lacks explicit read/apply output modes: ${domain_file#$repo_root/}"
@@ -301,7 +330,7 @@ readonly = ("review", "audit", "triage", "doctor")
 advice = ("shape", "crate", "stack")
 inspect_first = (
     "harden", "modernize", "distill", "slim", "gate", "bench",
-    "concurrency", "process", "async", "serde", "obs", "axum", "tauri",
+    "concurrency", "process", "async", "serde", "obs", "name", "axum", "tauri",
     "seaorm", "sqlx", "cli", "ship", "xplat",
 )
 

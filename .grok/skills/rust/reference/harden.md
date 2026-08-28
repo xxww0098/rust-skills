@@ -2,6 +2,8 @@
 
 目的：把「能跑」的代码推到「能上生产」。批量应用 ERR/OBS/ASYNC 域规则 + 边界条件。缺省 target = 最近改动的模块；service 模式的默认强化命令。裸调用只做体检；`--apply` 或同一请求明确写入授权后才改码。写入走 [kernel/write.md](../kernel/write.md)：每项一张 Patch，改完 [kernel/verification.md](../kernel/verification.md)（`check_patch.py`）。
 
+编排：多文件时按 [kernel/swarm.md](../kernel/swarm.md) — 错误路径 · 入站边界 · 观测/停机。 单文件或已有快照则跳过。
+
 
 ## 加固清单（逐项过；写入时改动配规则号）
 

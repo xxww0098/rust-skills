@@ -2,6 +2,8 @@
 
 目的：按实际交付目标审查发布链路。service 不默认等于容器，desktop 也不默认等于三平台；从用户目标、现有产线、RUST.md facets 与依赖共同判定，冲突时报出而不猜。无 target 时：优先 facets 指向的主产物 crate（`artifact=service|desktop`）及其相关 CI/Dockerfile/conf；旁路 crate 默认排除并回显。
 
+编排：多文件时按 [kernel/swarm.md](../kernel/swarm.md) — 容器 · 签名公证 · 交叉矩阵。 单文件或已有快照则跳过。
+
 ## 服务形态（SH-01..06）
 
 - SH-01 多阶段构建：推荐模式之一是 cargo-chef 缓存依赖层；BuildKit cache mount / 分层 COPY 若已能复用依赖编译也算通过。运行层 distroless/cc 或 scratch+musl。镜像尺寸须有前后基线（`docker images`），阈值由项目自定——无基线只标缺口，不因未达某固定 MB 判阻断。
