@@ -1,6 +1,14 @@
 # Changelog
 
+## 0.0.48 — 2026-08-28
+
+- 写出路径：`kernel/write.md` Patch 契约。实现/修/改必须按规范形状落盘，不能先写绿再等 review。
+- META-07：写不出 Patch 不准改文件。拒绝 clone-to-compile、生产 unwrap、服务端 println、无规格测试。
+- 修复 SKILL.md 重复的不变量/执行协议段。
+- **未做**：E4 模型跑 Patch、RUST.md renderer、provider 迁 dist。
+
 ## 0.0.47 — 2026-08-28
+
 
 - PR 1（对抗审查）：kernel 收口。不改 29 条命令、不迁 provider 树。
 - `kernel/scope.md` / `evidence.md` / `finding.md`；`schemas/project-snapshot.schema.json` + `finding.schema.json`。

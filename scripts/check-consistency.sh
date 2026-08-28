@@ -89,9 +89,12 @@ for required in "$skill_file" "$rules_file" "$namespace_file" "$scenarios_file";
 done
 [[ -d "$reference_dir" ]] || fail "required directory missing: ${reference_dir#$repo_root/}"
 [[ -d "$kernel_dir" ]] || fail "required directory missing: ${kernel_dir#$repo_root/}"
-for kf in scope.md evidence.md finding.md; do
+for kf in scope.md evidence.md finding.md write.md; do
   [[ -f "$kernel_dir/$kf" ]] || fail "kernel file missing: kernel/$kf"
 done
+rg -q 'Patch' "$kernel_dir/write.md" || fail "kernel/write.md missing Patch contract"
+rg -q 'kernel/write.md' "$reference_dir/craft.md" || fail "craft.md does not load kernel/write.md"
+
 for pb in review document doctor crate; do
   rg -q 'ProjectSnapshot' "$reference_dir/$pb.md" || fail "$pb.md does not consume ProjectSnapshot"
 done

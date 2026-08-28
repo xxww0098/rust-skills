@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/xxww0098/rust-skills/schemas/patch.schema.json",
+  "title": "Patch",
+  "type": "object",
+  "required": ["intent", "finding_id", "owner_layer", "files", "invariant", "shape", "refused", "verification"],
+  "properties": {
+    "intent": { "type": "string" },
+    "finding_id": { "type": "string" },
+    "owner_layer": { "type": "string" },
+    "files": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+    "invariant": { "type": "string" },
+    "shape": { "type": "string" },
+    "refused": { "type": "string" },
+    "verification": { "type": "string" }
+  }
+}

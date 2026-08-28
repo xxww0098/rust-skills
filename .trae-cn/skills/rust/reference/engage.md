@@ -10,9 +10,10 @@
 | 无 `RUST.md` 的非空项目 | 一句「需要画像再说 `/rust-skills:rust document`」 | 不阻塞当前任务 |
 | 空目录 / 无清单的新项目 | 一句建议 `init` | 不擅自铺模板 |
 | 出现 `E0xxx` / rustc / borrow checker | 加载 [triage.md](triage.md)，输出 HOW→WHY→WHAT | 不等 `/triage`，不先 clone |
-| 用户在实现、修、改、补测试 | 加载 [craft.md](craft.md) 再动手；补测试/竞态/flaky 再叠加 [testing.md](testing.md) | 不等选命令；不新开一堆测文件 |
+| 用户在实现、修、改、补测试 | 加载 [kernel/write.md](../kernel/write.md) 与 [craft.md](craft.md) 再动手；补测试/竞态/flaky 再叠加 [testing.md](testing.md) | 不等选命令；不新开一堆测文件；不为过编译器 clone |
+
 | 本轮刚改完 `.rs`，用户没说 review | 收尾给 1 条可复制 `/rust-skills:rust review <路径>` | 不自动开全量评审、不写 RUST.md |
-| `edition = "2018"` / `"2021"` | 一句 DRIFT，指向 `init`/`modernize` | 不打断当前修复。2024+resolver 2 不旁注 |
+| `edition = "2018"` / `"2021"` | 一句「待确认兼容约束」，指向 `init`/`modernize`（有 MSRV/发布承诺则保留） | 不打断当前修复。2024+resolver 2 不旁注 |
 | 「要不要拆 crate」且已点模块 | 走 [crate.md](crate.md) 三路审查 | 不直接搬家 |
 | 改动触及 axum handler/Router/extractor/中间件 | 叠加 [axum.md](axum.md)，按其「深入」表只加载命中的子 playbook | 不开全仓 review，不整目录读 |
 | 改动触及 `src-tauri/`、`tauri.conf.json`、`capabilities/*.json` | 叠加 [tauri.md](tauri.md)，按其「深入」表只加载命中的子 playbook | 不扩到三端发布，不改权限文件 |
