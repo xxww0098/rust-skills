@@ -18,7 +18,7 @@
 
 ## 深挖工具（需要定位时）
 
-CPU：`samply record` / perf + 火焰图——先看图再动手；堆：dhat；构建性能不归本命令管 → `/rust-skills:rust slim`。
+CPU：`samply record` / `cargo flamegraph`。先用 `profiling`（inherits release + `debug = "line-tables-only"` + 帧指针）出图，点名最宽 **self** 符号，只改那一帧，再用同一条命令测墙钟。堆：dhat。构建性能不归本命令管 → `/rust-skills:rust slim`。
 
 ## 输出
 

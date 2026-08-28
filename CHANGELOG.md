@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.0.52 — 2026-08-28
+
+- 合并 [#1](https://github.com/xxww0098/rust-skills/pull/1)：`/cargo`、`/test`、`/cargo tools` 作为 `slim` 子模式，不增加隐式路由。
+- Cargo / 测试 / 工具带共用一份 ProjectSnapshot 与命令指纹；禁止为仪式重复 metadata。
+- `bench` 火焰图闭环：profiling profile → 点名 self 符号 → 改一帧 → 同命令测墙钟。
+
 ## 0.0.51 — 2026-08-28
 
 - 蒸馏 Axum「分层路由 + 全局异常」：不是 Spring `@ControllerAdvice`。
