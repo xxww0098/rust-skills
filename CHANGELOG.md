@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.0.54 — 2026-08-28
+
+- 命令级 swarm：`kernel/swarm.md` 给需要并行取证的命令列出车道；子 agent 只读，合并进同一份 ProjectSnapshot。
+- 开：document/review/doctor/crate/stack/audit/harden/slim/distill/gate/modernize 与语言/框架/交付体检。禁：craft/triage/shape/capture/init 与火焰图改帧循环。
+- bench 火焰图子 playbook（profile/read/loop/optimize）+ PERF-06：`[unknown]` 禁止改码，agent 不 sudo。
+
 ## 0.0.53 — 2026-08-28
 
 - SH-16 桌面构建矩阵：macOS「双端」= 原生 mac 包 + cargo-xwin **未签名** NSIS。Tauri 只认 MSVC；WiX/MSI 与 Authenticode 必须 Windows。

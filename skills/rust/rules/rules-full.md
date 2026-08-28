@@ -1,4 +1,4 @@
-# Rust 工程规范（注入版 v0.0.53）
+# Rust 工程规范（注入版 v0.0.54）
 
 供按相关域渐进加载（先读同目录分文件，不要默认打开本合并件）；仅在明确的全规范审计时读取 `rules-full.md`。规则是决策约束，不是替代项目证据的检查表。
 分级：[M]=适用前提命中后 MUST，违反即阻断；[S]=默认 SHOULD，项目约定或证据可推翻并说明；[Y]=MAY。先证明前提，再引用编号；不适用不是违规。**本规范只以 edition 2024 为基线**（MSRV ≥ 1.85，可用 `rust-version` 或 `rust-toolchain.toml` 声明）。edition 2018/2021 是待迁移债务。新 workspace 用 `resolver = "3"`；已经 2024 且钉在 resolver 2 的成熟仓不迁 resolver。新代码按 2024 语义写（RPIT 全捕获、`if let` 短临时值、`#[unsafe(no_mangle)]`、`unsafe extern`、≥1.88 let chains）。Unix 多线程禁止靠 `env::set_var` 改环境。
@@ -181,6 +181,7 @@
 - PERF-03[S] 冷路径不为省 clone 扭曲设计；热路径 clone 必须说明或消除。`Arc`/`Rc` 的 clone 是计数不是深拷贝。覆盖已有缓冲时优先 `clone_from`。
 - PERF-04[S] samply/perf+flamegraph 看 CPU、dhat 看堆；bench 用 black_box 和生产分布数据。不要 `collect` 再立刻遍历——迭代器直接消费。
 - PERF-05[Y] 执行清单参考 nnethercote《The Rust Performance Book》。smallvec/arrayvec 只在剖析证明短向量分配热时引入。
+- PERF-06[M] 火焰图主宽条是 `[unknown]` / 无符号 `main` 时禁止点名热点或改码；先修 `line-tables-only`、帧指针或采集权限。Linux `sysctl`/`setcap` 只打印，用户同意后由用户执行。
 
 ## GATE 门禁
 - GATE-01[S] 本地与 CI 应复用同一组检查入口；沿用项目已有脚本/任务系统，只有复杂度值得时才新增 `cargo xtask gate`。

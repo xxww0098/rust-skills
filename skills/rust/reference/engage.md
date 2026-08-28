@@ -20,7 +20,7 @@
 | 改动触及 `clap` / `#[derive(Parser)]` | 叠加 [cli.md](cli.md) | 不把库 crate 改成 CLI |
 | 生产路径 `println!` / `tracing` / 用户问日志 | 叠加 [obs.md](obs.md) | 不把 CLI stdout 当日志缺口 |
 | 用户问技术栈 / 用什么框架 / 该选哪些 crate | 加载 [stack.md](stack.md)，只出分层表 | 裸调用不改 Cargo.toml；不丢时尚全家桶 |
-| 纯「Pin 是什么」 | 直接答 | 不扫仓库 |
+| 「看看这个仓库 / 全仓审查 / 生成画像」且 workspace ≥2 crate | 先 inspect 一份图，再按 [kernel/swarm.md](../kernel/swarm.md) 并行取证 | 不为单文件 craft/triage 开 swarm；不让子 agent 写文件 |
 
 同一轮最多主动做 **一件主动作 + 至多一句旁注**（画像缺失 / edition 漂移 / 下一步 review）。禁止连开 document+review+init。
 

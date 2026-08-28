@@ -4,11 +4,12 @@
 
 > 立场：先守用户边界和项目事实，再追求正确、精简、可验证。规则是候选约束，不是把现有项目改造成统一模板的许可。**只推崇 edition 2024**（MSRV ≥ 1.85）。新仓 resolver 3；成熟 2024 仓钉 resolver 2 不迁。2018/2021 当迁移债务。
 
-## 先记住三件事
+## 先记住四件事
 
 1. **多数时候不必选命令。** 人在 Cargo 项目里改代码或贴 rustc，技能应主动走 craft / triage。命令用来要一份确定格式的报告或授权写入。
 2. **裸命令默认不改你的代码。** 评审永远只读。改造类要 `--apply` 或说「改」才动。
 3. **旧代码优化用 `distill`，不要等 `/optimize` 或 `/split`。** 拆不拆 crate 用 `crate`，由你拍板。
+4. **大仓探索才开 swarm。** 多文件命令按 [kernel/swarm.md](skills/rust/kernel/swarm.md) 并行只读取证，合并进一份 ProjectSnapshot。`craft` / `triage` / 火焰图改帧循环禁止扇出。
 
 不确定用哪条：直接说人话，或敲 `/rust-skills:rust` 看推荐。首轮提示见 [examples/first-prompts.md](examples/first-prompts.md)。
 
@@ -286,7 +287,7 @@ axum 子 playbook：scaffold / routing / extractors / handlers / middleware / re
 /rust-skills:rust cli [target]               # clap 4.6 CLI：derive、子命令、env、退出码、补全；解析只在 bin
 
 #### 交付
-/rust-skills:rust bench <target>             # 性能纪律：搭基准、出同机前后对比
+/rust-skills:rust bench <target>             # 性能纪律：同机前后对比；火焰图测→看 self 帧→改一处→墙钟复测
 /rust-skills:rust ship [target]              # 发布工程：容器产线 / 桌面签名 + 公证 + updater
 /rust-skills:rust xplat [target]             # 跨平台一致性：平台边界、CI 矩阵、差异账本
 

@@ -12,6 +12,7 @@
 - **正交画像**：每个 crate 分开记录 `artifact=lib|service|cli|desktop` 与 `maturity=prototype|production`，不拿仓库级标签覆盖所有成员。
 - **框架深入子 playbook**：`reference/axum/` 与 `reference/tauri/` 存放按信号加载的深入材料。owner `reference/axum.md` / `reference/tauri.md` 独占 AX/TA 编号，写成薄索引（门条款保留短说明，其余一句话 + 深入表），子文件只能括号引用编号，不得定义。一致性脚本校验子目录的 owner 存在、每个子文件有 `目的：`、被 owner 入链、规则引用合法。新增子文件只需在 owner 表里加一行；新增编号只在 owner 追加并保持连续。出处（已蒸馏完毕，源包不再随仓保留，需要复核时重新 clone）：`https://github.com/Impertio-Studio/Axum-Claude-Skill-Package` @ f5b0cd4、`https://github.com/full-stack-skills/tauri-skills` @ 17c7356。
 - **doctor 自反**：库自己也是软件——编号一致性、命令表↔文件对应、写入边界分类、场景覆盖、**每个命令的磁盘 fixture**、**version floor** 都有体检。一致性脚本必须在 `LC_ALL=C` 下也能跑（UTF-8 场景标题含全角括号）；优先本机/CI 的 `rg`（ripgrep），`rg` 垫片不得把缺文件吞成空匹配。有磁盘 fixture 的场景由 `scripts/eval-fixtures.py` 读 `tests/fixtures/scene-*/contract.json` 做机械契约，不是 LLM 会话替代品。`scripts/check-floor.py` 钉死 axum/tauri/sqlx/sea-orm 现行线和 edition/MSRV；`--fetch` 才打 crates.io。
+- **命令级 swarm**：`kernel/swarm.md` 是编排表不是命令。多文件探索可并行只读车道，合并进同一份 ProjectSnapshot。`craft`/`triage`/`shape`/`capture`/`init` 与火焰图改帧循环禁止扇出。子 agent 不写文件。
 
 ## 命令表单一事实源
 

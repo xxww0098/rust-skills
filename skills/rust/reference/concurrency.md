@@ -2,6 +2,8 @@
 
 目的：为并发设计选择正确形态，并用数据优化线程、池、runtime 与竞争。[async.md](async.md) 管取消、结构化和背压语义；全局底座 ASYNC-01..08 与 D-3，SIMP-07 先行。组合根里大量 `Arc` 共享 ≠ 锁竞争（CC-13 要证据）；`TaskTracker`/`watch`/等价停机出现时标 **AS 旁注**，不得据此否决 concurrency 选型结论。
 
+编排：多文件时按 [kernel/swarm.md](../kernel/swarm.md) — 锁跨 await · spawn · rayon/tokio 桥。 单文件或已有快照则跳过。
+
 ## 选型（先分形态，形态错了后面全错）
 
 ```

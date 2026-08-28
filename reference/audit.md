@@ -1,6 +1,8 @@
 # /rust-skills:rust audit <domain> [--record] — 领域深审
 
-目的：单域穿透式只读审查，比 review 深一个量级。域：`unsafe` / `deps` / `tests` / `build` / `async` / `api` / `security`。无域参数 → 列出七域一句话说明，问一次。多域 = 依次执行。每域结束输出统一表格（位置|规则号|问题|修复）+ 置信度；默认只给可粘贴的债务条目，显式 `--record` 才写 RUST.md。
+目的：单域穿透式只读审查，比 review 深一个量级。域：`unsafe` / `deps` / `tests` / `build` / `async` / `api` / `security`。无域参数 → 列出七域一句话说明，问一次。多域 = 依次执行。消费本轮 ProjectSnapshot；大仓未限单域时按 [kernel/swarm.md](../kernel/swarm.md) 扇出对应车道。每域结束输出统一表格（位置|规则号|问题|修复）+ 置信度；默认只给可粘贴的债务条目，显式 `--record` 才写 RUST.md。
+
+编排：按 [kernel/swarm.md](../kernel/swarm.md) 只开点名域的车道；未给域则先问一次再扇出。
 
 ## audit unsafe（UNSAFE-01..11 · FFI-01..10）
 

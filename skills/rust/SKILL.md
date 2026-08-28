@@ -2,7 +2,7 @@
 name: rust
 description: Use for Cargo/Rust work in a repo — implement, debug, rustc/borrow-checker, clippy, review, unsafe/FFI, axum/sqlx/tokio, clap/tracing, Tauri v2, edition 2024, 技术栈, 编译报错, 代码审查, or /rust-skills:rust. Engage without a subcommand. Skip non-Cargo work and language trivia.
 license: MIT
-version: 0.0.53
+version: 0.0.54
 metadata:
   type: workflow
 argument-hint: "[搭建与设计: init|shape|crate|document|stack · 评审: review|audit|triage|doctor · 改造: harden|slim|modernize|distill|gate · 语言语义: concurrency|process|async|serde|obs · 框架: axum|tauri|seaorm|sqlx|cli · 交付: bench|ship|xplat · 治理: docs|capture] [target]"
@@ -32,7 +32,7 @@ argument-hint: "[搭建与设计: init|shape|crate|document|stack · 评审: rev
 0. **主动介入**：当前是 Cargo 项目且本轮在做 Rust 事时，先读 [reference/engage.md](reference/engage.md)。看见编译错误立刻 triage；看见「修/改/实现」立刻 craft。禁止因用户没敲子命令就只回命令表。
 1. **判定动作**：回答/设计/评审/诊断默认只读；用户说「实现、修、改、生成、应用」或命令带 `--apply` 即授权目标内写入。语言语义/框架命令本身不暗示写入。
 2. **范围**：按 [kernel/scope.md](kernel/scope.md) 钉根并冻结主目标｜邻接证据｜已排除。
-3. **事实**：按 [kernel/evidence.md](kernel/evidence.md) 采集一份 ProjectSnapshot（lock-safe metadata 一次）。后续命令只读这份快照。
+3. **事实**：按 [kernel/evidence.md](kernel/evidence.md) 采集一份 ProjectSnapshot（lock-safe metadata 一次）。大仓探索按 [kernel/swarm.md](kernel/swarm.md) 并行补车道，仍合并进这一份快照。后续命令只读这份快照。
 4. **渐进披露**：按路由表匹配后加载一个最贴近的 reference。普通实现先 [reference/craft.md](reference/craft.md)；测试叠加 [reference/testing.md](reference/testing.md)；编译错误叠加 [reference/triage.md](reference/triage.md)。框架 owner 先编号清单再 1–2 个子 playbook。规则按触达域读 `rules/<domain>.md`。
 5. **完成闭环**：范围内每项已处理或列为缺口；写入未越界；Finding 按 [kernel/finding.md](kernel/finding.md)；落盘按 [kernel/write.md](kernel/write.md)；验证按 [kernel/verification.md](kernel/verification.md)。
 
@@ -62,7 +62,7 @@ argument-hint: "[搭建与设计: init|shape|crate|document|stack · 评审: rev
 | 门禁 | [rules/gate.md](rules/gate.md) | CI/xtask |
 | 决策树 | [rules/d.md](rules/d.md) | 分诊、落点、三振 |
 
-范围、快照、Finding、Patch、验证 见 [kernel/scope.md](kernel/scope.md)、[kernel/evidence.md](kernel/evidence.md)、[kernel/finding.md](kernel/finding.md)、[kernel/write.md](kernel/write.md)、[kernel/verification.md](kernel/verification.md)。
+范围、快照、Finding、Patch、验证、探索扇出 见 [kernel/scope.md](kernel/scope.md)、[kernel/evidence.md](kernel/evidence.md)、[kernel/finding.md](kernel/finding.md)、[kernel/write.md](kernel/write.md)、[kernel/verification.md](kernel/verification.md)、[kernel/swarm.md](kernel/swarm.md)。
 
 ## 写入边界（一条规则：按分类记）
 
@@ -104,7 +104,7 @@ argument-hint: "[搭建与设计: init|shape|crate|document|stack · 评审: rev
 | `seaorm` | 框架 | 「SeaORM」 · 「数据库查询」 · 「N+1」 · SeaORM · ORM N+1 · SeaORM query | [reference/seaorm.md](reference/seaorm.md) |
 | `sqlx` | 框架 | 「sqlx」 · 「query! 宏」 · 「编译期 SQL」 · 「连接池饿死」 · sqlx · query! macro · compile-time SQL · pool starvation | [reference/sqlx.md](reference/sqlx.md) |
 | `cli` | 框架 | 「clap」 · 「命令行」 · 「子命令」 · 「shell 补全」 · 「CLI 参数」 · clap · CLI args · subcommands · shell completion | [reference/cli.md](reference/cli.md) |
-| `bench` | 交付 | 「性能对比」 · 「benchmark」 · 「这改动快了多少」 · benchmark · before/after perf · how much faster | [reference/bench.md](reference/bench.md) |
+| `bench` | 交付 | 「性能对比」 · 「benchmark」 · 「这改动快了多少」 · 「火焰图」 · 「samply」 · 「读火焰图」 · benchmark · before/after perf · how much faster · flamegraph · samply | [reference/bench.md](reference/bench.md) |
 | `ship` | 交付 | 「要发版」 · 「打镜像」 · 「签名/公证/updater」 · 「发布链路」 · 「交叉编译」 · 「双端编译」 · 「cargo-xwin」 · 「NSIS」 · release · container image · signing/notarization/updater · cross-compile Windows · cargo-xwin · NSIS from macOS | [reference/ship.md](reference/ship.md) |
 | `xplat` | 交付 | 「Windows 报错 Mac 正常」 · 「跨平台」 · 「CI 矩阵」 · Windows fails Mac works · cross-platform · CI matrix | [reference/xplat.md](reference/xplat.md) |
 | `docs` | 治理 | 「整理文档」 · 「docs 首页」 · 「链接失效」 · 「文档治理」 · docs index · broken links · documentation governance | [reference/docs.md](reference/docs.md) |

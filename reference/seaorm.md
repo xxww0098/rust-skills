@@ -3,6 +3,8 @@
 目的：在有 sea-orm 依赖证据时审查或优化查询、连接池与事务边界。现行稳定线 **2.0.x**（crates.io 2.0.2，2026-08）。1.x 先确认 MSRV、runtime 与迁移约束，不凭版本号自动要求升级。
 不要读：Cargo.toml 与当前改动都没有 `sea-orm` 证据时停。
 
+编排：多文件时按 [kernel/swarm.md](../kernel/swarm.md) — Loader/N+1 · execute vs raw · 池。 单文件或已有快照则跳过。
+
 ## SO 检查单（体检输出：位置｜编号｜问题｜修复）
 
 **连接与池**
