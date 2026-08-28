@@ -1,6 +1,7 @@
 # /rust-skills:rust harden [target] — 生产加固
 
-目的：把「能跑」的代码推到「能上生产」。批量应用 ERR/OBS/ASYNC 域规则 + 边界条件。缺省 target = 最近改动的模块；service 模式的默认强化命令。裸调用只做体检；`--apply` 或同一请求明确写入授权后才改码。
+目的：把「能跑」的代码推到「能上生产」。批量应用 ERR/OBS/ASYNC 域规则 + 边界条件。缺省 target = 最近改动的模块；service 模式的默认强化命令。裸调用只做体检；`--apply` 或同一请求明确写入授权后才改码。写入走 [kernel/write.md](../kernel/write.md)：每项一张 Patch，改完 [kernel/verification.md](../kernel/verification.md)（`check_patch.py`）。
+
 
 ## 加固清单（逐项过；写入时改动配规则号）
 
@@ -17,6 +18,7 @@
 按 [kernel/finding.md](../kernel/finding.md) 组织：一句话结论 → 范围行 → 正文 → 验证 → 置信度 → 下一步 → 写授权收尾。
 
 - **只读体检**：清单 1–7 分栏「主目标｜邻接证据」→ 通过 / 缺口 / 改进项 → 可粘贴 RUST.md 债务候选（默认不写；`--record` 才写入 managed）。
-- **写入授权后**：改动 diff（按域分批）+ 新增测试清单 + 未加固残留（同上 `--record` 规则）。
+- **写入授权后**：按规范形状改（Result / tracing Registry / 停机），每项 Patch 表 + `python3 scripts/check_patch.py <files>` + 新增测试清单 + 未加固残留（同上 `--record` 规则）。
+
 
 完成条件：体检时每项有判定与证据；写入时目标中可触发风险已有修复和回归检查；不能运行项目门禁时如实列缺口。

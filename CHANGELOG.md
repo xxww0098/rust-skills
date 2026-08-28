@@ -1,6 +1,13 @@
 # Changelog
 
+## 0.0.49 — 2026-08-28
+
+- 深度闭环：inspect 增加 fan-in 与 unwrap/println 信号；`render_rust_md.py` 钉死 RUST.md 四个投影节；`check_patch.py` 机械拒绝 clone/unwrap/println。
+- `kernel/verification.md`：写完必须跑 check_patch + Patch 里的 cargo 命令。document 禁止手绘 crate 图。
+- **未做**：E4 模型评 Patch、provider 迁 dist、callers/cfg 全量图。
+
 ## 0.0.48 — 2026-08-28
+
 
 - 写出路径：`kernel/write.md` Patch 契约。实现/修/改必须按规范形状落盘，不能先写绿再等 review。
 - META-07：写不出 Patch 不准改文件。拒绝 clone-to-compile、生产 unwrap、服务端 println、无规格测试。

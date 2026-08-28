@@ -48,14 +48,20 @@ pub fn parse_port(s: &str) -> Result<u16, ParsePortError> {
 }
 ```
 
-**测试**：改行为 → 最近的现有测试加 1 条，期望值来自规格。禁止新开 `tests/foo_more.rs` 复述实现。
+**应用错误（service）**：一个 enum，在边界转 HTTP/退出码；handler 不 `unwrap`。
 
-**观测**：binary `main` 装一次 subscriber；事件是常量消息 + 字段。库 crate 只 `tracing::info!(user_id = %id, "fetched")`。
+```rust
+enum AppError { NotFound, Internal(anyhow::Error) }
+```
+
+**观测**：binary `main` 一次 `Registry` + `EnvFilter::try_from_default_env` 回退 `info`。库只 emit。禁止 `fmt().init()` 当生产配置。
+
+**测试**：改行为 → 最近的现有 `#[test]` 加 1 条，期望值来自规格。禁止新开 `tests/foo_more.rs` 复述实现。
 
 **异步**：不该 async 就同步。`tokio::spawn` 必须 `.instrument(span)`；锁不跨 `.await`。
 
 ## 写完
 
-1. 最小验证已跑或缺口写进 Patch。
+1. 按 [kernel/verification.md](verification.md) 跑 `check_patch.py` + Patch 里的 cargo 命令。
 2. 范围行来自 snapshot，文件数对得上 `files`。
 3. 下一步最多一条：`/rust-skills:rust review <刚改的路径>`。

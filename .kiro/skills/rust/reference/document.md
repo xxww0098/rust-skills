@@ -5,10 +5,11 @@
 ## 一次取证
 
 
-1. **结构**：本轮若无快照，lock-safe `cargo metadata` 或 `python3 scripts/inspect_project.py <根>` 一次（失败则按 kernel/evidence 降级）。记录 workspace 形态、crate 图、环、最长链与出度 0 素材（WS-08/12）。同一 commit+target 再跑，投影节不得漂移。
-2. **域与模块**：判断 src 是业务域还是技术层（WS-06），核对 tests 布局（TEST-02/03），用快照 `graphs.orphans` 找孤儿 `.rs`，不手扫第二遍。
-3. **风险**：只记录不修改 unsafe/extern、生产 unwrap、println、无界 channel、通配 opt-level 与 lock 策略；每项给计数和位置样例，只有可行动发现才生成稳定 debt key。lock 缺失本身不是债务，只有项目已选择跟踪或可复现交付确实需要时才报 DEP-07。
-4. **Facets**：逐 crate 推断 `artifact=lib|service|cli|desktop` 与 `maturity=prototype|production`。证据充分则投影；歧义标 `待确认`。edition 2024 是生成默认，存量未解释的旧 edition 标待确认兼容约束，不直接判不健康。
+1. **结构**：本轮若无快照，跑 `python3 scripts/inspect_project.py <根>` 一次。crate 图、环、fan-in、孤儿、机械信号都来自这份 JSON。**四个投影节必须** `python3 scripts/render_rust_md.py <根>` 生成，禁止手绘。同一 commit+target 再跑，投影节不得漂移。
+2. **域与模块**：用快照 `graphs.orphans` / `fan_in`；tests 布局仍按 TEST-02/03 读证据。不手扫第二遍 crate 图。
+3. **风险**：只把快照 `signals`（unwrap/println/dbg/expect）和 lock 策略记入债务候选；模型可加低置信项但必须标 `provenance=model`。lock 缺失本身不是债务。
+4. **Facets**：renderer 给出 artifact 初值；模型只在证据不足时改成 `待确认`。edition 2024 是生成默认，存量未解释的旧 edition 标待确认兼容约束。
+
 
 
 完成取证后一次性生成画像；不要为每个节重复扫描。由 init 复用时，可以沿用未受修改影响的证据，但必须刷新受改动的 manifest、依赖图、基线和风险计数。

@@ -3,5 +3,7 @@
   "edges": [],
   "cycles": [],
   "orphans": [],
-  "entrypoints": ["src/lib.rs"]
+  "entrypoints": ["src/lib.rs"],
+  "fan_in": ["single_lib:0"],
+  "signals": []
 }

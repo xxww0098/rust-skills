@@ -1,0 +1,13 @@
+{
+  "id": "80",
+  "title": "document 投影必须来自 renderer，写出后必须 check_patch",
+  "commands": ["document"],
+  "fixture": "note.md",
+  "fixture_needles": ["手绘 crate 图", "check_patch"],
+  "skill_needles": {
+    "skills/rust/kernel/verification.md": ["check_patch", "render_rust_md.py"],
+    "skills/rust/kernel/evidence.md": ["fan-in", "render_rust_md.py"],
+    "skills/rust/reference/document.md": ["render_rust_md.py", "禁止手绘"],
+    "tests/pressure-scenarios.md": ["### 场景 80", "render_rust_md"]
+  }
+}

@@ -3,5 +3,7 @@
   "edges": ["alpha->beta", "beta->alpha"],
   "cycles": ["alpha->beta->alpha"],
   "orphans": [],
-  "entrypoints": ["alpha/src/lib.rs", "beta/src/lib.rs"]
+  "entrypoints": ["alpha/src/lib.rs", "beta/src/lib.rs"],
+  "fan_in": ["alpha:1", "beta:1"],
+  "signals": []
 }

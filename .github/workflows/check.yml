@@ -15,5 +15,8 @@ jobs:
           python3 scripts/eval-triggers.py
           python3 scripts/eval-fixtures.py
           python3 scripts/inspect_project.py --check-fixtures
+          python3 scripts/check_patch.py --check-fixtures
+          python3 scripts/render_rust_md.py --check-fixtures
+
       - name: consistency
         run: bash scripts/check-consistency.sh

@@ -2,7 +2,7 @@
 name: rust
 description: Use for Cargo/Rust work in a repo — implement, debug, rustc/borrow-checker, clippy, review, unsafe/FFI, axum/sqlx/tokio, clap/tracing, Tauri v2, edition 2024, 技术栈, 编译报错, 代码审查, or /rust-skills:rust. Engage without a subcommand. Skip non-Cargo work and language trivia.
 license: MIT
-version: 0.0.48
+version: 0.0.49
 metadata:
   type: workflow
 argument-hint: "[搭建与设计: init|shape|crate|document|stack · 评审: review|audit|triage|doctor · 改造: harden|slim|modernize|distill|gate · 语言语义: concurrency|process|async|serde|obs · 框架: axum|tauri|seaorm|sqlx|cli · 交付: bench|ship|xplat · 治理: docs|capture] [target]"
@@ -34,7 +34,8 @@ argument-hint: "[搭建与设计: init|shape|crate|document|stack · 评审: rev
 2. **范围**：按 [kernel/scope.md](kernel/scope.md) 钉根并冻结主目标｜邻接证据｜已排除。
 3. **事实**：按 [kernel/evidence.md](kernel/evidence.md) 采集一份 ProjectSnapshot（lock-safe metadata 一次）。后续命令只读这份快照。
 4. **渐进披露**：按路由表匹配后加载一个最贴近的 reference。普通实现先 [reference/craft.md](reference/craft.md)；测试叠加 [reference/testing.md](reference/testing.md)；编译错误叠加 [reference/triage.md](reference/triage.md)。框架 owner 先编号清单再 1–2 个子 playbook。规则按触达域读 `rules/<domain>.md`。
-5. **完成闭环**：范围内每项已处理或列为缺口；写入未越界；Finding 按 [kernel/finding.md](kernel/finding.md)；**落盘按** [kernel/write.md](kernel/write.md)（每处改动一张 Patch：不变量、所有权层、验证）。
+5. **完成闭环**：范围内每项已处理或列为缺口；写入未越界；Finding 按 [kernel/finding.md](kernel/finding.md)；落盘按 [kernel/write.md](kernel/write.md)；验证按 [kernel/verification.md](kernel/verification.md)。
+
 
 ## 规则按域加载
 
@@ -61,7 +62,7 @@ argument-hint: "[搭建与设计: init|shape|crate|document|stack · 评审: rev
 | 门禁 | [rules/gate.md](rules/gate.md) | CI/xtask |
 | 决策树 | [rules/d.md](rules/d.md) | 分诊、落点、三振 |
 
-范围、快照、Finding、Patch 不在本表：见 [kernel/scope.md](kernel/scope.md)、[kernel/evidence.md](kernel/evidence.md)、[kernel/finding.md](kernel/finding.md)、[kernel/write.md](kernel/write.md)。
+范围、快照、Finding、Patch、验证 见 [kernel/scope.md](kernel/scope.md)、[kernel/evidence.md](kernel/evidence.md)、[kernel/finding.md](kernel/finding.md)、[kernel/write.md](kernel/write.md)、[kernel/verification.md](kernel/verification.md)。
 
 ## 写入边界（一条规则：按分类记）
 

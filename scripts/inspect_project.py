@@ -23,6 +23,112 @@ PKG_NAME_RE = re.compile(r'(?m)^name\s*=\s*"([^"]+)"')
 MEMBERS_RE = re.compile(r"(?ms)^\[workspace\].*?^members\s*=\s*\[(.*?)\]")
 DEP_TABLE_RE = re.compile(r"(?ms)^\[dependencies\](.*?)(?=^\[|\Z)")
 DEP_NAME_RE = re.compile(r"(?m)^([A-Za-z0-9_-]+)\s*=")
+EDITION_RE = re.compile(r'(?m)^edition\s*=\s*"([^"]+)"')
+RESOLVER_RE = re.compile(r'(?m)^resolver\s*=\s*"([^"]+)"')
+UNWRAP_RE = re.compile(r"\.unwrap\s*\(")
+EXPECT_RE = re.compile(r"\.expect\s*\(")
+PRINTLN_RE = re.compile(r"\bprintln!\s*\(")
+DBG_RE = re.compile(r"\bdbg!\s*\(")
+
+
+
+def git_head(root: Path) -> str | None:
+    try:
+        proc = subprocess.run(
+            ["git", "-C", str(root), "rev-parse", "HEAD"],
+            check=False, capture_output=True, text=True,
+        )
+    except FileNotFoundError:
+        return None
+    if proc.returncode != 0:
+        return None
+    return proc.stdout.strip() or None
+
+
+def edition_of(manifest: Path) -> str | None:
+    if not manifest.is_file():
+        return None
+    text = manifest.read_text(encoding="utf-8")
+    pkg = re.search(r"(?ms)^\[package\](.*?)(?=^\[|\Z)", text)
+    if pkg:
+        m = EDITION_RE.search(pkg.group(1))
+        if m:
+            return m.group(1)
+    ws = re.search(r"(?ms)^\[workspace\.package\](.*?)(?=^\[|\Z)", text)
+    if ws:
+        m = EDITION_RE.search(ws.group(1))
+        if m:
+            return m.group(1)
+    m = EDITION_RE.search(text)
+    return m.group(1) if m else None
+
+
+def resolver_of(root: Path) -> str | None:
+    man = root / "Cargo.toml"
+    if not man.is_file():
+        return None
+    text = man.read_text(encoding="utf-8")
+    ws = re.search(r"(?ms)^\[workspace\](.*?)(?=^\[|\Z)", text)
+    body = ws.group(1) if ws else text
+    m = RESOLVER_RE.search(body)
+    return m.group(1) if m else None
+
+
+def fan_maps(edges: list[tuple[str, str]], names: list[str]) -> tuple[dict[str, int], dict[str, int]]:
+    fan_in = {n: 0 for n in names}
+    fan_out = {n: 0 for n in names}
+    for a, b in edges:
+        if a in fan_out:
+            fan_out[a] += 1
+        if b in fan_in:
+            fan_in[b] += 1
+    return fan_in, fan_out
+
+
+def is_prod_rs(path: Path) -> bool:
+    parts = {p.lower() for p in path.parts}
+    if "tests" in parts or "examples" in parts or "benches" in parts:
+        return False
+    if path.name.endswith("_test.rs"):
+        return False
+    return path.suffix == ".rs"
+
+
+def scan_signals(root: Path, member_dirs: list[Path]) -> list[dict]:
+    found: list[dict] = []
+    kinds = (
+        ("unwrap", UNWRAP_RE),
+        ("expect", EXPECT_RE),
+        ("println", PRINTLN_RE),
+        ("dbg", DBG_RE),
+    )
+    for d in member_dirs:
+        src = d / "src"
+        if not src.is_dir():
+            continue
+        for path in src.rglob("*.rs"):
+            if not is_prod_rs(path):
+                continue
+            try:
+                lines = path.read_text(encoding="utf-8").splitlines()
+            except OSError:
+                continue
+            rel = rel_to(root, path)
+            for i, line in enumerate(lines, 1):
+                stripped = line.lstrip()
+                if stripped.startswith("//"):
+                    continue
+                for kind, rx in kinds:
+                    if rx.search(line):
+                        found.append(
+                            {
+                                "kind": kind,
+                                "path": f"{rel}:{i}",
+                                "provenance": "source-scan",
+                                "confidence": "high",
+                            }
+                        )
+    return found
 
 
 def fail(msg: str) -> None:
@@ -206,7 +312,15 @@ def inspect(root: Path) -> dict:
             n = package_name(d / "Cargo.toml")
             if n:
                 ws_names[n] = d
-                crates.append({"name": n, "manifest": rel_to(root, d / "Cargo.toml"), "edition": None, "targets": []})
+                crates.append(
+                    {
+                        "name": n,
+                        "manifest": rel_to(root, d / "Cargo.toml"),
+                        "edition": edition_of(d / "Cargo.toml") or edition_of(root / "Cargo.toml"),
+                        "targets": [],
+                    }
+                )
+
         for n, d in ws_names.items():
             for dep in declared_deps(d / "Cargo.toml"):
                 if dep in ws_names:
@@ -222,14 +336,18 @@ def inspect(root: Path) -> dict:
         orphan_rel.extend(rel_to(root, o) for o in pkg_orphans(d, ents))
 
     edges = sorted(set(edges))
+    names = [c["name"] for c in crates]
+    fan_in, fan_out = fan_maps(edges, names)
+    signals = scan_signals(root, member_dirs)
     return {
         "identity": {
             "workspace_root": str(root),
             "manifest_path": rel_to(root, manifest) if manifest.is_file() else str(manifest),
-            "git_head": None,
+            "git_head": git_head(root),
             "dirty": False,
             "lock_policy": lock_policy,
             "degraded_reasons": degraded,
+            "resolver": resolver_of(root),
         },
         "scope": {"requested_target": None, "primary_files": [], "adjacent_evidence": [], "excluded_paths": []},
         "crates": crates,
@@ -238,18 +356,26 @@ def inspect(root: Path) -> dict:
             "cycles": find_cycles(edges),
             "orphans": sorted(set(orphan_rel)),
             "entrypoints": sorted(set(entry_rel)),
+            "fan_in": fan_in,
+            "fan_out": fan_out,
         },
-        "signals": [],
+        "signals": signals,
     }
 
 
 def comparable(snapshot: dict) -> dict:
+    counts: dict[str, int] = {}
+    for sig in snapshot.get("signals", []):
+        counts[sig["kind"]] = counts.get(sig["kind"], 0) + 1
+    fan_in = snapshot["graphs"].get("fan_in", {})
     return {
         "members": sorted(c["name"] for c in snapshot["crates"]),
         "edges": sorted(f'{e["from"]}->{e["to"]}' for e in snapshot["graphs"]["crate_edges"]),
         "cycles": sorted("->".join(c) for c in snapshot["graphs"]["cycles"]),
         "orphans": sorted(snapshot["graphs"]["orphans"]),
         "entrypoints": sorted(snapshot["graphs"]["entrypoints"]),
+        "fan_in": sorted(f"{k}:{v}" for k, v in fan_in.items()),
+        "signals": sorted(f"{k}:{v}" for k, v in counts.items() if v),
     }
 
 
@@ -262,8 +388,11 @@ def check_fixtures() -> int:
     for root in roots:
         expected = json.loads((root / "expected.json").read_text(encoding="utf-8"))
         got = comparable(inspect(root))
-        for key in ("members", "edges", "cycles", "orphans", "entrypoints"):
+        for key in ("members", "edges", "cycles", "orphans", "entrypoints", "fan_in", "signals"):
+            if key not in expected:
+                continue
             if set(got.get(key, [])) != set(expected.get(key, [])):
+
                 fail(f"{root.name}.{key}: got {got.get(key)} want {expected.get(key)}")
                 failed += 1
     if failed == 0:

@@ -3,5 +3,7 @@
   "edges": [],
   "cycles": [],
   "orphans": [],
-  "entrypoints": ["src/bin/cli.rs", "src/bin/worker.rs", "src/lib.rs"]
+  "entrypoints": ["src/bin/cli.rs", "src/bin/worker.rs", "src/lib.rs"],
+  "fan_in": ["parallel_entrypoints:0"],
+  "signals": []
 }

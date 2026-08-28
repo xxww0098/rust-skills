@@ -89,11 +89,14 @@ for required in "$skill_file" "$rules_file" "$namespace_file" "$scenarios_file";
 done
 [[ -d "$reference_dir" ]] || fail "required directory missing: ${reference_dir#$repo_root/}"
 [[ -d "$kernel_dir" ]] || fail "required directory missing: ${kernel_dir#$repo_root/}"
-for kf in scope.md evidence.md finding.md write.md; do
+for kf in scope.md evidence.md finding.md write.md verification.md; do
   [[ -f "$kernel_dir/$kf" ]] || fail "kernel file missing: kernel/$kf"
 done
 rg -q 'Patch' "$kernel_dir/write.md" || fail "kernel/write.md missing Patch contract"
+rg -q 'check_patch' "$kernel_dir/verification.md" || fail "kernel/verification.md missing check_patch"
 rg -q 'kernel/write.md' "$reference_dir/craft.md" || fail "craft.md does not load kernel/write.md"
+rg -q 'render_rust_md.py' "$reference_dir/document.md" || fail "document.md does not use render_rust_md.py"
+
 
 for pb in review document doctor crate; do
   rg -q 'ProjectSnapshot' "$reference_dir/$pb.md" || fail "$pb.md does not consume ProjectSnapshot"
@@ -411,6 +414,13 @@ fi
 if ! python3 "$repo_root/scripts/inspect_project.py" --check-fixtures; then
   fail "project snapshot fixtures drifted; see scripts/inspect_project.py"
 fi
+if ! python3 "$repo_root/scripts/check_patch.py" --check-fixtures; then
+  fail "check_patch fixtures drifted; see scripts/check_patch.py"
+fi
+if ! python3 "$repo_root/scripts/render_rust_md.py" --check-fixtures; then
+  fail "RUST.md projection fixtures drifted; see scripts/render_rust_md.py"
+fi
+
 if ! python3 "$repo_root/scripts/eval-triggers.py"; then
   fail "trigger eval drifted; see scripts/eval-triggers.py"
 fi
