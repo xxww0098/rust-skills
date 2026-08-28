@@ -1,0 +1,13 @@
+{
+  "id": "82",
+  "title": "Axum 分层路由：repo 不知 HTTP；没有 ControllerAdvice",
+  "commands": ["axum"],
+  "fixture": "app.rs",
+  "fixture_needles": ["HandleErrorLayer", "body_mut", "AppError::NotFound"],
+  "skill_needles": {
+    "skills/rust/reference/axum.md": ["AX-53", "AX-54", "ControllerAdvice"],
+    "skills/rust/reference/axum/handlers.md": ["AX-53", "AX-54", "Infallible"],
+    "skills/rust/reference/axum/routing.md": ["一份 `IntoResponse`"],
+    "tests/pressure-scenarios.md": ["### 场景 82", "AX-53"]
+  }
+}

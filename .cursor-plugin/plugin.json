@@ -1,7 +1,7 @@
 {
   "name": "rust-skills",
   "displayName": "Rust Skills",
-  "version": "0.0.50",
+  "version": "0.0.51",
   "description": "Use for Cargo/Rust work in a repo — implement, debug, rustc/borrow-checker, clippy, review, unsafe/FFI, axum/sqlx/tokio, clap/tracing, Tauri v2, edition 2024, 技术栈, 编译报错, 代码审查, or /rust-skills:rust. Engage without a subcommand. Skip non-Cargo work and language trivia.",
   "author": {
     "name": "xxww"

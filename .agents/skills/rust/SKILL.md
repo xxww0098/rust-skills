@@ -2,7 +2,7 @@
 name: rust
 description: Use for Cargo/Rust work in a repo — implement, debug, rustc/borrow-checker, clippy, review, unsafe/FFI, axum/sqlx/tokio, clap/tracing, Tauri v2, edition 2024, 技术栈, 编译报错, 代码审查, or /rust-skills:rust. Engage without a subcommand. Skip non-Cargo work and language trivia.
 license: MIT
-version: 0.0.50
+version: 0.0.51
 metadata:
   type: workflow
 argument-hint: "[搭建与设计: init|shape|crate|document|stack · 评审: review|audit|triage|doctor · 改造: harden|slim|modernize|distill|gate · 语言语义: concurrency|process|async|serde|obs · 框架: axum|tauri|seaorm|sqlx|cli · 交付: bench|ship|xplat · 治理: docs|capture] [target]"
@@ -99,7 +99,7 @@ argument-hint: "[搭建与设计: init|shape|crate|document|stack · 评审: rev
 | `async` | 语言语义 | 「异步」 · 「取消安全」 · 「Future/Stream」 · 「结构化并发」 · cancellation safety · structured concurrency · Future/Stream | [reference/async.md](reference/async.md) |
 | `serde` | 语言语义 | 「序列化」 · 「serde」 · 「JSON 性能」 · 「协议兼容」 · serialization · JSON performance · wire compatibility | [reference/serde.md](reference/serde.md) |
 | `obs` | 语言语义 | 「tracing」 · 「日志乱」 · 「RUST_LOG」 · 「OpenTelemetry」 · 「span 对不上」 · 「日志丢了」 · 「subscriber」 · tracing · structured logging · RUST_LOG · OpenTelemetry · logs dropped · tracing subscriber | [reference/obs.md](reference/obs.md) |
-| `axum` | 框架 | 「axum」 · 「web 服务」 · 「路由/状态/超时」 · 「鉴权/JWT/session」 · 「WebSocket/SSE」 · 「中间件/tower」 · 「0.7 升 0.8」 · axum · web service · JWT/session auth · WebSocket/SSE · tower middleware · 0.7 to 0.8 | [reference/axum.md](reference/axum.md) |
+| `axum` | 框架 | 「axum」 · 「web 服务」 · 「路由/状态/超时」 · 「鉴权/JWT/session」 · 「WebSocket/SSE」 · 「中间件/tower」 · 「0.7 升 0.8」 · 「分层路由」 · 「全局异常」 · 「统一错误处理」 · axum · web service · JWT/session auth · WebSocket/SSE · tower middleware · 0.7 to 0.8 · layered routing · global exception handler · unified error handling | [reference/axum.md](reference/axum.md) |
 | `tauri` | 框架 | 「Tauri」 · 「桌面应用」 · 「体积/启动/IPC」 · 「capabilities/权限」 · 「插件/托盘/菜单」 · 「Android/iOS」 · 「v1 升 v2」 · Tauri · desktop app · capabilities/permissions · tray/menu plugins · Android/iOS · v1 to v2 | [reference/tauri.md](reference/tauri.md) |
 | `seaorm` | 框架 | 「SeaORM」 · 「数据库查询」 · 「N+1」 · SeaORM · ORM N+1 · SeaORM query | [reference/seaorm.md](reference/seaorm.md) |
 | `sqlx` | 框架 | 「sqlx」 · 「query! 宏」 · 「编译期 SQL」 · 「连接池饿死」 · sqlx · query! macro · compile-time SQL · pool starvation | [reference/sqlx.md](reference/sqlx.md) |

@@ -89,6 +89,9 @@ fn http_client() -> reqwest::Client {
 - AX-50 所有测试经同一个 `pub fn app(state) -> Router` 驱动；oneshot 发 JSON 必须带 `content-type`。详见 [axum/testing.md](axum/testing.md)。
 - AX-51 测试默认不起端口；SSE/WS 禁止 `to_bytes` 全量收。详见 [axum/testing.md](axum/testing.md)。
 - AX-52 0.7→0.8 完成判据不是 `cargo build`：`rg '"[^"]*/[:*][A-Za-z_]'` 零命中 + 构造完整 `Router` 的测试通过，禁止 `without_v07_checks()` 止血。详见 [axum/migrate.md](axum/migrate.md)。
+- AX-53 错误所有权分层：存储层禁止 `use axum` / `StatusCode`；有 service 时由它转 `AppError`，薄 handler（AX-14）可用 `From`+`?`。HTTP 状态码只出现在 `impl IntoResponse for AppError`。详见 [axum/handlers.md](axum/handlers.md) 与 [axum/routing.md](axum/routing.md)。
+- AX-54 没有 Spring `@ControllerAdvice`。禁止 `from_fn` 读响应体当「全局异常」；禁止 `HandleErrorLayer` 包 `Router` 抓 handler 的 `AppError`（handler 已是 `Infallible`）。详见 [axum/handlers.md](axum/handlers.md)。
+
 
 ## 深入（按信号加载）
 
@@ -97,9 +100,11 @@ fn http_client() -> reqwest::Client {
 | 用户信号 / 代码证据 | 加载 |
 |---|---|
 | 「新建服务 / 搭骨架 / 整理 main.rs」；`Router::new()` 组合根、`AppState`、`with_state`、进程秒退 | [axum/scaffold.md](axum/scaffold.md) |
-| `nest`/`merge`/`fallback`/`nest_service`；启动 panic（`Overlapping`/`Nesting at the root`）；404 与 405 混淆；按领域拆路由 | [axum/routing.md](axum/routing.md) |
+| `nest`/`merge`/`fallback`；启动 panic；404 与 405 混淆；按领域拆路由；「分层路由」 | [axum/routing.md](axum/routing.md) |
+
 | `Path`/`Query`/`Json`/`Option<Extractor>`、`impl FromRequest(Parts)`、`*Rejection`、`validator`/`garde` | [axum/extractors.md](axum/extractors.md) |
-| 贴出 `Handler<_, _> is not satisfied`；`impl IntoResponse for`、`HandleErrorLayer`；「同时返回状态码/header/cookie」 | [axum/handlers.md](axum/handlers.md) |
+| 贴出 `Handler<_, _> is not satisfied`；`impl IntoResponse for`、`HandleErrorLayer`；「全局异常 / 统一错误处理」 | [axum/handlers.md](axum/handlers.md) |
+
 | `middleware::from_fn`/`route_layer`/`ServiceBuilder`/`tower_http::*`；「中间件顺序 / CORS / 限流怎么挂」 | [axum/middleware.md](axum/middleware.md) |
 | `WebSocketUpgrade`/`Sse`/`broadcast::channel`；聊天、通知、进度条、LLM token 流 | [axum/realtime.md](axum/realtime.md) |
 | `jsonwebtoken`/`tower-sessions`/`axum-login`/`oauth2`、`Authorization: Bearer`；「保护路由 / 加登录 / 做权限」 | [axum/auth.md](axum/auth.md) |

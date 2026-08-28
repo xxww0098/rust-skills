@@ -1,6 +1,14 @@
 # Changelog
 
+## 0.0.51 — 2026-08-28
+
+- 蒸馏 Axum「分层路由 + 全局异常」：不是 Spring `@ControllerAdvice`。
+- AX-53 错误所有权分层（repo 不知 HTTP；状态码只在 `IntoResponse`）。
+- AX-54 禁止中间件读响应体 / `HandleErrorLayer` 包 Router 抓 `AppError`。
+- 「分层路由」「全局异常」触发进 `axum` → `routing`/`handlers`。
+
 ## 0.0.50 — 2026-08-28
+
 
 - 蒸馏 Rust 静态分析工具链：一层一职（rustc → fmt → clippy → deny → 选择性 Miri/semver-checks/hack/Kani）。
 - LINT-07 同层不双跑（deny advisories 覆盖 cargo-audit）；LINT-08 工具链钉 clippy/rustfmt；GATE-06 禁止 G4 进每次 push。
