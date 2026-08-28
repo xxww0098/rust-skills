@@ -1,4 +1,4 @@
-# Rust 工程规范（注入版 v0.0.45）
+# Rust 工程规范（注入版 v0.0.46）
 
 供按相关域渐进加载（先读同目录分文件，不要默认打开本合并件）；仅在明确的全规范审计时读取 `rules-full.md`。规则是决策约束，不是替代项目证据的检查表。
 分级：[M]=适用前提命中后 MUST，违反即阻断；[S]=默认 SHOULD，项目约定或证据可推翻并说明；[Y]=MAY。先证明前提，再引用编号；不适用不是违规。**本规范只以 edition 2024 为基线**（MSRV ≥ 1.85，可用 `rust-version` 或 `rust-toolchain.toml` 声明）。edition 2018/2021 是待迁移债务。新 workspace 用 `resolver = "3"`；已经 2024 且钉在 resolver 2 的成熟仓不迁 resolver。新代码按 2024 语义写（RPIT 全捕获、`if let` 短临时值、`#[unsafe(no_mangle)]`、`unsafe extern`、≥1.88 let chains）。Unix 多线程禁止靠 `env::set_var` 改环境。
@@ -169,6 +169,7 @@
 - OBS-04[S] 级别语义：error=需人介入 / warn=已自愈 / info=业务里程碑 / debug、trace=开发期。
 - OBS-05[S] 只有 binary `main` 安装全局 subscriber；库 crate 只 emit tracing 事件，禁止 `init`/`set_global_default`。
 - OBS-06[M] 非阻塞/滚动 writer 的 WorkerGuard 必须活到进程退出；测试用 `try_init` / `with_test_writer`，禁止 `init()` 进入 `#[test]`。
+- OBS-07[S] `fmt::init()`（无 RUST_LOG→ERROR）≠ `fmt().init()`（默认 INFO）；生产一律 `EnvFilter::try_from_default_env` 带回退。多 sink 用 Registry+Layer，每个 writer 一层 fmt；同一 writer 禁止两层。`#[instrument]` 只标业务边界。
 
 ## PERF 性能纪律
 - PERF-01[M] 性能声明必附同机 before/after 数据（criterion/divan 或 --timings），并使用交付 profile 或与其优化语义一致的 profiling profile；debug 数据只作诊断。

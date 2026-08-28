@@ -1,6 +1,15 @@
 # Changelog
 
+## 0.0.46 — 2026-08-28
+
+- 蒸馏「Rust 日志终极指南」（tracing 概念/架构/Span/Registry+Layer）。不整篇搬教程。
+- OBS-07 / TR-19：`fmt::init()` ≠ `fmt().init()` 默认过滤器。
+- TR-20：多 sink 用 Registry+Layer；修正 TR-03——禁止的是同一 writer 两层 fmt，不是「永远只能一层」。
+- TR-21 `in_scope`；TR-22 `FmtSpan` 默认关；`#[instrument]` 只标业务边界。
+- **未做**：强制 `tracing-error`、把 XML/YAML 日志配置引进 Rust。
+
 ## 0.0.45 — 2026-08-26
+
 
 - 蒸馏：[Anthropic skill authoring](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices)（body ≤500 行、description ≤1024）；[Jesse Vincent](https://www.ksred.com/best-claude-code-skills-which-ones-are-actually-worth-installing/) Claude Code 15k 描述预算静默丢 skill；[Macroscope AI Rust review](https://macroscope.com/content/ai-code-review-rust) 信任边界 panic；[Microsoft Rust Engineering](https://microsoft.github.io/RustTraining/engineering-book/) + [cargo-hack](https://github.com/taiki-e/cargo-hack) powerset。
 - ERR-09 `xs[i]` / 入站 `/`；SIMP-13 AI 过编译器味；GATE-05 `cargo hack --feature-powerset --no-dev-deps`。

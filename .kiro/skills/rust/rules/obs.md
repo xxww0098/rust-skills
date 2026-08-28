@@ -5,3 +5,4 @@
 - OBS-04[S] 级别语义：error=需人介入 / warn=已自愈 / info=业务里程碑 / debug、trace=开发期。
 - OBS-05[S] 只有 binary `main` 安装全局 subscriber；库 crate 只 emit tracing 事件，禁止 `init`/`set_global_default`。
 - OBS-06[M] 非阻塞/滚动 writer 的 WorkerGuard 必须活到进程退出；测试用 `try_init` / `with_test_writer`，禁止 `init()` 进入 `#[test]`。
+- OBS-07[S] `fmt::init()`（无 RUST_LOG→ERROR）≠ `fmt().init()`（默认 INFO）；生产一律 `EnvFilter::try_from_default_env` 带回退。多 sink 用 Registry+Layer，每个 writer 一层 fmt；同一 writer 禁止两层。`#[instrument]` 只标业务边界。

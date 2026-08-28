@@ -1,0 +1,12 @@
+{
+  "id": "77",
+  "title": "fmt::init vs fmt().init + 双 fmt 打 stdout + 跨 await enter",
+  "commands": ["obs"],
+  "fixture": "hits.rs",
+  "fixture_needles": ["fmt().init()", "fmt().json().init()", "info_span!(\"GET {}\"", "span.enter()"],
+  "skill_needles": {
+    "skills/rust/rules/obs.md": ["OBS-07", "fmt::init()", "Registry"],
+    "skills/rust/reference/obs.md": ["TR-19", "TR-20", "TR-21", "in_scope", "业务边界"],
+    "tests/pressure-scenarios.md": ["### 场景 77", "TR-19"]
+  }
+}

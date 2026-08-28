@@ -6,7 +6,7 @@
 
 1. `registry().with(filter).with(fmt).init()` 只在 `main` 调一次、早于 `axum::serve`；第二次 `init()` panic。`.with()`/`.init()` 来自 `prelude::*`（`SubscriberExt`/`SubscriberInitExt`），不导入不编译。
 2. `EnvFilter` 用 `try_from_default_env()` 带回退：`from_default_env()` 是 lossy 的，写错的指令被静默忽略、`RUST_LOG` 未设时只剩 ERROR 级——症状是「什么都不打」而不是 panic。开发回退必须含 `axum::rejection=trace`（否则 extractor 拒绝只剩一个裸 4xx）和 `tower_http=debug`（`TraceLayer` 默认钩子在 DEBUG，不开等于没装）；生产回退是 `info`。
-3. fmt 层二选一装配：开发 `.pretty()`，生产 `.json()`（feature `json`，默认已带当前 span 与 span 列表字段，要把事件字段拍平到顶层才加 `.flatten_event(true)`）；两分支用 `.boxed()` 统一类型。禁止同时装两个 fmt 层（每行打两遍）。
+3. 同一 writer 一层 fmt：开发 `.pretty()`，生产 `.json()`（feature `json`，默认已带当前 span 与 span 列表字段，要把事件字段拍平到顶层才加 `.flatten_event(true)`）；stdout 上两分支用 `.boxed()` 统一类型。控制台+文件是 **Registry 上两个 writer**（TR-20），不是两个 fmt 打同一 stdout。
 
 ```rust
 use tracing_subscriber::{fmt, prelude::*, EnvFilter};
