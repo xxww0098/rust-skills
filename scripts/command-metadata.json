@@ -353,7 +353,10 @@
         "鉴权/JWT/session",
         "WebSocket/SSE",
         "中间件/tower",
-        "0.7 升 0.8"
+        "0.7 升 0.8",
+        "分层路由",
+        "全局异常",
+        "统一错误处理"
       ],
       "triggers_en": [
         "axum",
@@ -361,8 +364,12 @@
         "JWT/session auth",
         "WebSocket/SSE",
         "tower middleware",
-        "0.7 to 0.8"
+        "0.7 to 0.8",
+        "layered routing",
+        "global exception handler",
+        "unified error handling"
       ]
+
     },
     "tauri": {
       "category": "框架",

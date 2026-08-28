@@ -138,7 +138,8 @@ pub fn app(state: AppState) -> Router {
 
 ## 按领域拆模块
 
-1. 每个领域 `mod` 暴露一个 `pub fn router() -> Router<AppState>`，路径写相对路径，不知道自己会被挂在哪。版本前缀、鉴权 `route_layer`、fallback、`with_state`、全局 `layer` 只在组合根出现一次；子模块里出现 `.with_state`/`.layer(TraceLayer…)` 就是分层漏了。
+1. 每个领域 `mod` 暴露一个 `pub fn router() -> Router<AppState>`，路径写相对路径，不知道自己会被挂在哪。版本前缀、鉴权 `route_layer`、fallback、`with_state`、全局 `layer` 只在组合根出现一次；子模块里出现 `.with_state`/`.layer(TraceLayer…)` 就是分层漏了。全仓一个 `AppError` + 一份 `IntoResponse`（AX-53）；子 router 禁止各自 `impl IntoResponse` 或在模块里 `map_err(|_| StatusCode::…)`。
+
 2. 不需要前缀的（`/healthz`、`/metrics`）用 `merge`；需要前缀的用 `nest`。`merge` 进来的 `/healthz` 与 `nest("/api")` 下的路由互不影响。
 3. 拆分依据是变化原因（WS-11），不是行数；一个 `users.rs` 里 6 条路由加 handler 完全正常。路由与 handler 同文件，跨模块只共享 `AppState` 与错误类型。
 

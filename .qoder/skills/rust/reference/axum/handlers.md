@@ -1,6 +1,7 @@
 # axum/handlers — Handler 与响应：签名规则、IntoResponse、错误模型与 Handler trait 报错分诊
 
-目的：用户贴出 `the trait bound … Handler<_, _> is not satisfied`、问「handler 怎么同时返回状态码/header/cookie」、或代码里出现 `impl IntoResponse for`、`Result<_, AppError>`、`HandleErrorLayer` 时加载。只展开 [../axum.md](../axum.md) 的 AX-12/AX-13/AX-14，不复述清单：状态与 `FromRef` 见 AX-01，鉴权 extractor 见 [auth.md](auth.md)，超时与流式见 AX-04/AX-07，锁跨 await 的原理见 [../async.md](../async.md)。
+目的：用户贴出 `the trait bound … Handler<_, _> is not satisfied`、问「handler 怎么同时返回状态码/header/cookie / 全局异常 / 统一错误处理」、或代码里出现 `impl IntoResponse for`、`Result<_, AppError>`、`HandleErrorLayer` 时加载。只展开 [../axum.md](../axum.md) 的 AX-12/AX-13/AX-14/AX-53/AX-54，不复述清单：状态与 `FromRef` 见 AX-01，鉴权 extractor 见 [auth.md](auth.md)，超时与流式见 AX-04/AX-07，锁跨 await 的原理见 [../async.md](../async.md)。
+
 
 ## Handler 资格：blanket impl 的全部条件
 
@@ -139,6 +140,45 @@ impl IntoResponse for AppError {
 
 5. extractor 失败默认是纯文本 + 各自正确的状态（415/400/422/413，AX-20），与上面的错误体形状不一致时客户端要解析两套：按 [extractors.md](extractors.md) 的同名 newtype / `WithRejection` 方案把 rejection 收进 `AppError`，并按 AX-19 审 0.8 的 `Option<Extractor>`——机制此处不重复。
 6. `HandleErrorLayer` 只给**会失败的 tower service**（AX-31）：`Router::layer` 要求 service 错误为 `Infallible`，`tower::timeout`/`load_shed`/`buffer`/限流这类返回 `BoxError` 的 layer 必须被 `HandleErrorLayer` 包住，且在 `ServiceBuilder` 里写在被包 layer **之前**（外层）。tower-http 的 `TimeoutLayer`（AX-04 用的那个）自己回 408、是 infallible 的，不需要；handler 错误与 extractor 失败也不走它——那是 `IntoResponse` 的事。
+
+## 分层错误所有权（AX-53）与「全局异常」（AX-54）
+
+Axum 没有 `@ControllerAdvice`。handler 的 service 错误类型是 `Infallible`：失败已经变成响应，中间件再读 body 当异常会把响应体消费掉且看不到 `AppError`。
+
+| 层 | 返回 | 禁止 |
+|---|---|---|
+| repo / sql | `sqlx::Error` 或领域存储错误 | `use axum`、`StatusCode`、`AppError::NotFound` |
+| service（有第二调用方才建，SIMP-01） | `AppError` 或领域错误 | `http::StatusCode`、拼 JSON 响应 |
+| handler | `Result<T, AppError>`，`?` 传播 | `map_err(|_| StatusCode::X)`、再打一遍日志 |
+| `impl IntoResponse for AppError` | 唯一映射状态码 + 唯一 `tracing::error!` | 每个域 Router 各自再写一份 IntoResponse |
+
+薄 handler（AX-14：端点就是 1–2 条查询）可以没有 service：`From<sqlx::Error>` + `?` 合法，但 **From 映射进 `error.rs`，sql 函数本身仍不碰 HTTP**。
+
+```rust
+// ✗ AX-54 当 Spring 全局异常：handler 已是 Infallible，这层永远看不到 AppError
+.layer(HandleErrorLayer::new(|_: BoxError| async { StatusCode::INTERNAL_SERVER_ERROR }))
+.layer(from_fn(|req, next| async move {
+    let mut res = next.run(req).await;
+    let _ = res.body_mut(); // 体被消费，客户端拿到空 body
+    res
+}))
+
+// ✗ AX-53 repo 认识 HTTP
+pub async fn find_user(db: &PgPool, id: i64) -> Result<User, AppError> {
+    sqlx::query_as!(User, "…", id).fetch_optional(db).await?.ok_or(AppError::NotFound)
+}
+
+// ✓ 存储层不知 HTTP；404 语义在调用点或 IntoResponse 的 RowNotFound 映射
+pub async fn find_user(db: &PgPool, id: i64) -> Result<Option<User>, sqlx::Error> {
+    sqlx::query_as!(User, "SELECT id, email FROM users WHERE id = $1", id).fetch_optional(db).await
+}
+async fn show(State(db): State<PgPool>, Path(id): Path<i64>) -> Result<Json<User>, AppError> {
+    Ok(Json(find_user(&db, id).await?.ok_or(AppError::NotFound)?))
+}
+```
+
+`HandleErrorLayer` 的合法位置仍是上一节：只包 `load_shed`/`buffer`/`tower::timeout` 这类 `BoxError` layer。
+
 
 ```rust
 // ✓ HandleErrorLayer 在外层，只翻译 fallible layer 的 BoxError
