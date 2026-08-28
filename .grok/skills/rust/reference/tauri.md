@@ -3,6 +3,8 @@
 目的：在有 Tauri 2.x 依赖和相关目标时审查体积、IPC、启动与运行时，以及权限面、命令/事件契约、窗口集成、插件接线与移动端。现行稳定线 **2.11.x**（crates.io 2.11.5，2026-07）；v1 结构（`tauri.allowlist`、`emit_all`、`@tauri-apps/api/tauri`）是迁移债务。`removeUnusedCommands` 从 2.4 起可用，不是新命令门槛。本文件是 owner：先按 TA 清单体检，再按「深入」表只加载命中的 1–2 个 `tauri/` 子 playbook。跨平台差异按需加载 [xplat.md](xplat.md)，签名/公证/updater 发布链走 [ship.md](ship.md)；不因技术栈自动扩到三端发布。
 不要读：Cargo.toml、`src-tauri/` 与当前改动都没有 Tauri 证据时停。
 
+编排：多文件时按 [kernel/swarm.md](../kernel/swarm.md) — capabilities · IPC · 窗口。仍只加载 1–2 个子 playbook。 单文件或已有快照则跳过。
+
 ## TA 检查单（体检输出：位置｜编号｜问题｜修复）
 
 编号定义在本文件。细节只在命中的 1–2 个子 playbook 里读，不要整目录读 `reference/tauri/`。

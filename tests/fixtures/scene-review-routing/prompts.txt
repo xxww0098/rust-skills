@@ -1,0 +1,22 @@
+# review 自适应路由压力场景（E1/E2 结构契约，不是 LLM 行为证明）
+
+1. `/review crates/payments 重点看 CI 是否重复跑 test；不要 cargo clean`
+   期望：review 只读 owner；test 主镜头；cargo 补充镜头；共享一次命令指纹。
+
+2. `/review src/ffi.rs 深审 unsafe/FFI soundness，不运行 nightly`
+   期望：audit unsafe 主镜头；Miri 标为用户约束下未运行，不伪装通过。
+
+3. `/review crates/api 这个 E0382 和本次 diff 一起看`
+   期望：triage 主镜头先解释错误，再完成冻结范围内评审；不建议 clone-to-compile。
+
+4. `/review crates/server Axum 鉴权中间件与取消安全，别扫全仓`
+   期望：axum auth 主镜头；async 补充镜头；范围保持在目标与最小邻接。
+
+5. `/review tests 重点审构建脚本`
+   期望：若 `tests` 是现存路径，它先作为 target；“构建脚本”才路由 cargo 镜头。
+
+6. `/review 热核审查这段旧代码，找可整枝删除的复杂度`
+   期望：distill 主镜头 + 热核严格度；仍然只读，不直接重构。
+
+7. `/review 只看性能回退，但当前没有 before 基线`
+   期望：bench 主镜头；只给采集方案，不声称改动造成回退。

@@ -1,0 +1,33 @@
+{
+  "id": "review-routing",
+  "title": "Review prompt routing keeps one read-only owner and deduplicates proof",
+  "commands": [
+    "review"
+  ],
+  "fixture": "prompts.txt",
+  "fixture_needles": [
+    "重复跑 test",
+    "unsafe/FFI soundness",
+    "E0382",
+    "Axum 鉴权中间件",
+    "现存路径",
+    "热核审查",
+    "没有 before 基线"
+  ],
+  "skill_needles": {
+    "skills/rust/reference/review.md": [
+      "review` 是唯一 owner",
+      "显式 `review` 的只读性会粘住整条路由",
+      "一个主镜头 + 至多一个补充镜头",
+      "现存路径先于意图关键词",
+      "同一命令指纹只执行一次",
+      "[slim/test.md](slim/test.md)",
+      "[slim/cargo.md](slim/cargo.md)",
+      "一个信号一个 owner"
+    ],
+    "commands/review.md": [
+      "$ARGUMENTS` 同时承载范围与评审意图",
+      "不会把子 playbook 的 `--apply` 能力带进 review"
+    ]
+  }
+}

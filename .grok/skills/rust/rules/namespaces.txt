@@ -29,4 +29,5 @@ ST local reference/stack.md
 SX local reference/sqlx.md
 TA local reference/tauri.md
 TR local reference/obs.md
+NM local reference/name.md
 XP local reference/xplat.md

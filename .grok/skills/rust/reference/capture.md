@@ -2,6 +2,8 @@
 
 目的：把踩坑蒸馏为可验证的候选规则，同时保持已安装插件为只读。默认只写当前项目的 `.rust-skills/capture-outbox.md`；不得写已安装插件根（`${CLAUDE_PLUGIN_ROOT}`、`${GROK_PLUGIN_ROOT}`、`${CLAUDE_SKILL_DIR}`）或 marketplace 的版本化 cache。
 
+编排：禁止 swarm。六步蒸馏串行写入 outbox。
+
 无参数时回顾当前会话，提出一个最值得沉淀的教训并在写入前确认；有 lesson 时视为用户已选择主题，但仍先展示候选条目和目标文件。
 
 ## 六步蒸馏
