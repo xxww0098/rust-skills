@@ -1,6 +1,16 @@
 # Changelog
 
+## 0.0.47 — 2026-08-28
+
+- PR 1（对抗审查）：kernel 收口。不改 29 条命令、不迁 provider 树。
+- `kernel/scope.md` / `evidence.md` / `finding.md`；`schemas/project-snapshot.schema.json` + `finding.schema.json`。
+- META-06：review/document/doctor/crate/distill/harden 本轮只消费一份 ProjectSnapshot。
+- `scripts/inspect_project.py`：crate 图、环、孤儿、入口；`tests/projects/` 四个真实 Cargo fixture。
+- `.github/workflows/check.yml`。edition 2024 在 SKILL 中降为生成默认，不再当存量健康不变量。
+- **未做**：provider 树迁 dist/、拆 check-consistency.sh、E4 模型行为测试、inspect 的 callers/cfg 全量。
+
 ## 0.0.46 — 2026-08-28
+
 
 - 蒸馏「Rust 日志终极指南」（tracing 概念/架构/Span/Registry+Layer）。不整篇搬教程。
 - OBS-07 / TR-19：`fmt::init()` ≠ `fmt().init()` 默认过滤器。

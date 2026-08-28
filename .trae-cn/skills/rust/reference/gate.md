@@ -39,7 +39,7 @@ incompatible-publish-age = "deny"
 
 ## 输出与完成条件
 
-按 [SKILL 输出契约](../SKILL.md) 组织：一句话结论 → 范围行 → 正文 → 验证 → 置信度 → 下一步 → 写授权收尾。
+按 [kernel/finding.md](../kernel/finding.md) 组织：一句话结论 → 范围行 → 正文 → 验证 → 置信度 → 下一步 → 写授权收尾。
 
 - **只读体检**：统一入口、ENABLED / NOT_IMPLEMENTED / REVIEW_ONLY 三表、与 skill 候选集差距、实跑或「未重跑/从配置推断」声明。
 - **写入授权后**：改入口/检查/CI/hooks 的计划与 diff；失败 fixture 与实跑证据。

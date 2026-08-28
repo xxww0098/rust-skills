@@ -1,0 +1,7 @@
+{
+  "members": ["orphan_module"],
+  "edges": [],
+  "cycles": [],
+  "orphans": ["src/orphan.rs"],
+  "entrypoints": ["src/lib.rs"]
+}

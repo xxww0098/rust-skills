@@ -74,7 +74,9 @@ skill_file="$repo_root/skills/rust/SKILL.md"
 rules_file="$repo_root/skills/rust/rules/rules-full.md"
 namespace_file="$repo_root/skills/rust/rules/namespaces.txt"
 reference_dir="$repo_root/skills/rust/reference"
+kernel_dir="$repo_root/skills/rust/kernel"
 scenarios_file="$repo_root/tests/pressure-scenarios.md"
+
 failed=0
 
 fail() {
@@ -86,6 +88,14 @@ for required in "$skill_file" "$rules_file" "$namespace_file" "$scenarios_file";
   [[ -f "$required" ]] || fail "required file missing: ${required#$repo_root/}"
 done
 [[ -d "$reference_dir" ]] || fail "required directory missing: ${reference_dir#$repo_root/}"
+[[ -d "$kernel_dir" ]] || fail "required directory missing: ${kernel_dir#$repo_root/}"
+for kf in scope.md evidence.md finding.md; do
+  [[ -f "$kernel_dir/$kf" ]] || fail "kernel file missing: kernel/$kf"
+done
+for pb in review document doctor crate; do
+  rg -q 'ProjectSnapshot' "$reference_dir/$pb.md" || fail "$pb.md does not consume ProjectSnapshot"
+done
+
 if (( failed != 0 )); then
   exit 1
 fi
@@ -167,10 +177,13 @@ for line in (skill_root / "rules" / "namespaces.txt").read_text(encoding="utf-8"
 
 failed = False
 references = list(reference_dir.rglob("*.md"))
+kernel_dir = skill_root / "kernel"
+kernel_files = list(kernel_dir.rglob("*.md")) if kernel_dir.is_dir() else []
 skill_file = skill_root / "SKILL.md"
 scenarios_file = root / "tests" / "pressure-scenarios.md"
 sources = []
-for path in [*references, skill_file]:
+for path in [*references, *kernel_files, skill_file]:
+
     lines = list(enumerate(path.read_text(encoding="utf-8").splitlines(), 1))
     sources.append((path, lines))
 scenario_acceptance = [
@@ -230,9 +243,10 @@ while IFS= read -r rule_id; do
 done <<<"$rule_ids"
 
 {
-  rg -o --no-filename '[A-Z]+-[0-9]+' "$reference_dir" "$skill_file"
+  rg -o --no-filename '[A-Z]+-[0-9]+' "$reference_dir" "$kernel_dir" "$skill_file"
   sed -n '/^验收：/p' "$scenarios_file" | grep -oE '[A-Z]+-[0-9]+' || true
 } | sort -u >"$_consis_tmp/rule_refs"
+
 
 while IFS= read -r rule_ref; do
   [[ "$rule_ref" == "UTF-8" ]] && continue
@@ -390,6 +404,9 @@ fi
 
 if ! python3 "$repo_root/scripts/eval-fixtures.py"; then
   fail "fixture eval contracts drifted; see scripts/eval-fixtures.py"
+fi
+if ! python3 "$repo_root/scripts/inspect_project.py" --check-fixtures; then
+  fail "project snapshot fixtures drifted; see scripts/inspect_project.py"
 fi
 if ! python3 "$repo_root/scripts/eval-triggers.py"; then
   fail "trigger eval drifted; see scripts/eval-triggers.py"

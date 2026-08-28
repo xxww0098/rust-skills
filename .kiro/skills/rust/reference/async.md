@@ -59,6 +59,6 @@ timeout(Duration::from_secs(10), tracker.wait()).await?;
 
 ## 输出
 
-按 [SKILL 输出契约](../SKILL.md) 组织：一句话结论 → 范围行 → 正文 → 验证 → 置信度 → 下一步 → 写授权收尾。
+按 [kernel/finding.md](../kernel/finding.md) 组织：一句话结论 → 范围行 → 正文 → 验证 → 置信度 → 下一步 → 写授权收尾。
 
 只读调用：体检表（位置｜AS/ASYNC 编号｜问题｜修复）+ 验证缺口。`--apply` 或明确“修/改/实现”时：再给实际改动与验证证据。残余只输出 RUST.md 债务候选，显式 `--record` 才写入。

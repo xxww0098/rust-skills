@@ -1,11 +1,14 @@
 # /rust-skills:rust review [target] [--record] — 规范评审
 
-目的：用 143 条分级规则作候选检索，做证据驱动的只读评审；不是为了把每条偏好套到代码上。无 target 时评审当前改动；给路径时评审该路径的完整内容；只有用户明确说“全仓”才扩到整个 workspace。永远只读；`--apply` 不适用，`--record` 只授权写 RUST.md 评审快照，不授权修改代码。用户说「热核 / thermo-nuclear / 严格可维护性 / spaghetti」时打开下方热核档：结构门槛升高，仍然只出报告。编译绿仍审：clone-to-compile（OWN-01）、`xs[i]`（ERR-09）、indexed loop / `Box<dyn>`（SIMP-13）。
+目的：用 144 条分级规则作候选检索，对 **同一份 ProjectSnapshot** 的变更切片做证据驱动的只读评审；不是为了把每条偏好套到代码上。无 target 时评审当前改动；给路径时评审该路径的完整内容；只有用户明确说“全仓”才扩到整个 workspace。永远只读；`--apply` 不适用，`--record` 只授权写 RUST.md 评审快照，不授权修改代码。用户说「热核 / thermo-nuclear / 严格可维护性 / spaghetti」时打开下方热核档：结构门槛升高，仍然只出报告。编译绿仍审：clone-to-compile（OWN-01）、`xs[i]`（ERR-09）、indexed loop / `Box<dyn>`（SIMP-13）。
+
+先读 [kernel/scope.md](../kernel/scope.md) 冻结范围，再按 [kernel/evidence.md](../kernel/evidence.md) **本轮只采集一次**快照（`scripts/inspect_project.py` 出 crate 图/孤儿/入口）。Findings 用 [kernel/finding.md](../kernel/finding.md)：每条必须有前提、证据、反证、所有权层。禁止本命令另画 crate 图。
 
 ## 作用域解析
 
-1. 在 SKILL 已钉死的项目根按其 lock-safe 协议运行 `cargo metadata --no-deps --format-version 1`（或 `--manifest-path <root>/Cargo.toml`）；失败时仅在该根树内退回最近 Cargo.toml，并声明降级。禁止用技能仓或其他邻居仓库的 metadata 冒充，也不得为只读评审创建/更新 Cargo.lock。
-2. 先报告解析出的 workspace 根、target、文件数与是否写入，再冻结文件清单：
+
+1. 钉死项目根后，若本轮还没有 ProjectSnapshot：lock-safe `cargo metadata --no-deps --format-version 1` 或 `python3 scripts/inspect_project.py <根>`。失败时仅在该根树内退回最近 Cargo.toml，并写入 snapshot.degraded_reasons。禁止用技能仓 metadata 冒充，也不得为只读评审创建/更新 Cargo.lock。
+2. 先报告 snapshot.identity.workspace_root、target、文件数与是否写入，再按 [kernel/scope.md](../kernel/scope.md) 冻结：
    - 无 target：在项目根合并 `git -C <root> diff HEAD --name-only --` 与 `git -C <root> ls-files --others --exclude-standard`。
    - target 先按 workspace 内文件/目录解析；存在则读取其完整相关文件清单，不再套 git diff 过滤。
    - 仅当 target 不存在于文件系统且 `git -C <root> rev-parse` 能验证为 commit/range 时，才用 `git diff --name-only <target> --`；在执行前原样回显 revision。
@@ -23,12 +26,13 @@
 
 ## 输出
 
-按 [SKILL 输出契约](../SKILL.md) 组织：一句话结论 → 范围行 → 正文 → 验证 → 置信度 → 下一步 → 写授权收尾。
+按 [kernel/finding.md](../kernel/finding.md) 组织：一句话结论 → 范围行 → Finding 表 → 验证 → 置信度 → 下一步 → 写授权收尾。
 
 ```
 范围：<workspace 根> · <target 解释> · <N 个文件> · 只读|记录快照
-| 位置 | 规则号 | 级别 | 问题 | 修复建议 |
+| 位置 | 规则 | 级别 | 前提 | 证据 | 反证 | 所有权层 | 最小修复 |
 ```
+
 
 M 违规在前；每条给适用前提、代码证据和后果，不给感觉。表后给总评、逐域覆盖/不适用表、验证结果和置信度（低必列未验证假设）。未发现问题也要列已检查范围和剩余风险。
 

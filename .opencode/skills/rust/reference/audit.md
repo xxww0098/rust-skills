@@ -74,4 +74,4 @@ pub 面清单：无文档 pub 项计数（missing_docs）；连环 bool/魔法�
 
 ## 输出
 
-按 [SKILL 输出契约](../SKILL.md) 组织：一句话结论 → 范围行 → 正文 → 验证 → 置信度 → 下一步 → 写授权收尾。
+按 [kernel/finding.md](../kernel/finding.md) 组织：一句话结论 → 范围行 → 正文 → 验证 → 置信度 → 下一步 → 写授权收尾。

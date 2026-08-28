@@ -14,11 +14,12 @@
 | B 反对拆 | 找留在模块的理由 | 单调用方？（SIMP-01）拆完只是 `pub use` 转发？（SIMP-02）增量编译/链接会更差吗？（BUILD-03，无 timings 只标缺口） |
 | C 依赖方向 | 中立画图 | 拟建 crate 的入边/出边；会不会为拆而引入逆向边或把内部类型被迫 `pub`（WS-07/10） |
 
-取证下限（主会话先采，再喂给三路，避免三路各扫全仓）：
+取证下限（主会话先采 **一份** ProjectSnapshot，再喂给三路，避免三路各扫全仓）：
 
-1. 钉死项目根；`cargo metadata --no-deps`（lock-safe）看现有 members。
-2. 目标模块的文件清单、`mod` 图、谁 `use` 它（主目标｜邻接证据分栏）。
-3. 现有 crate 图与 RUST.md 域划分（有则读，无则不阻塞）。
+1. 钉死项目根；快照 `crates` / `graphs.crate_edges` / `cycles`（`inspect_project.py` 或 lock-safe metadata）。禁止本命令另画 crate 图。
+2. 目标模块的文件清单、`mod` 图、谁 `use` 它（主目标｜邻接证据分栏，[kernel/scope.md](../kernel/scope.md)）。
+3. 现有 crate 图与 RUST.md 域划分（有则读作账本，无则不阻塞）。RUST.md 与快照冲突时以快照为准。
+
 
 ## CK 检查单
 
@@ -46,4 +47,4 @@
 
 ## 输出
 
-按 [SKILL 输出契约](../SKILL.md) 组织：一句话建议（拆/留/不足）→ 范围行 → 三路表 → 验证（metadata / 引用图）→ 置信度 → 下一步（0–1 条：「回复『拆』」或「等 X 出现再跑」）→ **未改动任何文件**。
+按 [kernel/finding.md](../kernel/finding.md) 组织：一句话建议（拆/留/不足）→ 范围行 → 三路表 → 验证（metadata / 引用图）→ 置信度 → 下一步（0–1 条：「回复『拆』」或「等 X 出现再跑」）→ **未改动任何文件**。

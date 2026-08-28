@@ -1,0 +1,15 @@
+{
+  "id": "78",
+  "title": "核心命令消费同一 ProjectSnapshot，不另画 crate 图",
+  "commands": ["review", "document", "doctor", "crate"],
+  "fixture": "note.md",
+  "fixture_needles": ["ProjectSnapshot", "另画 crate 图"],
+  "skill_needles": {
+    "skills/rust/kernel/evidence.md": ["ProjectSnapshot", "报告与账本"],
+    "skills/rust/kernel/finding.md": ["counterevidence", "owner_layer"],
+    "skills/rust/kernel/scope.md": ["主目标｜邻接证据"],
+    "skills/rust/rules/meta.md": ["META-06", "ProjectSnapshot"],
+    "skills/rust/reference/review.md": ["ProjectSnapshot", "kernel/finding.md"],
+    "tests/pressure-scenarios.md": ["### 场景 78", "META-06"]
+  }
+}

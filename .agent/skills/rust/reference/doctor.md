@@ -1,8 +1,9 @@
 # /rust-skills:rust doctor — 库与项目体检
 
-目的：只读检查本技能库自身、以及它与项目之间的漂移。**不做修复、设计或代码工作**。
+目的：只读检查本技能库自身、以及它与项目之间的漂移。**不做修复、设计或代码工作**。项目侧必须用与 `document`/`review` **同一份** ProjectSnapshot（[kernel/evidence.md](../kernel/evidence.md)），禁止另画 crate 图。
 
 ## 检查项
+
 
 **库自身**
 
@@ -13,16 +14,18 @@
 
 **项目侧（有 RUST.md 时）**
 
-5. RUST.md 时效：crate 图与当前 `cargo metadata` 一致吗；「最近评审」——无快照 → STALE（建议首次 `/rust-skills:rust review`）；有快照且超过 30 天 → STALE（建议复跑）。
+5. RUST.md 时效：crate 图与当前快照 `graphs.crate_edges` 一致吗（先 `inspect_project.py` / metadata，不要手绘）；「最近评审」——无快照 → STALE（建议首次 `/rust-skills:rust review`）；有快照且超过 30 天 → STALE（建议复跑）。
 6. **规范版本**：RUST.md 记录的 rust-skills 版本 vs 当前技能 `version`；不一致 → **DRIFT**（建议 `/rust-skills:rust document`）。单独一行，勿埋进工具链项。
 7. 棘轮基线：仅当存在明确棘轮文件（如 clippy JSON 基线、`ratchet.toml`）时对比当前 clippy 实测——更低 → 提示收紧；更高 → 红色警报。无此类文件 → **N-A**，禁止为对比安装工具或强跑 clippy。`[workspace.lints]` 不是棘轮文件。
-8. 工具链漂移：rust-toolchain / MSRV / edition 与 RUST.md 记录一致吗。**edition < 2024 → DRIFT**（`init`/`modernize`），不得把 2018/2021 标成 OK。edition 2024 + resolver 2 → **OK**（记录，不因数字 2 标 DRIFT）。无 `rust-version` 但有 `rust-toolchain.toml` 且 channel ≥ 1.85 → OK。
+8. 工具链：rust-toolchain / MSRV / edition 与 RUST.md 记录是否一致。不一致 → DRIFT。**旧 edition 且 RUST.md/README 未写兼容约束 → 待确认，不直接判不健康**。宣称 MSRV 但 CI 不测 → DRIFT。edition 2024 + resolver 2 → OK（记录，不因数字 2 标 DRIFT）。无 `rust-version` 但有 `rust-toolchain.toml` 且 channel ≥ 1.85 → OK。
 
-输出须回显已排除的旁路 crate 路径（与 SKILL 默认范围一致）。
+
+输出须回显已排除的旁路 crate 路径（与 [kernel/scope.md](../kernel/scope.md) 一致）。
 
 ## 输出
 
-按 [SKILL 输出契约](../SKILL.md) 组织：一句话结论 → 范围行 → 正文 → 验证 → 置信度 → 下一步 → 写授权收尾。
+按 [kernel/finding.md](../kernel/finding.md) 组织：一句话结论 → 范围行 → 正文 → 验证 → 置信度 → 下一步 → 写授权收尾。
+
 
 ```
 | 项 | 状态 | 建议动作 |

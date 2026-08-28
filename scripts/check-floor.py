@@ -26,7 +26,10 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parent.parent
 FLOOR = REPO_ROOT / "scripts" / "version-floor.json"
 CRATES_IO = "https://crates.io/api/v1/crates/{name}"
-UA = "rust-skills-check-floor/0.0.46 (https://github.com/xxww0098/rust-skills)"
+PLUGIN = REPO_ROOT / ".claude-plugin" / "plugin.json"
+_plugin = json.loads(PLUGIN.read_text(encoding="utf-8")) if PLUGIN.is_file() else {}
+UA = f"rust-skills-check-floor/{_plugin.get('version', 'dev')} (https://github.com/xxww0098/rust-skills)"
+
 
 
 def fail(msg: str) -> None:

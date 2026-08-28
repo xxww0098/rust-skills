@@ -1,0 +1,7 @@
+{
+  "members": ["single_lib"],
+  "edges": [],
+  "cycles": [],
+  "orphans": [],
+  "entrypoints": ["src/lib.rs"]
+}

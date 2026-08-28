@@ -1,4 +1,4 @@
-# Rust 工程规范（注入版 v0.0.46）
+# Rust 工程规范（注入版 v0.0.47）
 
 供按相关域渐进加载（先读同目录分文件，不要默认打开本合并件）；仅在明确的全规范审计时读取 `rules-full.md`。规则是决策约束，不是替代项目证据的检查表。
 分级：[M]=适用前提命中后 MUST，违反即阻断；[S]=默认 SHOULD，项目约定或证据可推翻并说明；[Y]=MAY。先证明前提，再引用编号；不适用不是违规。**本规范只以 edition 2024 为基线**（MSRV ≥ 1.85，可用 `rust-version` 或 `rust-toolchain.toml` 声明）。edition 2018/2021 是待迁移债务。新 workspace 用 `resolver = "3"`；已经 2024 且钉在 resolver 2 的成熟仓不迁 resolver。新代码按 2024 语义写（RPIT 全捕获、`if let` 短临时值、`#[unsafe(no_mangle)]`、`unsafe extern`、≥1.88 let chains）。Unix 多线程禁止靠 `env::set_var` 改环境。
@@ -16,6 +16,7 @@
 - META-03[M] 新增规则必须同时新增可执行验证：可机械判定的补失败 fixture + 门禁；否则补独立压力/eval 场景。技能仓本身以命令级压力场景 + consistency 为准；machine gate fixture 只在用户项目落地 `gate` 后计算。
 - META-04[M] 正确建模、清晰所有权、可测边界 优先于一切微优化。
 - META-05[M] 风险决定验证强度：prototype 可跳过纯治理项，但不能跳过与当前改动相关的正确性、安全和数据损失防护。产物类型与成熟度分开记录，不从仓库整体推断每个 crate。
+- META-06[M] `review`/`document`/`doctor`/`crate`/`distill`/`harden` 本轮只消费一份 ProjectSnapshot（[kernel/evidence.md](../kernel/evidence.md)）。禁止各命令再扫一遍 workspace 另画 crate 图。RUST.md 是画像不是事实源。Finding 必须含前提、证据、反证、所有权层（[kernel/finding.md](../kernel/finding.md)）。
 
 ## WS 工作区与结构
 - WS-01[S] 多 crate 共享构建、依赖或发布生命周期时使用 workspace；新建 workspace 优先虚拟根，迁移现有根包须有实际收益。

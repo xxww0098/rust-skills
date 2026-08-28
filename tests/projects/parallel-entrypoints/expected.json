@@ -1,0 +1,7 @@
+{
+  "members": ["parallel_entrypoints"],
+  "edges": [],
+  "cycles": [],
+  "orphans": [],
+  "entrypoints": ["src/bin/cli.rs", "src/bin/worker.rs", "src/lib.rs"]
+}

@@ -58,7 +58,7 @@
 
 ## 输出（ST-12）
 
-按 [SKILL 输出契约](../SKILL.md) 组织。正文固定这张表，未触及的层写 `N-A`：
+按 [kernel/finding.md](../kernel/finding.md) 组织。正文固定这张表，未触及的层写 `N-A`：
 
 ```
 产物：<service|cli|desktop|lib|worker|混合，逐 crate>

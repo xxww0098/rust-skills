@@ -4,3 +4,4 @@
 - META-03[M] 新增规则必须同时新增可执行验证：可机械判定的补失败 fixture + 门禁；否则补独立压力/eval 场景。技能仓本身以命令级压力场景 + consistency 为准；machine gate fixture 只在用户项目落地 `gate` 后计算。
 - META-04[M] 正确建模、清晰所有权、可测边界 优先于一切微优化。
 - META-05[M] 风险决定验证强度：prototype 可跳过纯治理项，但不能跳过与当前改动相关的正确性、安全和数据损失防护。产物类型与成熟度分开记录，不从仓库整体推断每个 crate。
+- META-06[M] `review`/`document`/`doctor`/`crate`/`distill`/`harden` 本轮只消费一份 ProjectSnapshot（[kernel/evidence.md](../kernel/evidence.md)）。禁止各命令再扫一遍 workspace 另画 crate 图。RUST.md 是画像不是事实源。Finding 必须含前提、证据、反证、所有权层（[kernel/finding.md](../kernel/finding.md)）。

@@ -79,6 +79,7 @@ def root_compat_links() -> tuple[tuple[str, str], ...]:
         ("SKILL.md", "skills/rust/SKILL.md"),
         ("reference", "skills/rust/reference"),
         ("rules", "skills/rust/rules"),
+        ("kernel", "skills/rust/kernel"),
         ("agents", "skills/rust/agents"),
     )
 
@@ -327,7 +328,7 @@ def ensure_link(link_rel: str, target: str, check: bool, drifts: list[str]) -> N
     resolved_target = (link_path.parent / target).resolve()
     prefer_copy = (
         link_rel.startswith(".grok/")
-        or link_rel in {"SKILL.md", "reference", "rules", "agents"}
+        or link_rel in {"SKILL.md", "reference", "rules", "kernel", "agents"}
         or not symlink_supported()
     )
 

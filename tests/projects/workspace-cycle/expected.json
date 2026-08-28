@@ -1,0 +1,7 @@
+{
+  "members": ["alpha", "beta"],
+  "edges": ["alpha->beta", "beta->alpha"],
+  "cycles": ["alpha->beta->alpha"],
+  "orphans": [],
+  "entrypoints": ["alpha/src/lib.rs", "beta/src/lib.rs"]
+}

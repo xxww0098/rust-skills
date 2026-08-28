@@ -12,6 +12,7 @@ EXPECTED = {
     "SKILL.md": "skills/rust/SKILL.md",
     "reference": "skills/rust/reference",
     "rules": "skills/rust/rules",
+    "kernel": "skills/rust/kernel",
     "agents": "skills/rust/agents",
 }
 
@@ -67,7 +68,11 @@ def main() -> int:
         elif name == "reference" and not (path / "engage.md").is_file():
             fail("root reference/engage.md missing")
             failed = True
+        elif name == "kernel" and not (path / "evidence.md").is_file():
+            fail("root kernel/evidence.md missing")
+            failed = True
         elif name == "rules" and not (path / "rules-full.md").is_file():
+
             fail("root rules/rules-full.md missing")
             failed = True
     return 1 if failed else 0

@@ -64,4 +64,4 @@ fn first_word(s: &str) -> Option<&str> {
 
 ## 完成条件
 
-目标内每处改动有所有权一句话或测试；共享改动的调用面已枚举；未越写范围；最小相关 `cargo test`/`cargo check` 已跑或声明缺口。不要先逼 `init`/`document`。按 [SKILL 输出契约](../SKILL.md) 收尾。
+目标内每处改动有所有权一句话或测试；共享改动的调用面已枚举；未越写范围；最小相关 `cargo test`/`cargo check` 已跑或声明缺口。不要先逼 `init`/`document`。按 [kernel/finding.md](../kernel/finding.md) 收尾。

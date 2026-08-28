@@ -49,6 +49,6 @@ ENTRYPOINT ["/server"]
 
 ## 输出
 
-按 [SKILL 输出契约](../SKILL.md) 组织：一句话结论 → 范围行 → 正文 → 验证 → 置信度 → 下一步 → 写授权收尾。
+按 [kernel/finding.md](../kernel/finding.md) 组织：一句话结论 → 范围行 → 正文 → 验证 → 置信度 → 下一步 → 写授权收尾。
 
 只读调用：产线检查表（SH 编号，分栏主目标｜邻接证据）+ 候选 diff + 验证方案。`--apply` 或明确“修/改/实现”时才修改 CI/Dockerfile/conf 并给验证证据。发布债务只输出 RUST.md 候选，显式 `--record` 才写入。
