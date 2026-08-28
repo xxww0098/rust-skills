@@ -31,6 +31,7 @@
 - `Span::enter()` 跨 `.await`；`fmt().init()` 当生产 subscriber（TR-05/19）。
 - 新函数 `get_foo` 读字段、转换却叫错 `as_`/`to_`/`into_`（API-07 / NM-02/03）。
 - 新建 crate 名叫 `utils`/`common`/`helpers`/`*-rs`/`rust-*`（NM-11/12）。
+- 用 `cargo clean`/`sweep` 当加速，或未获「清磁盘」授权就删共享 `target/` / `$CARGO_HOME`（BUILD-07/11、HY-03/10）。
 
 ## 规范形状（直接按这个写）
 

@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.0.57 — 2026-08-28
+
+- `/cargo hygiene`：`slim` 第四条车道，过期开发文件分四层（`target/`、`$CARGO_HOME`、未入库垃圾、入库孤儿）。不是新命令。
+- BUILD-11 + HY-01..10。权威 Cargo [`cargo clean`](https://doc.rust-lang.org/cargo/commands/cargo-clean.html) 与 [`cache.auto-clean-frequency`](https://doc.rust-lang.org/cargo/reference/config.html)（只扫全局缓存）。X：[judeVector](https://x.com/judeVector/status/2025947553628398024) cargo-sweep 清 17GB。
+- `--apply` 不够清共享 `target/`；必须说「清磁盘」。禁止 `cargo clean` 当加速、禁止 `rm -rf ~/.cargo`。活文件死码仍走 distill。
+- 场景 88。触发：「清理过期文件 / 磁盘占满 / 孤儿文件 / cargo sweep」。
+
 ## 0.0.56 — 2026-08-28
 
 - `/name` 覆盖项目 crate 命名：NM-11 C-CRATE（kebab、禁 `-rs`/`-rust`）、NM-12 成员按职责+产品前缀（禁 `utils`/`common`）、NM-13 包名/ident/模块对齐、NM-14 C-FEATURE。

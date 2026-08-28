@@ -1,6 +1,6 @@
 # rust-skills — Rust 工程技能包
 
-`/rust-skills:rust <命令> [target]`：一个入口、29 条命令。同一份技能源同步到支持的全部 harness。
+`/rust-skills:rust <命令> [target]`：一个入口、30 条命令。同一份技能源同步到支持的全部 harness。
 
 > 立场：先守用户边界和项目事实，再追求正确、精简、可验证。规则是候选约束，不是把现有项目改造成统一模板的许可。**只推崇 edition 2024**（MSRV ≥ 1.85）。新仓 resolver 3；成熟 2024 仓钉 resolver 2 不迁。2018/2021 当迁移债务。
 
@@ -153,6 +153,14 @@
 
 先体检；拆 crate 仍要 WS-12 证据，不按行数拆。
 
+磁盘被 `target/` 和过期开发文件吃满（不是「代码太多」）：
+
+```text
+/rust-skills:rust slim
+```
+
+先出四层表：可再生 `target/`、Cargo 全局缓存、未入库的 `perf.data`/火焰图、入库却没人引用的孤儿 `.rs`。不要 `rm -rf ~/.cargo`，也不要用 `cargo clean` 当加速。说「清磁盘」才动构建缓存；说「删」才动源文件。活文件里的死函数走 `distill`。
+
 把门禁落成真检查：
 
 ```text
@@ -268,7 +276,7 @@ axum 子 playbook：scaffold / routing / extractors / handlers / middleware / re
 
 #### 改造
 /rust-skills:rust harden [target]            # 生产加固：错误路径、边界、可观测性、优雅停机
-/rust-skills:rust slim [target]              # 构建减肥：用 timings 数据定位、裁依赖、拆 crate
+/rust-skills:rust slim [target]              # 构建减肥与文件卫生：timings 定位、裁依赖；过期开发文件/target 分层清理
 /rust-skills:rust modernize [target]         # 把过时写法换成现代等价物（lazy_static → OnceLock 等）
 /rust-skills:rust distill [target]           # 旧代码优化入口：删抽象、结构梯子、crate 只建议不擅迁
 /rust-skills:rust gate                       # 生成/维护 xtask 门禁与 clippy 基线（只收紧不放宽）

@@ -30,4 +30,5 @@ SX local reference/sqlx.md
 TA local reference/tauri.md
 TR local reference/obs.md
 NM local reference/name.md
+HY local reference/slim/hygiene.md
 XP local reference/xplat.md

@@ -56,6 +56,7 @@ fn first_word(s: &str) -> Option<&str> {
 | 补测试 / 竞态 / flaky / 火焰山 / 测文件越写越多 | [testing.md](testing.md) |
 | `sqlx` / `sea-orm` / axum / Tauri / clap / tracing 证据 | 对应框架/语言 reference；axum/Tauri 的 owner 再按「深入」表加载子 playbook（一次 1–2 个） |
 | `get_` 字段读取 / `as_` 却分配 / `row_to_user` 自由函数 / `utils`/`*-rs` 包名 | [name.md](name.md) |
+| 磁盘满 / 过期开发文件 / 孤儿 `.rs` / 误提交火焰图 | [slim/hygiene.md](slim/hygiene.md)；活文件死码仍走 [distill.md](distill.md) |
 | 用户要评审而不是改 | [review.md](review.md)，只读 |
 
 ## 权威源（有争议时以这些为准）

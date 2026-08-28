@@ -30,12 +30,12 @@
 - Cargo.toml 有 `clap` 且用户在问子命令/补全/环境变量/退出码 → `cli`；有 `tracing`/`RUST_LOG` 且用户在问日志/span/OTel → `obs`（axum 的 TraceLayer 仍走 `axum`）
 - Cargo.toml 有 `axum` 且用户在问鉴权/WebSocket/SSE/中间件/上传/测试/0.8 迁移 → `axum`（owner 再按「深入」表加载 `reference/axum/` 子 playbook）；有 `tauri` 且在问 capabilities/权限/插件/托盘/菜单/移动端/v1 迁移 → `tauri`（同理加载 `reference/tauri/`）。不因依赖存在就推荐，要有问题信号
 - 最近评审快照有未清 M 级违规 → `harden` 或复跑 `review`
-- RUST.md 债务清单里有「构建慢」类条目，或用户近期抱怨过编译时间 → `slim`
+- RUST.md 债务清单里有「构建慢」类条目，或用户近期抱怨过编译时间 → `slim`。磁盘满 / 过期开发文件 / 孤儿 `.rs` 同样推 `slim`（走 hygiene 子模式），不要推 distill。
 - 上次 `capture` 距今超过两周而会话里明显有踩坑痕迹 → 提醒 `capture`
 - docs 存在但无首页，或有竞争权威源、失效证据/链接、未表达的 supersession → 推荐 `docs`
 - 用户问「技术栈 / 用什么框架 / 选 axum 还是 actix / 该上 sqlx 还是 sea-orm」→ `stack`（默认只出表；「改」才加缺失层）
 - 都不命中 → 按类别列全表，用一句话问用户现在关心什么。普通「改/实现」不要推菜单，让用户直接干，技能自己走 craft。
-- 中英触发等价：路由表「触发」列含中文「」短语与英文短语，任一命中即可。改造四条互斥见 SKILL「路由」节：编译慢 → slim；升 edition/过时 API → modernize；上生产加固 → harden；旧代码删仪式 → distill。
+- 中英触发等价：路由表「触发」列含中文「」短语与英文短语，任一命中即可。改造四条互斥见 SKILL「路由」节：编译慢 → slim/cargo；磁盘/过期文件 → slim/hygiene；升 edition/过时 API → modernize；上生产加固 → harden；旧代码删仪式 → distill。
 
 ## 输出格式
 

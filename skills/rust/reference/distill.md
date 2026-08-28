@@ -13,7 +13,7 @@
 ## 五遍扫描（每处改动标注规则号）
 
 0. **judo**：整枝条件/整层转发能否消失？特判能否变成默认路径（SIMP-10）？文件被推过 1000 行则先按 WS-11 分解（SIMP-09），不拆 crate。
-1. **死码与死依赖**：`cargo +nightly udeps` 或 cargo-machete 查无用依赖；`#[allow(dead_code)]` 逐个清算；从未被读的字段、从未失败的错误变体。
+1. **死码与死依赖**：`cargo +nightly udeps` 或 cargo-machete 查无用依赖；`#[allow(dead_code)]` 逐个清算；从未被读的字段、从未失败的错误变体。整份 `.rs` 不在 mod 图里是文件卫生，转 `/cargo hygiene`（HY-08 / TEST-04），本命令不 `rm` 文件、不 `cargo clean`。
 2. **塌层**（SIMP-01/02）：单实现 trait、转发 wrapper 或单调用方通用函数先做删除测试：删后若复杂度只是散回调用方则保留；若复杂度消失才内联。
 3. **去仪式**（SIMP-06）：builder/getter/setter/成对 API 只有在未编码约束、未保护兼容面且不减少调用方复杂度时删除；不以复用次数机械裁决，也不为少几行扩大 pub 字段。
 4. **去分配**（SIMP-04/05）：只清理可证明无收益的中间集合与 clone；循环和迭代器按清晰度选择。`dyn`、泛型和 enum 依据开放性、编译成本与异构需求选择。

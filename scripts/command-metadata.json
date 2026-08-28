@@ -176,18 +176,28 @@
     },
     "slim": {
       "category": "改造",
-      "summary": "构建减肥：用 timings 数据定位、裁依赖、拆 crate",
+      "summary": "构建减肥与文件卫生：timings 定位、裁依赖；过期开发文件/target 分层清理",
       "argumentHint": "[target]",
       "triggers": [
         "编译太慢",
         "构建时间太长",
         "构建减肥",
-        "target 目录太大"
+        "target 目录太大",
+        "清理过期文件",
+        "开发文件太多",
+        "磁盘占满",
+        "孤儿文件",
+        "cargo sweep",
+        "清理 target"
       ],
       "triggers_en": [
         "compile too slow",
         "slow builds",
-        "shrink target dir"
+        "shrink target dir",
+        "clean stale files",
+        "disk full",
+        "orphan modules",
+        "cargo sweep"
       ]
     },
     "modernize": {

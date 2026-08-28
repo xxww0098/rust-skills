@@ -27,7 +27,7 @@
 | `stack` | 产物/Facets · 活栈 · 死亡线 | `cargo add` |
 | `audit` | 按域：unsafe 清单 · deps/deny · tests 孤儿 · async 锁 | 多域混成一张表先扇出再分域输出 |
 | `harden` | 错误路径 · 入站边界 · 观测/停机 | 扩到旁路 crate |
-| `slim` | `slim/cargo` 指纹 · `slim/test` 证明集 · `slim/tooling` owner | 各跑一遍 metadata；清共享 target |
+| `slim` | `slim/cargo` 指纹 · `slim/test` 证明集 · `slim/tooling` owner · `slim/hygiene` 四层 | 各跑一遍 metadata；清共享 target；把死码当文件删 |
 | `distill` | 死码/未用 · 仪式/`clone` · 结构梯子 | 改 Cargo.toml |
 | `gate` | CI 现状 · clippy 基线 · deny/hooks | 覆盖用户 hook；G4 塞进每次 push |
 | `modernize` | edition/MSRV · 过时 API 清单 | 无授权升 edition |
@@ -47,7 +47,7 @@
 | `docs` | 首页/权威源 · 断链 · 生命周期 | 默认为写 |
 | `bench` | 仅盘点：已有装置 · profiling profile 是否在 | 采集后的改帧循环（串行） |
 
-`audit <domain>` 只开该域车道。`slim` 的 `/cargo` `/test` `/cargo tools` 是三条车道的 pin，不是新命令。
+`audit <domain>` 只开该域车道。`slim` 的 `/cargo` `/test` `/cargo tools` `/cargo hygiene` 是四条车道的 pin，不是新命令。
 
 ## 合并
 

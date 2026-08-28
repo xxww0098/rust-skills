@@ -1,4 +1,4 @@
-# Rust 工程规范（注入版 v0.0.56）
+# Rust 工程规范（注入版 v0.0.57）
 
 供按相关域渐进加载（先读同目录分文件，不要默认打开本合并件）；仅在明确的全规范审计时读取 `rules-full.md`。规则是决策约束，不是替代项目证据的检查表。
 分级：[M]=适用前提命中后 MUST，违反即阻断；[S]=默认 SHOULD，项目约定或证据可推翻并说明；[Y]=MAY。先证明前提，再引用编号；不适用不是违规。**本规范只以 edition 2024 为基线**（MSRV ≥ 1.85，可用 `rust-version` 或 `rust-toolchain.toml` 声明）。edition 2018/2021 是待迁移债务。新 workspace 用 `resolver = "3"`；已经 2024 且钉在 resolver 2 的成熟仓不迁 resolver。新代码按 2024 语义写（RPIT 全捕获、`if let` 短临时值、`#[unsafe(no_mangle)]`、`unsafe extern`、≥1.88 let chains）。Unix 多线程禁止靠 `env::set_var` 改环境。
@@ -140,6 +140,7 @@
 - BUILD-08[S] 日常开发可 debug="line-tables-only"；split-debuginfo 平台实测。
 - BUILD-09[S] rust-analyzer 与终端 `cargo` 抢同一 `target/` 锁时，给 RA 单独 `CARGO_TARGET_DIR`（官方 FAQ），不要杀进程或清缓存。
 - BUILD-10[S] 构建优化优先序跟 2025 编译器调查：减依赖/关未用 default-features → 降 debuginfo → 换实测过的链接器 → timings 证明后再拆编译单元。禁把「拆成几百 crate」或 2021 年的「全仓 rust-lld rustflags」当默认方。
+- BUILD-11[S] 磁盘/过期开发文件分四层清理（`target/`、`$CARGO_HOME`、未入库垃圾、入库孤儿），走 `/cargo hygiene`（slim 子模式）。禁止用 `cargo clean`/`sweep` 当加速或冷构建基线（BUILD-07）；死码走 distill，死依赖走 machete 复核。
 
 ## DEP 依赖治理
 - DEP-01[S] 多成员共享的三方版本优先收口；有意使用不同版本或 feature 时局部声明并保留理由。

@@ -1,8 +1,8 @@
 ---
 name: rust
-description: Use for Cargo/Rust work in a repo — implement, debug, rustc/borrow-checker, clippy, review, unsafe/FFI, axum/sqlx/tokio, clap/tracing, Tauri v2, edition 2024, 技术栈, 函数命名, crate命名, 编译报错, 代码审查, or /rust-skills:rust. Engage without a subcommand. Skip non-Cargo work and language trivia.
+description: Use for Cargo/Rust work in a repo — implement, debug, rustc/borrow-checker, clippy, review, unsafe/FFI, axum/sqlx/tokio, clap/tracing, Tauri v2, edition 2024, 技术栈, 函数命名, crate命名, 清理过期文件, 编译报错, 代码审查, or /rust-skills:rust. Engage without a subcommand. Skip non-Cargo work and language trivia.
 license: MIT
-version: 0.0.56
+version: 0.0.57
 metadata:
   type: workflow
 argument-hint: "[搭建与设计: init|shape|crate|document|stack · 评审: review|audit|triage|doctor · 改造: harden|slim|modernize|distill|gate · 语言语义: concurrency|process|async|serde|obs|name · 框架: axum|tauri|seaorm|sqlx|cli · 交付: bench|ship|xplat · 治理: docs|capture] [target]"
@@ -90,7 +90,7 @@ argument-hint: "[搭建与设计: init|shape|crate|document|stack · 评审: rev
 | `triage` | 评审 | 「编译报错」 · 「这个错误怎么修」 · 「borrow checker 打架」 · compiler error · how do I fix this rustc error · borrow checker fight · E0382 | [reference/triage.md](reference/triage.md) |
 | `doctor` | 评审 | 「体检」 · 「检查漂移」 · 「画像过期了没」 · health check · check drift · is the portrait stale | [reference/doctor.md](reference/doctor.md) |
 | `harden` | 改造 | 「能跑但要上生产」 · 「补错误处理」 · 「补边界检查」 · 「加可观测性」 · production-ready · add error handling · boundary checks · add observability | [reference/harden.md](reference/harden.md) |
-| `slim` | 改造 | 「编译太慢」 · 「构建时间太长」 · 「构建减肥」 · 「target 目录太大」 · compile too slow · slow builds · shrink target dir | [reference/slim.md](reference/slim.md) |
+| `slim` | 改造 | 「编译太慢」 · 「构建时间太长」 · 「构建减肥」 · 「target 目录太大」 · 「清理过期文件」 · 「开发文件太多」 · 「磁盘占满」 · 「孤儿文件」 · 「cargo sweep」 · 「清理 target」 · compile too slow · slow builds · shrink target dir · clean stale files · disk full · orphan modules · cargo sweep | [reference/slim.md](reference/slim.md) |
 | `modernize` | 改造 | 「lazy_static 换 OnceLock」 · 「过时写法现代化」 · 「升级到现代 Rust」 · 「升到 edition 2024」 · lazy_static to OnceLock · upgrade to edition 2024 · modernize outdated APIs | [reference/modernize.md](reference/modernize.md) |
 | `distill` | 改造 | 「过度设计了」 · 「删到本质」 · 「精简代码」 · 「去掉仪式」 · 「优化旧代码」 · 「整理遗留模块」 · 「删复杂度」 · 「code judo」 · too much abstraction · simplify legacy · remove ceremony · clean up this module · code judo | [reference/distill.md](reference/distill.md) |
 | `gate` | 改造 | 「上 CI 门禁」 · 「xtask」 · 「提交前自动检查」 · 「clippy 基线只收紧」 · 「静态分析」 · 「静态分析工具链」 · add CI gates · xtask · pre-commit checks · tighten clippy baseline · static analysis · static analysis toolchain | [reference/gate.md](reference/gate.md) |
@@ -119,4 +119,4 @@ argument-hint: "[搭建与设计: init|shape|crate|document|stack · 评审: rev
 - 显式命令：按路由表「触发」列匹配用户语言后加载对应 reference。改造/语言语义/框架/交付命令裸调用为只读体检；`--apply` 或同一请求明确「修/改/实现」时直接在冻结范围应用该清单，无需单独的 apply 子命令。
 - 普通 Rust 任务：先 [reference/engage.md](reference/engage.md)，再 [reference/craft.md](reference/craft.md)；编译错误叠加 [reference/triage.md](reference/triage.md)。不要求用户先选子命令，也不因缺少 RUST.md 拒绝修改。
 - 叠加顺序：engage（主动）→ craft（普通实现）→ 全局规则 → 语言语义（concurrency/process/async/serde/obs/name）→ 框架（axum/tauri/seaorm/sqlx/cli，owner 清单 → 命中的子 playbook）→ 交付（ship/xplat）。重复问题只保留证据更具体的一条。
-- 改造四条互斥：「编译/构建太慢」→ `slim`；「升 edition / OnceLock / 过时 API」→ `modernize`；「能跑要上生产（错误、边界、观测）」→ `harden`；「旧代码过度设计、删仪式」→ `distill`。用户只说「优化」且点了旧模块 → `distill`，未点路径先问一次。「函数名 / crate 名 / get_ / as_ to_ into_ / -rs」→ `name`，不走 distill，也不走 `/crate`（`/crate` 只管拆不拆）。
+- 改造四条互斥：「编译/构建太慢」→ `slim`/`cargo`；「target 太大 / 磁盘 / 过期开发文件 / 孤儿文件」→ `slim`/`hygiene`，禁止 `cargo clean` 当加速；「升 edition / OnceLock / 过时 API」→ `modernize`；「能跑要上生产（错误、边界、观测）」→ `harden`；「旧代码过度设计、删仪式」→ `distill`。用户只说「优化」且点了旧模块 → `distill`，未点路径先问一次。「函数名 / crate 名 / get_ / as_ to_ into_ / -rs」→ `name`，不走 distill，也不走 `/crate`（`/crate` 只管拆不拆）。

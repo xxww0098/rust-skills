@@ -96,7 +96,7 @@ cargo check -p <pkg> --test <integration-target> --profile test
 
 ## 5. 明确拒绝的“快”与“专业工具箱”
 
-- 清缓存后宣称更快，或用不同 features/profile/target 做前后对比。
+- 清缓存后宣称更快，或用不同 features/profile/target 做前后对比。磁盘清理走 [hygiene.md](hygiene.md)，且必须用户说「清磁盘」。
 - 把 `--workspace --all-targets --all-features` 设成本地默认。
 - 同时启动多条 Cargo 命令争同一个 target/package cache。
 - 只调 `jobs`，不看 critical path、内存和 build script jobserver。

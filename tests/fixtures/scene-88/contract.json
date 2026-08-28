@@ -1,0 +1,32 @@
+{
+  "id": "88",
+  "title": "过期开发文件分层清理，cargo clean 不是加速",
+  "commands": ["slim"],
+  "fixture": "hits.md",
+  "fixture_needles": [
+    "cargo clean",
+    "rm -rf ~/.cargo",
+    "src/orphan.rs",
+    "flamegraph.svg",
+    "perf.data"
+  ],
+  "skill_needles": {
+    "skills/rust/reference/slim/hygiene.md": [
+      "HY-01",
+      "HY-03",
+      "HY-06",
+      "HY-08",
+      "HY-09",
+      "cargo clean"
+    ],
+    "skills/rust/rules/build.md": [
+      "BUILD-07",
+      "BUILD-11"
+    ],
+    "tests/pressure-scenarios.md": [
+      "### 场景 88",
+      "HY-03",
+      "orphan.rs"
+    ]
+  }
+}

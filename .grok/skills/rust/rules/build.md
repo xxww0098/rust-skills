@@ -9,3 +9,4 @@
 - BUILD-08[S] 日常开发可 debug="line-tables-only"；split-debuginfo 平台实测。
 - BUILD-09[S] rust-analyzer 与终端 `cargo` 抢同一 `target/` 锁时，给 RA 单独 `CARGO_TARGET_DIR`（官方 FAQ），不要杀进程或清缓存。
 - BUILD-10[S] 构建优化优先序跟 2025 编译器调查：减依赖/关未用 default-features → 降 debuginfo → 换实测过的链接器 → timings 证明后再拆编译单元。禁把「拆成几百 crate」或 2021 年的「全仓 rust-lld rustflags」当默认方。
+- BUILD-11[S] 磁盘/过期开发文件分四层清理（`target/`、`$CARGO_HOME`、未入库垃圾、入库孤儿），走 `/cargo hygiene`（slim 子模式）。禁止用 `cargo clean`/`sweep` 当加速或冷构建基线（BUILD-07）；死码走 distill，死依赖走 machete 复核。

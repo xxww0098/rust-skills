@@ -31,3 +31,13 @@
 - 期望：库禁 `init()`（TR-11）；WorkerGuard 活到退出（TR-12）；span 名静态（TR-14）。
 - 失败：再装 env_logger，或把 URI 当 span 名。
 - 场景 70。
+
+## 4. 过期开发文件 → slim/hygiene，不用 cargo clean 加速
+
+```text
+开发文件一直增长，清理多余的过期开发文件
+```
+
+- 期望：四层表（target / CARGO_HOME / 未入库垃圾 / 入库孤儿）；拒绝 `rm -rf ~/.cargo`；`cargo clean` 不是加速（HY-03）。
+- 失败：立刻清缓存并宣称更快，或把死函数当文件删。
+- 场景 88。

@@ -6,6 +6,7 @@
     {"phrase": "代码审查", "where": "description"},
     {"phrase": "函数命名", "where": "description"},
     {"phrase": "crate命名", "where": "description"},
+    {"phrase": "清理过期文件", "where": "description"},
     {"phrase": "技术栈", "where": "description"},
     {"phrase": "borrow-checker", "where": "description"},
     {"phrase": "axum", "where": "description"},
@@ -22,6 +23,7 @@
     {"prompt": "这个项目该用什么技术栈", "expect": "activate", "token": "技术栈"},
     {"prompt": "这些函数命名不合规范", "expect": "activate", "token": "函数命名"},
     {"prompt": "这个 workspace 的 crate 该怎么命名", "expect": "activate", "token": "crate命名"},
+    {"prompt": "清理这些过期开发文件", "expect": "activate", "token": "清理过期文件"},
     {"prompt": "/rust-skills:rust review --apply", "expect": "readonly", "token": "--apply"}
   ]
 }
