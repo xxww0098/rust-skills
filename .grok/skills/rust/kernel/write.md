@@ -35,6 +35,7 @@
 - `ActiveModel` 把 PK / `DEFAULT` 列写成 `Set(0)` / `Set(now)`，或 `Set(None)` 当默认值（SO-17）；有 `#[sea_orm::model]` 却手循环 insert 子行（SO-18）。
 - `on_conflict` 0 行当成功、用 `save()` 当 upsert（SO-23/24）；handler 把 Entity JSON/`rename_all` 直接 `from_json`（SO-25）；生产启动 `schema-sync`（SO-12）。
 - 列表页 `Entity::load().with(..)` 整棵 `ModelEx`（SO-22/26）；把 `HasOne::Unloaded` 当 `None`（SO-27）；JOIN 1-N 再 paginate（SO-07/13）；`load().all()` 后 `clone` `ModelEx` 树（SO-28）；`load().with().filter(子列)` 当切子行（SO-29）。
+- 把一次 JSON `insert` 后的 RSS 台阶当 SeaORM 泄漏来修（SO-30）；静态里堆 `Vec<ModelEx>` 或每请求 `Database::connect`。
 
 ## 规范形状（直接按这个写）
 

@@ -1,6 +1,12 @@
 # Changelog
 
+## 0.0.62 — 2026-08-29
+
+- `/seaorm` SO-30 内存「泄漏」四类：分配器/碎片（[discussion 2901](https://github.com/SeaQL/sea-orm/discussions/2901)，官方无缓存无特殊 Drop，RSS 不是细指标）· 活图没放 · 连接没还 · 真泄漏才上 heaptrack。大 JSON 不要 `Set(Value)`；每请求 `connect` 禁。
+- 场景 94。触发：「内存泄漏 / RSS / 不释放」。
+
 ## 0.0.61 — 2026-08-29
+
 
 - `/seaorm` SO-29 Entity Loader 内存优化六杠杆（换路径 → 切边 → 切根 → 切子行 → 切列 → 切寿命）。`load().with().filter(子列)` 对 has_many 无效（[discussion 2850](https://github.com/SeaQL/sea-orm/discussions/2850)）；子行走 `load_many(find().filter)`。Loader 无 `select_only`。假优化：JOIN 1-N 省往返、给 `.with()` 当投影。
 - 场景 93。触发：「Loader 优化 / 切边 / 切根」。

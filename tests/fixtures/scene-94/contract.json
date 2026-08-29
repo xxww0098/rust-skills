@@ -1,0 +1,28 @@
+{
+  "id": "94",
+  "title": "SeaORM 泄漏分诊：OnceCell 堆图 + 每请求 connect + Set(Value)",
+  "commands": [
+    "seaorm"
+  ],
+  "fixture": "hits.rs",
+  "fixture_needles": [
+    "OnceCell",
+    "Database::connect",
+    "Entity::load()",
+    "FEED.set",
+    "Set(blob)"
+  ],
+  "skill_needles": {
+    "skills/rust/reference/seaorm.md": [
+      "SO-30",
+      "discussion 2901",
+      "heaptrack",
+      "OnceCell",
+      "Database::connect"
+    ],
+    "tests/pressure-scenarios.md": [
+      "### 场景 94",
+      "SO-30"
+    ]
+  }
+}

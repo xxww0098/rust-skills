@@ -3,7 +3,7 @@
 目的：在有 sea-orm 依赖证据时审查或优化查询、连接池、事务、ActiveModel、upsert 与迁移。现行稳定线 **2.0.x**（crates.io 2.0.2，2026-08）。1.x 先确认 MSRV、runtime 与迁移约束，不凭版本号自动要求升级。
 不要读：Cargo.toml 与当前改动都没有 `sea-orm` 证据时停。
 
-编排：多文件时按 [kernel/swarm.md](../kernel/swarm.md) — Loader/N+1/ModelEx · ActiveValue/嵌套save/upsert · 池/迁移/schema-sync。 单文件或已有快照则跳过。
+编排：多文件时按 [kernel/swarm.md](../kernel/swarm.md) — Loader/过取/泄漏分诊 · ActiveValue/嵌套save/upsert · 池/迁移/schema-sync。 单文件或已有快照则跳过。
 
 来源：[Entity Loader](https://www.sea-ql.org/SeaORM/docs/relation/entity-loader/)、[Nested Selects](https://www.sea-ql.org/SeaORM/docs/relation/nested-selects/)、[Model Loader](https://www.sea-ql.org/SeaORM/docs/relation/model-loader/)、[HasOne/HasMany](https://www.sea-ql.org/blog/2025-11-11-sea-orm-2.0/)、[ActiveModel](https://www.sea-ql.org/SeaORM/docs/basic-crud/active-model/)、[Insert / on_conflict](https://www.sea-ql.org/SeaORM/docs/basic-crud/insert/)、[Save](https://www.sea-ql.org/SeaORM/docs/basic-crud/save/)、[JSON](https://www.sea-ql.org/SeaORM/docs/basic-crud/json/)、[Nested ActiveModel](https://www.sea-ql.org/blog/2025-11-25-sea-orm-2.0/)、[2.0 Migration Guide](https://www.sea-ql.org/blog/2026-01-12-sea-orm-2.0/)、[Entity-first / schema-sync](https://www.sea-ql.org/SeaORM/docs/generate-entity/entity-first/)、[Writing Migration](https://www.sea-ql.org/SeaORM/docs/migration/writing-migration/)。规则只在前提命中时适用。
 
@@ -61,6 +61,11 @@ let fruits = cakes.load_many(Fruit, db).await?;
   5. **切列**：Loader 没有 `select_only`。要窄列就离开 `load()`。1-1 JOIN 仍是相关表全列。
   6. **切寿命**：分页循环丢掉上一页；映射 DTO 后放掉 `ModelEx`；禁 `clone` 树（SO-28）。`load()` 概念实现是 `all` + `load_many`，不要指望它 `stream` 整图。
   假优化：JOIN 1-N 省往返、给 Loader 加更多 `.with()` 当投影、调 `max_connections` 当内存策略。
+- SO-30 「泄漏」先分四类，不要对着 RSS 开治（[discussion 2901](https://github.com/SeaQL/sea-orm/discussions/2901) · [Connection](https://www.sea-ql.org/SeaORM/docs/install-and-config/connection/)）。官方：无缓存、无特殊 `Drop`；默认分配器不立刻把页还给 OS；RSS 不是单条语句的细粒度指标。
+  1. **分配器/碎片（不是泄漏）**：大 JSON/`Value`/`ActiveModel::insert` 后 RSS 台阶式上升、raw SQL 却平稳 → 换 mimalloc/jemalloc 复测；JSON 列尽量当 `String` + `jsonb` 写入，不要把 10MB `serde_json::Value` 推进 `Set`。
+  2. **活图没放**：`OnceCell`/`lazy_static`/`app state` 里堆 `Vec<ModelEx>`、clone 树、无界 `.all()`（SO-28/29）。进程级该复用的是**池**（`DatabaseConnection`），不是查询结果。
+  3. **连接没还**：事务跨外部 IO（SO-10）；`stream` 没消费完就丢任务；每请求 `Database::connect`（[608](https://github.com/SeaQL/sea-orm/discussions/608) 要复用池）；`Arc<Mutex<DatabaseConnection>>`（SO-01）。关停 `close().await`（sqlx 无 async Drop，最后一把 handle 丢了未必立刻拆连接）。`idle_timeout`/`max_lifetime` 回收闲连接，不是治泄漏。
+  4. **真泄漏**：换分配器 + 图已 Drop + 连接已还，heaptrack/dhat 仍跨请求单调涨 → 再查依赖。禁止把 2901 那种 RSS 当 SeaORM 泄漏修代码。
 
 ```rust
 // ✗ JOIN 1-N 再 paginate；Unloaded 当 None；深层 1-1 塞进一层 tuple
@@ -73,6 +78,12 @@ user::Entity::load().with((b::Entity, (c::Entity, d::Entity))).all(db);
 let users = user::Entity::load().with(post::Entity).all(db).await?;
 let _ = users.clone();
 user::Entity::load().with(post::Entity).filter(post::Column::Published.eq(true)).all(db);
+
+// ✗ SO-30 静态堆图；每请求 connect；10MB Value 进 Set
+static FEED: OnceCell<Vec<user::ModelEx>> = OnceCell::new();
+let db = Database::connect(url).await?;
+FEED.set(user::Entity::load().all(&db).await?).ok();
+ActiveModel { json: Set(blob), ..Default::default() }.insert(&db).await?;
 
 // ✓ 列表 PartialModel；详情只点名边；子行过滤走 load_many
 let cards: Vec<UserCard> = User::find()
@@ -89,6 +100,10 @@ let posts = users.load_many(
     post::Entity::find().filter(post::Column::Published.eq(true)),
     db,
 ).await?;
+// ✓ 进程级池；JSON 当 String；图不进静态
+async fn ok(State(db): State<DatabaseConnection>, body: String) {
+    payload::ActiveModel { json: Set(body), ..Default::default() }.insert(&db).await.ok();
+}
 ```
 
 **事务与一致性**
@@ -168,7 +183,7 @@ let _ = Entity::insert(am)
 
 ## 验证（PERF-01）
 
-同机前后对比：查询计时（p50/p99）、往返次数（N+1 修复前后 SQL 条数）、`EXPLAIN` 计划变化。内存争议再加：SELECT 列数/行宽、结果行数 vs unique 父行、RSS 或分配器峰值（`load().all().with(1-N)` vs PartialModel）。
+同机前后对比：查询计时（p50/p99）、往返次数（N+1 修复前后 SQL 条数）、`EXPLAIN` 计划变化。内存争议再加：SELECT 列数/行宽、结果行数 vs unique 父行、RSS 或分配器峰值（`load().all().with(1-N)` vs PartialModel）。「泄漏」用分配字节/heaptrack 跨请求是否单调涨，不要单看一次 RSS 台阶（SO-30）。
 
 ## 输出
 

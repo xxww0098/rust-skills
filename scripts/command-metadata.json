@@ -429,7 +429,7 @@
     },
     "seaorm": {
       "category": "框架",
-      "summary": "SeaORM 2.x：Entity Loader 策略/内存六杠杆、ActiveValue/NotSet、嵌套 save、upsert、迁移原子性",
+      "summary": "SeaORM 2.x：Entity Loader 策略/内存六杠杆/泄漏分诊、ActiveValue/NotSet、嵌套 save、upsert、迁移原子性",
       "argumentHint": "[target]",
       "triggers": [
         "SeaORM",
@@ -451,7 +451,10 @@
         "over-fetch",
         "Loader 优化",
         "切边",
-        "切根"
+        "切根",
+        "内存泄漏",
+        "RSS",
+        "不释放"
       ],
       "triggers_en": [
         "SeaORM",
@@ -471,7 +474,10 @@
         "over-fetch",
         "Loader optimize",
         "cut edges",
-        "cut roots"
+        "cut roots",
+        "memory leak",
+        "RSS",
+        "allocator fragmentation"
       ]
     },
     "sqlx": {
