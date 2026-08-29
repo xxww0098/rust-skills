@@ -32,6 +32,8 @@
 - 新函数 `get_foo` 读字段、转换却叫错 `as_`/`to_`/`into_`（API-07 / NM-02/03）。
 - 新建 crate 名叫 `utils`/`common`/`helpers`/`*-rs`/`rust-*`（NM-11/12）。
 - 用 `cargo clean`/`sweep` 当加速，或未获「清磁盘」授权就删共享 `target/` / `$CARGO_HOME`（BUILD-07/11、HY-03/10）。
+- `ActiveModel` 把 PK / `DEFAULT` 列写成 `Set(0)` / `Set(now)`，或 `Set(None)` 当默认值（SO-17）；有 `#[sea_orm::model]` 却手循环 insert 子行（SO-18）。
+- `on_conflict` 0 行当成功、用 `save()` 当 upsert（SO-23/24）；handler 把 Entity JSON/`rename_all` 直接 `from_json`（SO-25）；生产启动 `schema-sync`（SO-12）。
 
 ## 规范形状（直接按这个写）
 

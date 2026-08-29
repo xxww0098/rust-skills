@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.0.58 — 2026-08-29
+
+- `/seaorm` 蒸馏 2.0 用法：SO-17 ActiveValue 三态（`NotSet` ≠ `Set(None)`）、SO-18 嵌套 `.save`、SO-19 EXISTS 过滤、SO-20 迁移原子性/历史 seed、SO-21 不把 Model 当 API、SO-22 列表不用整棵 `ModelEx`。
+- SO-23 `on_conflict` / `try_insert`（0 行 = `RecordNotInserted`）、SO-24 单行 `save` 按 PK 分流 ≠ upsert、SO-25 `from_json` 缺字段→`NotSet` 且 Entity `rename_all` 有错位先例。SO-08 `exec_with_returning` 仅 PG/SQLite；SO-12 生产禁启动 `schema-sync`（不 DROP）。
+- 权威 [ActiveModel](https://www.sea-ql.org/SeaORM/docs/basic-crud/active-model/)、[Insert](https://www.sea-ql.org/SeaORM/docs/basic-crud/insert/)、[Save](https://www.sea-ql.org/SeaORM/docs/basic-crud/save/)、[JSON](https://www.sea-ql.org/SeaORM/docs/basic-crud/json/)、[Entity Loader](https://www.sea-ql.org/SeaORM/docs/relation/entity-loader/)、[Nested ActiveModel](https://www.sea-ql.org/blog/2025-11-25-sea-orm-2.0/)、[Entity-first](https://www.sea-ql.org/SeaORM/docs/generate-entity/entity-first/)、[Writing Migration](https://www.sea-ql.org/SeaORM/docs/migration/writing-migration/)。
+- X：[PhyroKelstein](https://x.com/PhyroKelstein/status/1941030262324031845) 迁移 DEFAULT 插入仍手填；[ccQpein](https://x.com/ccQpein/status/2051691030001422508) sqlx 迁表 + SeaORM 生成实体合法；[FusionZhu](https://x.com/CoderFusionZhu/status/1909977622001619305) `from_json` + `rename_all` 错位（[issue 2257](https://github.com/SeaQL/sea-orm/issues/2257)）。
+- 场景 89（NotSet/嵌套 save）+ 场景 90（upsert/`from_json`/`schema-sync`）。触发：「ActiveModel / NotSet / 嵌套保存 / entity-first / upsert / on_conflict / from_json / schema-sync」。
+
 ## 0.0.57 — 2026-08-28
 
 - `/cargo hygiene`：`slim` 第四条车道，过期开发文件分四层（`target/`、`$CARGO_HOME`、未入库垃圾、入库孤儿）。不是新命令。

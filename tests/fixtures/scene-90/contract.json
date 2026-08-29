@@ -1,0 +1,30 @@
+{
+  "id": "90",
+  "title": "SeaORM upsert 与 from_json，不要 save 当冲突写入、生产启动 schema-sync",
+  "commands": ["seaorm"],
+  "fixture": "hits.rs",
+  "fixture_needles": [
+    ".sync(db)",
+    "from_json",
+    ".save(db)",
+    "on_conflict",
+    "do_nothing",
+    ".exec(db)"
+  ],
+  "skill_needles": {
+    "skills/rust/reference/seaorm.md": [
+      "SO-12",
+      "SO-23",
+      "SO-24",
+      "SO-25",
+      "try_insert",
+      "RecordNotInserted",
+      "from_json"
+    ],
+    "tests/pressure-scenarios.md": [
+      "### 场景 90",
+      "SO-23",
+      "SO-25"
+    ]
+  }
+}

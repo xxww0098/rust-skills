@@ -431,17 +431,31 @@
     },
     "seaorm": {
       "category": "框架",
-      "summary": "SeaORM 2.x：池调优、Entity Loader、ExprTrait、execute vs execute_raw",
+      "summary": "SeaORM 2.x：池、Entity Loader、ActiveValue/NotSet、嵌套 save、upsert/on_conflict、from_json、迁移原子性",
       "argumentHint": "[target]",
       "triggers": [
         "SeaORM",
         "数据库查询",
-        "N+1"
+        "N+1",
+        "ActiveModel",
+        "NotSet",
+        "嵌套保存",
+        "entity-first",
+        "upsert",
+        "on_conflict",
+        "from_json",
+        "schema-sync"
       ],
       "triggers_en": [
         "SeaORM",
         "ORM N+1",
-        "SeaORM query"
+        "SeaORM query",
+        "ActiveModel",
+        "NotSet",
+        "nested save",
+        "upsert",
+        "on_conflict",
+        "from_json"
       ]
     },
     "sqlx": {

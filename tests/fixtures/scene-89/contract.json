@@ -1,0 +1,26 @@
+{
+  "id": "89",
+  "title": "SeaORM NotSet 与嵌套 save，不要 Set(0) 再手插子行",
+  "commands": ["seaorm"],
+  "fixture": "hits.rs",
+  "fixture_needles": [
+    "id: Set(0)",
+    "created_at: Set(Utc::now())",
+    "email: Set(None)",
+    ".insert(db)"
+  ],
+  "skill_needles": {
+    "skills/rust/reference/seaorm.md": [
+      "SO-17",
+      "SO-18",
+      "NotSet",
+      "Set(None)",
+      ".save(db)"
+    ],
+    "tests/pressure-scenarios.md": [
+      "### 场景 89",
+      "SO-17",
+      "SO-18"
+    ]
+  }
+}

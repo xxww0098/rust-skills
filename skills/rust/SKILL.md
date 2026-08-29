@@ -2,7 +2,7 @@
 name: rust
 description: Use for Cargo/Rust work in a repo — implement, debug, rustc/borrow-checker, clippy, review, unsafe/FFI, axum/sqlx/tokio, clap/tracing, Tauri v2, edition 2024, 技术栈, 函数命名, crate命名, 清理过期文件, 编译报错, 代码审查, or /rust-skills:rust. Engage without a subcommand. Skip non-Cargo work and language trivia.
 license: MIT
-version: 0.0.57
+version: 0.0.58
 metadata:
   type: workflow
 argument-hint: "[搭建与设计: init|shape|crate|document|stack · 评审: review|audit|triage|doctor · 改造: harden|slim|modernize|distill|gate · 语言语义: concurrency|process|async|serde|obs|name · 框架: axum|tauri|seaorm|sqlx|cli · 交付: bench|ship|xplat · 治理: docs|capture] [target]"
@@ -102,7 +102,7 @@ argument-hint: "[搭建与设计: init|shape|crate|document|stack · 评审: rev
 | `name` | 语言语义 | 「函数命名」 · 「方法命名」 · 「crate命名」 · 「改名」 · 「as_ to_ into_」 · 「get_ 前缀」 · 「命名规范」 · 「-rs 后缀」 · function naming · crate naming · package name · rename this function · as_ to_ into_ · get_ prefix · API guidelines naming | [reference/name.md](reference/name.md) |
 | `axum` | 框架 | 「axum」 · 「web 服务」 · 「路由/状态/超时」 · 「鉴权/JWT/session」 · 「WebSocket/SSE」 · 「中间件/tower」 · 「0.7 升 0.8」 · 「分层路由」 · 「全局异常」 · 「统一错误处理」 · axum · web service · JWT/session auth · WebSocket/SSE · tower middleware · 0.7 to 0.8 · layered routing · global exception handler · unified error handling | [reference/axum.md](reference/axum.md) |
 | `tauri` | 框架 | 「Tauri」 · 「桌面应用」 · 「体积/启动/IPC」 · 「capabilities/权限」 · 「插件/托盘/菜单」 · 「Android/iOS」 · 「v1 升 v2」 · 「localStorage」 · Tauri · desktop app · capabilities/permissions · tray/menu plugins · Android/iOS · v1 to v2 · WKWebView localStorage | [reference/tauri.md](reference/tauri.md) |
-| `seaorm` | 框架 | 「SeaORM」 · 「数据库查询」 · 「N+1」 · SeaORM · ORM N+1 · SeaORM query | [reference/seaorm.md](reference/seaorm.md) |
+| `seaorm` | 框架 | 「SeaORM」 · 「数据库查询」 · 「N+1」 · 「ActiveModel」 · 「NotSet」 · 「嵌套保存」 · 「entity-first」 · 「upsert」 · 「on_conflict」 · 「from_json」 · 「schema-sync」 · SeaORM · ORM N+1 · SeaORM query · ActiveModel · NotSet · nested save · upsert · on_conflict · from_json | [reference/seaorm.md](reference/seaorm.md) |
 | `sqlx` | 框架 | 「sqlx」 · 「query! 宏」 · 「编译期 SQL」 · 「连接池饿死」 · sqlx · query! macro · compile-time SQL · pool starvation | [reference/sqlx.md](reference/sqlx.md) |
 | `cli` | 框架 | 「clap」 · 「命令行」 · 「子命令」 · 「shell 补全」 · 「CLI 参数」 · clap · CLI args · subcommands · shell completion | [reference/cli.md](reference/cli.md) |
 | `bench` | 交付 | 「性能对比」 · 「benchmark」 · 「这改动快了多少」 · 「火焰图」 · 「samply」 · 「读火焰图」 · benchmark · before/after perf · how much faster · flamegraph · samply | [reference/bench.md](reference/bench.md) |
