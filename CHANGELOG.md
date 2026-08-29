@@ -1,6 +1,13 @@
 # Changelog
 
+## 0.0.60 — 2026-08-29
+
+- `/seaorm` SO-28 Entity Loader 内存：data loader 峰值按 unique 行（官方「each model transferred only once」）；JOIN 1-N 复制父行换一次往返。`load()` 仍全列 `ModelEx`，「preventing over-fetching」不是列裁剪。`HasOne::Loaded(Box<_>)` 每条 1-1 一次堆分配；`load().all()` 整图物化，禁 clone 树。
+- 权威 [Select batch loading](https://www.sea-ql.org/SeaORM/docs/basic-crud/select/)、[Entity Loader](https://www.sea-ql.org/SeaORM/docs/relation/entity-loader/)、[HasOne/HasMany](https://www.sea-ql.org/blog/2025-11-11-sea-orm-2.0/)。
+- 场景 92。触发：「Loader 内存 / ModelEx 树 / over-fetch」。
+
 ## 0.0.59 — 2026-08-29
+
 
 - `/seaorm` 蒸馏 Entity Loader 策略：SO-13 混合 JOIN(1-1, ≤3 表) + data loader(1-N/M-N, `IN` + junction)；生成物是 `find_also` + `load_many`，不是新引擎。
 - SO-26 三条读路径：列表 PartialModel / 详情 `Entity::load`→`ModelEx` / 已有 Vec 再 `load_many`+filter。SO-27 `HasOne::{Unloaded,NotFound,Loaded}` 不是 `Option`；钻石用 Relation 枚举（[#3030](https://github.com/SeaQL/sea-orm/pull/3030)）；深层链式 1-1 不要 `.with((b,(c,(d))))`（[discussion 2840](https://github.com/SeaQL/sea-orm/discussions/2840)）。

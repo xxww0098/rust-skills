@@ -39,7 +39,7 @@
 | `name` | 转换前缀 · getter/`get_` · 包名/`-rs`/workspace 成员 | 改行为；公开 API 或已发布包名未授权就改 |
 | `axum` | 路由/错误所有权 · 中间件次序 · 测试 `app()` | 整目录读 `axum/` |
 | `tauri` | capabilities · IPC/命令 · 窗口/托盘 | 整目录读 `tauri/` |
-| `seaorm` | Loader/N+1/ModelEx · ActiveValue/嵌套save/upsert · 池/迁移/schema-sync | 顺手再加 sqlx |
+| `seaorm` | Loader/N+1/ModelEx 过取 · ActiveValue/嵌套save/upsert · 池/迁移/schema-sync | 顺手再加 sqlx |
 | `sqlx` | `query!`/离线 · 池/事务 · row vs 领域 | 与 sea-orm 双栈 |
 | `cli` | `Parser` 仅 bin · 退出码 · 补全 | 库里 `process::exit` |
 | `ship` | 容器产线 · 签名/公证 · 交叉矩阵 | 把 xwin NSIS 当正式 Windows 包 |

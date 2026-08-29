@@ -1,0 +1,25 @@
+{
+  "id": "92",
+  "title": "SeaORM Entity Loader 内存：整图 all + clone ModelEx + JOIN 1-N",
+  "commands": ["seaorm"],
+  "fixture": "hits.rs",
+  "fixture_needles": [
+    "Entity::load()",
+    ".with(post::Entity)",
+    ".all(db)",
+    "users.clone()",
+    "find_with_related"
+  ],
+  "skill_needles": {
+    "skills/rust/reference/seaorm.md": [
+      "SO-28",
+      "transferred only once",
+      "HasOne::Loaded(Box",
+      "PartialModel"
+    ],
+    "tests/pressure-scenarios.md": [
+      "### 场景 92",
+      "SO-28"
+    ]
+  }
+}

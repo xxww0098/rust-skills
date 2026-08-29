@@ -431,7 +431,7 @@
     },
     "seaorm": {
       "category": "框架",
-      "summary": "SeaORM 2.x：Entity Loader 策略（JOIN vs data loader）、ActiveValue/NotSet、嵌套 save、upsert、from_json、迁移原子性",
+      "summary": "SeaORM 2.x：Entity Loader 策略与内存（JOIN vs data loader、ModelEx 过取）、ActiveValue/NotSet、嵌套 save、upsert、迁移原子性",
       "argumentHint": "[target]",
       "triggers": [
         "SeaORM",
@@ -447,7 +447,10 @@
         "schema-sync",
         "Entity Loader",
         "ModelEx",
-        "Unloaded"
+        "Unloaded",
+        "Loader 内存",
+        "ModelEx 树",
+        "over-fetch"
       ],
       "triggers_en": [
         "SeaORM",
@@ -461,7 +464,10 @@
         "from_json",
         "Entity Loader",
         "ModelEx",
-        "Unloaded"
+        "Unloaded",
+        "Entity Loader memory",
+        "ModelEx tree",
+        "over-fetch"
       ]
     },
     "sqlx": {

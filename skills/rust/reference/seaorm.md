@@ -47,6 +47,12 @@ let fruits = cakes.load_many(Fruit, db).await?;
   - 已有 `Vec<Model>`，相关行还要过滤 → `load_many(Entity::find().filter(..), db)`（SO-04）。
   列表页 `load().with(posts)` = 过取（SO-22）。
 - SO-27 `HasOne`/`HasMany` 是三态不是 `Option`（[HasOne/HasMany](https://www.sea-ql.org/blog/2025-11-11-sea-orm-2.0/)）：`HasOne::{Unloaded, NotFound, Loaded}`；`HasMany::{Unloaded, Loaded(Vec)}`。`Unloaded` = 没 `.with()`；`NotFound` = 加载了但没有行。禁止 `if profile.is_none()` 把 Unloaded 当缺失。钻石两 FK 指向同一表：`.with(Relation::Manager)` 不是两次 `.with(Worker)`（[#3030](https://github.com/SeaQL/sea-orm/pull/3030)）。深层链式 1-1 不要指望 `.with((b, (c, (d, e))))`（[discussion 2840](https://github.com/SeaQL/sea-orm/discussions/2840)）——逐步 load 或 PartialModel join。自引用走 `load_self` / `load_self_many`。
+- SO-28 Entity Loader 内存峰值按**唯一行**计，不按 JOIN 复制计（[Select / batch loading](https://www.sea-ql.org/SeaORM/docs/basic-crud/select/)：「one side rows may duplicate」；Loader「each model is transferred only once」，多一次往返换带宽）。
+  - **JOIN 1-N / `find_with_related`**：线上父行 × 子行；解码后再去重。峰值 ≈ 复制后的宽行。
+  - **data loader**：峰值 ≈ unique(父) + unique(子) + `IN` 的 ID 列表；`load_many` 先给出 `Vec<Vec<T>>` 再 zip 进 `HasMany`，短时间双持有。
+  - **1-1 JOIN**：行数 = 父行，行宽 = 最多三表全列；`HasOne::Loaded(Box<ModelEx>)` 每条 1-1 一次堆分配（递归类型 + 压 enum）。
+  - 官方「preventing over-fetching」= 不 `.with()` 的关系不取、1-N 不 JOIN 复制父行。**不是列裁剪**：`load()` 仍 SELECT 被加载实体的全列成 `ModelEx`。列表/窄 DTO 走 SO-05 PartialModel。
+  - `load().all()` 整图物化（SO-06）；切根用 `load().paginate`（SO-07）。不要 `clone` `ModelEx` 树再 Serialize（OWN-01 + SO-22）。无界 `.all().with(1-N)` 的子行和 `IN` 列表才是 RSS 主项，Loader 不会自动分块。
 
 ```rust
 // ✗ JOIN 1-N 再 paginate；Unloaded 当 None；深层 1-1 塞进一层 tuple
@@ -55,7 +61,11 @@ let u = user::Entity::load().one(db).await?.unwrap();
 if u.profile.is_none() { /* Unloaded，不是没 profile */ }
 user::Entity::load().with((b::Entity, (c::Entity, d::Entity))).all(db);
 
-// ✓ 1-1 JOIN + 1-N IN；详情才 load 整棵
+// ✗ SO-28 列表整图 + clone 树
+let users = user::Entity::load().with(post::Entity).all(db).await?;
+let _ = users.clone();
+
+// ✓ 1-1 JOIN + 1-N IN；详情才 load 整棵；列表 PartialModel
 let u = user::Entity::load()
     .filter_by_id(id)
     .with(profile::Entity)                 // JOIN
@@ -141,7 +151,7 @@ let _ = Entity::insert(am)
 
 ## 验证（PERF-01）
 
-同机前后对比：查询计时（p50/p99）、往返次数（N+1 修复前后 SQL 条数）、`EXPLAIN` 计划变化。
+同机前后对比：查询计时（p50/p99）、往返次数（N+1 修复前后 SQL 条数）、`EXPLAIN` 计划变化。内存争议再加：SELECT 列数/行宽、结果行数 vs unique 父行、RSS 或分配器峰值（`load().all().with(1-N)` vs PartialModel）。
 
 ## 输出
 
