@@ -1,6 +1,12 @@
 # Changelog
 
+## 0.0.61 — 2026-08-29
+
+- `/seaorm` SO-29 Entity Loader 内存优化六杠杆（换路径 → 切边 → 切根 → 切子行 → 切列 → 切寿命）。`load().with().filter(子列)` 对 has_many 无效（[discussion 2850](https://github.com/SeaQL/sea-orm/discussions/2850)）；子行走 `load_many(find().filter)`。Loader 无 `select_only`。假优化：JOIN 1-N 省往返、给 `.with()` 当投影。
+- 场景 93。触发：「Loader 优化 / 切边 / 切根」。
+
 ## 0.0.60 — 2026-08-29
+
 
 - `/seaorm` SO-28 Entity Loader 内存：data loader 峰值按 unique 行（官方「each model transferred only once」）；JOIN 1-N 复制父行换一次往返。`load()` 仍全列 `ModelEx`，「preventing over-fetching」不是列裁剪。`HasOne::Loaded(Box<_>)` 每条 1-1 一次堆分配；`load().all()` 整图物化，禁 clone 树。
 - 权威 [Select batch loading](https://www.sea-ql.org/SeaORM/docs/basic-crud/select/)、[Entity Loader](https://www.sea-ql.org/SeaORM/docs/relation/entity-loader/)、[HasOne/HasMany](https://www.sea-ql.org/blog/2025-11-11-sea-orm-2.0/)。

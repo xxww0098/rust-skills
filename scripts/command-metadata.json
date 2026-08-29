@@ -258,7 +258,6 @@
         "static analysis",
         "static analysis toolchain"
       ]
-
     },
     "concurrency": {
       "category": "语言语义",
@@ -403,7 +402,6 @@
         "global exception handler",
         "unified error handling"
       ]
-
     },
     "tauri": {
       "category": "框架",
@@ -431,7 +429,7 @@
     },
     "seaorm": {
       "category": "框架",
-      "summary": "SeaORM 2.x：Entity Loader 策略与内存（JOIN vs data loader、ModelEx 过取）、ActiveValue/NotSet、嵌套 save、upsert、迁移原子性",
+      "summary": "SeaORM 2.x：Entity Loader 策略/内存六杠杆、ActiveValue/NotSet、嵌套 save、upsert、迁移原子性",
       "argumentHint": "[target]",
       "triggers": [
         "SeaORM",
@@ -450,7 +448,10 @@
         "Unloaded",
         "Loader 内存",
         "ModelEx 树",
-        "over-fetch"
+        "over-fetch",
+        "Loader 优化",
+        "切边",
+        "切根"
       ],
       "triggers_en": [
         "SeaORM",
@@ -467,7 +468,10 @@
         "Unloaded",
         "Entity Loader memory",
         "ModelEx tree",
-        "over-fetch"
+        "over-fetch",
+        "Loader optimize",
+        "cut edges",
+        "cut roots"
       ]
     },
     "sqlx": {

@@ -53,6 +53,14 @@ let fruits = cakes.load_many(Fruit, db).await?;
   - **1-1 JOIN**：行数 = 父行，行宽 = 最多三表全列；`HasOne::Loaded(Box<ModelEx>)` 每条 1-1 一次堆分配（递归类型 + 压 enum）。
   - 官方「preventing over-fetching」= 不 `.with()` 的关系不取、1-N 不 JOIN 复制父行。**不是列裁剪**：`load()` 仍 SELECT 被加载实体的全列成 `ModelEx`。列表/窄 DTO 走 SO-05 PartialModel。
   - `load().all()` 整图物化（SO-06）；切根用 `load().paginate`（SO-07）。不要 `clone` `ModelEx` 树再 Serialize（OWN-01 + SO-22）。无界 `.all().with(1-N)` 的子行和 `IN` 列表才是 RSS 主项，Loader 不会自动分块。
+- SO-29 内存优化按杠杆顺序，不要先调池（[Entity Loader paginate](https://www.sea-ql.org/SeaORM/docs/relation/entity-loader/) · [Nested Selects](https://www.sea-ql.org/SeaORM/docs/relation/nested-selects/) · [discussion 2850](https://github.com/SeaQL/sea-orm/discussions/2850)）：
+  1. **换路径**：列表/卡片 → PartialModel（SO-26/05）。详情才 `load().with`。这是最大一刀。
+  2. **切边**：只 `.with()` 响应真正用到的关系。`.with((post, comment))` 会把该页所有 post 的全部 comment 拉齐。
+  3. **切根**：`filter` 打在**根**上；`load().paginate` / `cursor_by` 切根（深页用游标，SO-07）。禁止无界 `.all()`，禁止 `all()` 再内存 skip。
+  4. **切子行**：`Entity::load().with(E).filter(child::Column)` 对 has_many **无效**（缺 FROM，[2850](https://github.com/SeaQL/sea-orm/discussions/2850)）。子行过滤走 `load_many(Entity::find().filter(..), db)`。按子条件滤父行走 EXISTS（SO-19），不要先 load 再内存滤。
+  5. **切列**：Loader 没有 `select_only`。要窄列就离开 `load()`。1-1 JOIN 仍是相关表全列。
+  6. **切寿命**：分页循环丢掉上一页；映射 DTO 后放掉 `ModelEx`；禁 `clone` 树（SO-28）。`load()` 概念实现是 `all` + `load_many`，不要指望它 `stream` 整图。
+  假优化：JOIN 1-N 省往返、给 Loader 加更多 `.with()` 当投影、调 `max_connections` 当内存策略。
 
 ```rust
 // ✗ JOIN 1-N 再 paginate；Unloaded 当 None；深层 1-1 塞进一层 tuple
@@ -61,17 +69,26 @@ let u = user::Entity::load().one(db).await?.unwrap();
 if u.profile.is_none() { /* Unloaded，不是没 profile */ }
 user::Entity::load().with((b::Entity, (c::Entity, d::Entity))).all(db);
 
-// ✗ SO-28 列表整图 + clone 树
+// ✗ SO-28 列表整图 + clone 树；SO-29 用子列 filter 当切子行
 let users = user::Entity::load().with(post::Entity).all(db).await?;
 let _ = users.clone();
+user::Entity::load().with(post::Entity).filter(post::Column::Published.eq(true)).all(db);
 
-// ✓ 1-1 JOIN + 1-N IN；详情才 load 整棵；列表 PartialModel
+// ✓ 列表 PartialModel；详情只点名边；子行过滤走 load_many
+let cards: Vec<UserCard> = User::find()
+    .left_join(profile::Entity)
+    .into_partial_model()
+    .all(db)
+    .await?;
 let u = user::Entity::load()
     .filter_by_id(id)
-    .with(profile::Entity)                 // JOIN
-    .with((post::Entity, comment::Entity)) // IN + IN
+    .with(profile::Entity)
     .one(db)
     .await?;
+let posts = users.load_many(
+    post::Entity::find().filter(post::Column::Published.eq(true)),
+    db,
+).await?;
 ```
 
 **事务与一致性**

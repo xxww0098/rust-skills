@@ -1,0 +1,26 @@
+{
+  "id": "93",
+  "title": "SeaORM Entity Loader 优化：with().filter(子列) + all",
+  "commands": [
+    "seaorm"
+  ],
+  "fixture": "hits.rs",
+  "fixture_needles": [
+    "Entity::load()",
+    ".with(post::Entity)",
+    "post::Column::Published",
+    ".all(db)"
+  ],
+  "skill_needles": {
+    "skills/rust/reference/seaorm.md": [
+      "SO-29",
+      "discussion 2850",
+      "load_many",
+      "切根"
+    ],
+    "tests/pressure-scenarios.md": [
+      "### 场景 93",
+      "SO-29"
+    ]
+  }
+}
