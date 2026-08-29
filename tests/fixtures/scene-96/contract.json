@@ -1,0 +1,28 @@
+{
+  "id": "96",
+  "title": "hotpath 宏顺序反了 + global_allocator 并用 + ALLOC_CUMULATIVE 递归",
+  "commands": [
+    "bench"
+  ],
+  "fixture": "hits.rs",
+  "fixture_needles": [
+    "#[hotpath::main]",
+    "#[tokio::main]",
+    "#[global_allocator]",
+    "HOTPATH_ALLOC_CUMULATIVE",
+    "fn rec"
+  ],
+  "skill_needles": {
+    "skills/rust/reference/bench/layers.md": [
+      "HP-10",
+      "HP-12",
+      "HP-13",
+      "HotpathGuard",
+      "HOTPATH_ALLOC_CUMULATIVE"
+    ],
+    "tests/pressure-scenarios.md": [
+      "### 场景 96",
+      "HP-13"
+    ]
+  }
+}

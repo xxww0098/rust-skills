@@ -1,6 +1,6 @@
 # 高层剖析（hotpath）
 
-目的：后端「慢」先拿**确定性信号**（查询次数、串行 HTTP、锁持有、通道积压、分配字节），再决定要不要开火焰图。权威：[hotpath 完全指南](https://hotpath.rs/blog/profiling-rust-guide)（与 [BV18cbQ6vEu4](https://www.bilibili.com/video/BV18cbQ6vEu4/) 同源）、[vs samply/flamegraph](https://hotpath.rs/blog/sampling_comparison)、[overhead](https://hotpath.rs/profiling_overhead)。crate **`hotpath` 0.24.x**（官方钉 `^0.24`，2026-08）。本文件不是新命令，owner 仍是 `/bench`。
+目的：后端「慢」先拿**确定性信号**（查询次数、串行 HTTP、锁持有、通道积压、分配字节），再决定要不要开火焰图。权威：[完全指南](https://hotpath.rs/blog/profiling-rust-guide)（与 [BV18cbQ6vEu4](https://www.bilibili.com/video/BV18cbQ6vEu4/) 同源）、[vs samply](https://hotpath.rs/blog/sampling_comparison)、[overhead](https://hotpath.rs/profiling_overhead)、[functions](https://hotpath.rs/functions)、[profiling modes](https://hotpath.rs/profiling_modes)、[GitHub CI](https://hotpath.rs/github_ci)。crate **`hotpath` 0.24.x**（官方钉 `^0.24`，2026-08）。本文件不是新命令，owner 仍是 `/bench`。
 
 > 「优化 CPU 热路径可能省微秒；去掉一次多余 DB 往返或并行独立 HTTP，常常从响应里砍掉几百毫秒。」
 
@@ -14,9 +14,11 @@
 - HP-06 **锁不跨 `.await`**（同 ASYNC/CC）。`acquire` 高 = 持有者慢；`wait` 高 = 被堵。指南：写锁包住 HTTP，读 P95 1.11s → 先下载再加锁，P95 9.42µs。`hotpath::mutex!` / `rw_lock!` 支持 std / parking_lot / tokio / async-lock。
 - HP-07 **通道 `Max queue` 要低且稳**。积压 + send→recv 秒级 = 消费者慢或无界队列。过通道 `clone String` → `Arc<str>`（指南：4.8 GB 分配 → 25.1 KB）。`hotpath::channel!` 默认 wrap；legacy proxy 3.5–11µs/次，不要默认开。
 - HP-08 **CPU 采样最后**。regex 每次 `Regex::new` 占 92% CPU → `OnceLock`/`LazyLock`（[optimize.md](optimize.md)）。exclusive 采样才是 self。无符号图仍走 PERF-06，禁止猜热点。
-- HP-09 **功能门才是零成本**。`hotpath` / `hotpath-alloc` / `hotpath-cpu` 全是 feature；关掉则宏 no-op、依赖不进构建。生产 default features **不要** 开 profiling。`#[hotpath::measure]` ~40ns/次——标业务单元，不要标 getter。子微秒热循环相对开销最大；4µs 函数约 1% 税。
-- HP-10 **宏顺序与分配器**：tokio 项目 `#[tokio::main]` 在 `#[hotpath::main]` **之上**。`hotpath-alloc` 换 jemalloc/mimalloc 时由 hotpath **包住**你的全局分配器，不要各装一套。axum 路由可把 SQL/出站 HTTP 记到具体 endpoint。
-- HP-11 **不要把 Diff/CI 噪声当回归**。共享 runner 常见 10–15% 偏差（指南自述）。`hotpath Diff` 2026-08 仍是 waitlist，禁止当必装门禁。前后对比仍 PERF-01（同机、交付 profile、区间不重叠）。
+- HP-09 **功能门才是零成本**。`hotpath` / `hotpath-alloc` / `hotpath-cpu` / `hotpath-mcp` 全是 feature；关掉则宏 no-op、依赖不进构建。生产 default **不要** 开 profiling。`#[hotpath::measure]` ~40ns/次——标业务单元，不要标 getter。高频操作用采样率 `0.01`–`0.1`；`0.0` 只计数、不读钟。子微秒热循环相对开销最大；4µs 函数约 1% 税。
+- HP-10 **宏顺序与符号**：`#[tokio::main]` 必须在 `#[hotpath::main]` **之上**。`hotpath-alloc` 自定义分配器走 `#[hotpath::main(allocator = …)]` 或 `CountingAllocator`，**禁止**再手写一份 `#[global_allocator]`（与 `main` 并用会编不过）。CPU 采样要 `impl_type` / 在 inherent `impl Type` 上 `measure_all`（符号 `Type::method`）；**trait impl 采样挂不上**（demangle 是 `<Type as Trait>::method`），只认 timing/alloc。axum 可把 SQL/出站 HTTP 记到具体 endpoint。
+- HP-11 **CI 噪声不是回归**。共享 runner 常见 10–15% 偏差。`hotpath Diff` SaaS 2026-08 仍是 waitlist，禁止当必装。仓库内 [hotpath-utils profile-pr](https://hotpath.rs/github_ci) 对比两份 JSON 可以：两段 workflow（`pull_request` 出数 + `workflow_run` 评论；fork PR 只读）。前后对比仍 PERF-01（同机、交付 profile、区间不重叠）。
+- HP-12 **短进程静态、长驻 TUI**。[modes](https://hotpath.rs/profiling_modes)：CLI/测试 → 退出打表或 `HOTPATH_OUTPUT_FORMAT=json`；HTTP/worker → `hotpath console`。同时只能一把 `HotpathGuard`，第二把 **panic**。只要静态报告就 `HOTPATH_METRICS_SERVER_OFF=1`。`HOTPATH_SHUTDOWN_MS` 到点杀进程，禁止当生产超时。MCP 要 `hotpath-mcp` + `localhost:6771`，无 token 不要对公网开。
+- HP-13 **分配默认 exclusive**（只计本函数直接分配）。`HOTPATH_ALLOC_CUMULATIVE` 含嵌套，**递归函数数字是错的**（同一块计多次）。看次数不看字节才 `HOTPATH_ALLOC_METRIC=count`。
 
 ```rust
 // ✗ HP-01 先开火焰图；HP-03 N+1；HP-04 串行 HTTP；HP-06 锁跨 await
@@ -25,6 +27,13 @@ let a = client.get(u1).send().await?;
 let b = client.get(u2).send().await?;
 let mut g = lock.write().await;
 client.get(url).send().await?;
+
+// ✗ HP-10 宏顺序反了；HP-13 手写 global_allocator 再套 main
+#[hotpath::main]
+#[tokio::main]
+async fn main() {}
+#[global_allocator]
+static G: tikv_jemallocator::Jemalloc = tikv_jemallocator::Jemalloc;
 
 // ✓ 一次 JOIN；并行 HTTP；慢活在锁外
 let (a, b) = tokio::try_join!(client.get(u1).send(), client.get(u2).send())?;

@@ -1,6 +1,12 @@
 # Changelog
 
+## 0.0.65 — 2026-08-29
+
+- `/bench` HP-12/13：短进程静态表/JSON、长驻 `hotpath console`；一把 `HotpathGuard`；`HOTPATH_SHUTDOWN_MS` 不是生产超时。分配默认 exclusive，递归禁 `ALLOC_CUMULATIVE`；`#[global_allocator]` 不与 `#[hotpath::main]` 并用。HP-11 分开：Diff SaaS 仍 waitlist，仓库内 `hotpath-utils profile-pr` 可对比 JSON（两段 workflow）。
+- 场景 96。
+
 ## 0.0.64 — 2026-08-29
+
 
 - `/bench` 蒸馏 [hotpath 完全指南](https://hotpath.rs/blog/profiling-rust-guide)（B 站 [BV18cbQ6vEu4](https://www.bilibili.com/video/BV18cbQ6vEu4/)）：HP-01..11 层序 SQL/HTTP → I/O → 锁/通道 → 分配 → CPU。没点名火焰图禁止先采样。async wait 用墙钟不是 samply。`hotpath` 0.24 feature-gate；SeaORM 无自动 SQL tracing。PERF-04 补 instrumentation。
 - 场景 95。触发：「hotpath / 剖析 / N+1 / 锁竞争」。
