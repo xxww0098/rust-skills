@@ -454,7 +454,8 @@
         "切根",
         "内存泄漏",
         "RSS",
-        "不释放"
+        "不释放",
+        "泄漏分诊"
       ],
       "triggers_en": [
         "SeaORM",
@@ -477,7 +478,8 @@
         "cut roots",
         "memory leak",
         "RSS",
-        "allocator fragmentation"
+        "allocator fragmentation",
+        "leak triage"
       ]
     },
     "sqlx": {

@@ -1,6 +1,12 @@
 # Changelog
 
+## 0.0.63 — 2026-08-29
+
+- `/seaorm` SO-30 补分诊顺序：一次 RSS 台阶 ≠ 泄漏（2901 指纹：10MB JSON `ActiveModel` 10→121MB，raw SQL ~13MB）；分配字节回落但 RSS 不还 OS 仍是分配器；跨请求单调涨才查活图/连接/heaptrack。假优化：调池参数当治泄漏。
+- 场景 94 针补「分诊顺序 / mimalloc」。
+
 ## 0.0.62 — 2026-08-29
+
 
 - `/seaorm` SO-30 内存「泄漏」四类：分配器/碎片（[discussion 2901](https://github.com/SeaQL/sea-orm/discussions/2901)，官方无缓存无特殊 Drop，RSS 不是细指标）· 活图没放 · 连接没还 · 真泄漏才上 heaptrack。大 JSON 不要 `Set(Value)`；每请求 `connect` 禁。
 - 场景 94。触发：「内存泄漏 / RSS / 不释放」。

@@ -18,7 +18,9 @@
       "discussion 2901",
       "heaptrack",
       "OnceCell",
-      "Database::connect"
+      "Database::connect",
+      "分诊顺序",
+      "mimalloc"
     ],
     "tests/pressure-scenarios.md": [
       "### 场景 94",
