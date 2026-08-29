@@ -73,9 +73,17 @@ def validate(metadata: dict) -> None:
 
 
 def format_triggers(entry: dict) -> str:
-    zh = [f"「{t}」" for t in entry["triggers"]]
-    en = list(entry.get("triggers_en") or [])
-    return " · ".join(zh + en)
+    """SKILL 表只放代表触发，完整短语留在 metadata / owner 文首（渐进披露）。"""
+    zh_all = list(entry["triggers"])
+    en_all = list(entry.get("triggers_en") or [])
+    zh = list(entry.get("triggers_short") or zh_all[:5])
+    en = list(entry.get("triggers_short_en") or en_all[:3])
+    parts = [f"「{t}」" for t in zh] + en
+    truncated = bool(entry.get("triggers_short")) or len(zh_all) > len(zh) or len(en_all) > len(en)
+    text = " · ".join(parts)
+    if truncated:
+        text += " · …"
+    return text
 
 
 def skill_block(metadata: dict) -> str:

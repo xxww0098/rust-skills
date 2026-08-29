@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.0.66 — 2026-08-29
+
+- 渐进披露：SKILL 本轮预算 1 个 owner + 至多 2 个子 playbook + 至多 3 个规则域；禁止整目录读 `reference/axum|tauri|seaorm|bench|slim/`。路由表触发改代表项（`triggers_short`），完整短语留在 metadata / owner 文首。
+- `/seaorm` 拆成 owner 清单 + `query`/`loader`/`active`/`pool`/`leak` 五个子 playbook。SO-01..30 仍只在 owner 定义；N+1 只加载 owner+query，不整目录读。
+- 场景 97。
+
 ## 0.0.65 — 2026-08-29
 
 - `/bench` HP-12/13：短进程静态表/JSON、长驻 `hotpath console`；一把 `HotpathGuard`；`HOTPATH_SHUTDOWN_MS` 不是生产超时。分配默认 exclusive，递归禁 `ALLOC_CUMULATIVE`；`#[global_allocator]` 不与 `#[hotpath::main]` 并用。HP-11 分开：Diff SaaS 仍 waitlist，仓库内 `hotpath-utils profile-pr` 可对比 JSON（两段 workflow）。

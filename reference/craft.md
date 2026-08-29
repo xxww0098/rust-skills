@@ -54,10 +54,10 @@ fn first_word(s: &str) -> Option<&str> {
 | 取消/停机/Stream | [async.md](async.md) |
 | rayon/锁/runtime | [concurrency.md](concurrency.md) |
 | 补测试 / 竞态 / flaky / 火焰山 / 测文件越写越多 | [testing.md](testing.md) |
-| `sqlx` / `sea-orm` / axum / Tauri / clap / tracing 证据 | 对应框架/语言 reference；axum/Tauri 的 owner 再按「深入」表加载子 playbook（一次 1–2 个） |
+| `sqlx` / `sea-orm` / axum / Tauri / clap / tracing 证据 | 对应框架/语言 reference；axum/Tauri/SeaORM 的 owner 再按「深入」表加载子 playbook（一次 1–2 个） |
 | `get_` 字段读取 / `as_` 却分配 / `row_to_user` 自由函数 / `utils`/`*-rs` 包名 | [name.md](name.md) |
 | 磁盘满 / 过期开发文件 / 孤儿 `.rs` / 误提交火焰图 | [slim/hygiene.md](slim/hygiene.md)；活文件死码仍走 [distill.md](distill.md) |
-| `sea-orm` / `ActiveModel` / `find_related` 循环 / `Entity::load` / `ModelEx` / RSS 泄漏 | [seaorm.md](seaorm.md)；JOIN 1-N、列表整图、`with().filter(子列)`、RSS 当泄漏、每请求 connect |
+| `sea-orm` / `ActiveModel` / `find_related` 循环 / `Entity::load` / `ModelEx` / RSS 泄漏 | [seaorm.md](seaorm.md) 按「深入」表 1–2 个子 playbook；JOIN 1-N、列表整图、`with().filter(子列)`、RSS 当泄漏、每请求 connect |
 | 「慢 / hotpath / N+1 SQL / 串行 HTTP / 火焰图」 | [bench.md](bench.md) → 先 [bench/layers.md](bench/layers.md)；点名 samply 才火焰图 |
 | 用户要评审而不是改 | [review.md](review.md)，只读 |
 

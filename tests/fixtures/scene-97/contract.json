@@ -1,0 +1,34 @@
+{
+  "id": "97",
+  "title": "SeaORM 渐进加载：N+1 只读 owner+query，不整目录",
+  "commands": [
+    "seaorm"
+  ],
+  "fixture": "hits.rs",
+  "fixture_needles": [
+    "find_related",
+    "Cake::find()",
+    ".all(db)"
+  ],
+  "skill_needles": {
+    "skills/rust/SKILL.md": [
+      "本轮预算",
+      "至多 2",
+      "禁止整目录读"
+    ],
+    "skills/rust/reference/seaorm.md": [
+      "SO-04",
+      "load_many",
+      "seaorm/query.md",
+      "不要把 `reference/seaorm/` 整目录"
+    ],
+    "skills/rust/reference/seaorm/query.md": [
+      "load_many",
+      "find_related"
+    ],
+    "tests/pressure-scenarios.md": [
+      "### 场景 97",
+      "seaorm/query.md"
+    ]
+  }
+}

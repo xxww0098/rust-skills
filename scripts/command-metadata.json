@@ -198,6 +198,17 @@
         "disk full",
         "orphan modules",
         "cargo sweep"
+      ],
+      "triggers_short": [
+        "编译太慢",
+        "target 目录太大",
+        "清理过期文件",
+        "cargo sweep"
+      ],
+      "triggers_short_en": [
+        "compile too slow",
+        "shrink target dir",
+        "cargo sweep"
       ]
     },
     "modernize": {
@@ -401,6 +412,18 @@
         "layered routing",
         "global exception handler",
         "unified error handling"
+      ],
+      "triggers_short": [
+        "axum",
+        "路由/状态/超时",
+        "鉴权/JWT/session",
+        "WebSocket/SSE",
+        "0.7 升 0.8"
+      ],
+      "triggers_short_en": [
+        "axum",
+        "layered routing",
+        "0.7 to 0.8"
       ]
     },
     "tauri": {
@@ -425,6 +448,17 @@
         "Android/iOS",
         "v1 to v2",
         "WKWebView localStorage"
+      ],
+      "triggers_short": [
+        "Tauri",
+        "capabilities/权限",
+        "插件/托盘/菜单",
+        "Android/iOS"
+      ],
+      "triggers_short_en": [
+        "Tauri",
+        "capabilities/permissions",
+        "Android/iOS"
       ]
     },
     "seaorm": {
@@ -480,6 +514,18 @@
         "RSS",
         "allocator fragmentation",
         "leak triage"
+      ],
+      "triggers_short": [
+        "SeaORM",
+        "N+1",
+        "ActiveModel",
+        "Entity Loader",
+        "内存泄漏"
+      ],
+      "triggers_short_en": [
+        "SeaORM",
+        "Entity Loader",
+        "memory leak"
       ]
     },
     "sqlx": {
@@ -542,6 +588,17 @@
         "hotpath",
         "N+1 SQL",
         "lock contention"
+      ],
+      "triggers_short": [
+        "性能对比",
+        "火焰图",
+        "hotpath",
+        "锁竞争"
+      ],
+      "triggers_short_en": [
+        "benchmark",
+        "flamegraph",
+        "hotpath"
       ]
     },
     "ship": {
