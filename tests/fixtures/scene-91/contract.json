@@ -1,0 +1,27 @@
+{
+  "id": "91",
+  "title": "SeaORM Entity Loader：JOIN 1-N、Unloaded 当 None、深层 tuple",
+  "commands": ["seaorm"],
+  "fixture": "hits.rs",
+  "fixture_needles": [
+    "find_with_related",
+    ".paginate(db, 10)",
+    "profile.is_none()",
+    ".with((profile::Entity, (post::Entity, comment::Entity)))"
+  ],
+  "skill_needles": {
+    "skills/rust/reference/seaorm.md": [
+      "SO-13",
+      "SO-26",
+      "SO-27",
+      "Unloaded",
+      "find_also",
+      "data loader"
+    ],
+    "tests/pressure-scenarios.md": [
+      "### 场景 91",
+      "SO-13",
+      "SO-27"
+    ]
+  }
+}

@@ -3,9 +3,9 @@
 目的：在有 sea-orm 依赖证据时审查或优化查询、连接池、事务、ActiveModel、upsert 与迁移。现行稳定线 **2.0.x**（crates.io 2.0.2，2026-08）。1.x 先确认 MSRV、runtime 与迁移约束，不凭版本号自动要求升级。
 不要读：Cargo.toml 与当前改动都没有 `sea-orm` 证据时停。
 
-编排：多文件时按 [kernel/swarm.md](../kernel/swarm.md) — Loader/N+1 · ActiveValue/嵌套save/upsert · 池/迁移/schema-sync。 单文件或已有快照则跳过。
+编排：多文件时按 [kernel/swarm.md](../kernel/swarm.md) — Loader/N+1/ModelEx · ActiveValue/嵌套save/upsert · 池/迁移/schema-sync。 单文件或已有快照则跳过。
 
-来源：[ActiveModel](https://www.sea-ql.org/SeaORM/docs/basic-crud/active-model/)（`Set`/`Unchanged`/`NotSet`）、[Insert / on_conflict](https://www.sea-ql.org/SeaORM/docs/basic-crud/insert/)、[Save](https://www.sea-ql.org/SeaORM/docs/basic-crud/save/)、[JSON](https://www.sea-ql.org/SeaORM/docs/basic-crud/json/)、[Entity Loader](https://www.sea-ql.org/SeaORM/docs/relation/entity-loader/)、[Nested ActiveModel](https://www.sea-ql.org/blog/2025-11-25-sea-orm-2.0/)、[2.0 Migration Guide](https://www.sea-ql.org/blog/2026-01-12-sea-orm-2.0/)、[Entity-first / schema-sync](https://www.sea-ql.org/SeaORM/docs/generate-entity/entity-first/)、[Writing Migration](https://www.sea-ql.org/SeaORM/docs/migration/writing-migration/)。规则只在前提命中时适用。
+来源：[Entity Loader](https://www.sea-ql.org/SeaORM/docs/relation/entity-loader/)、[Nested Selects](https://www.sea-ql.org/SeaORM/docs/relation/nested-selects/)、[Model Loader](https://www.sea-ql.org/SeaORM/docs/relation/model-loader/)、[HasOne/HasMany](https://www.sea-ql.org/blog/2025-11-11-sea-orm-2.0/)、[ActiveModel](https://www.sea-ql.org/SeaORM/docs/basic-crud/active-model/)、[Insert / on_conflict](https://www.sea-ql.org/SeaORM/docs/basic-crud/insert/)、[Save](https://www.sea-ql.org/SeaORM/docs/basic-crud/save/)、[JSON](https://www.sea-ql.org/SeaORM/docs/basic-crud/json/)、[Nested ActiveModel](https://www.sea-ql.org/blog/2025-11-25-sea-orm-2.0/)、[2.0 Migration Guide](https://www.sea-ql.org/blog/2026-01-12-sea-orm-2.0/)、[Entity-first / schema-sync](https://www.sea-ql.org/SeaORM/docs/generate-entity/entity-first/)、[Writing Migration](https://www.sea-ql.org/SeaORM/docs/migration/writing-migration/)。规则只在前提命中时适用。
 
 ## SO 检查单（体检输出：位置｜编号｜问题｜修复）
 
@@ -17,10 +17,10 @@
 
 **查询效率**
 
-- SO-04 N+1 必查：循环里 `find_related` = 事故。一对多/多对多批量场景用 **LoaderTrait**（`load_many`/`load_many_to_many`，可带过滤器）；仅两实体小结果集才用 `find_with_related`（join 会复制「一」侧数据）；≥3 实体只能 loader。
+- SO-04 N+1 必查：循环里 `find_related` = 事故。一对多/多对多批量场景用 **LoaderTrait**（`load_many`/`load_many_to_many`，可带过滤器）；仅两实体小结果集才用 `find_with_related`（join 会复制「一」侧数据）；≥3 实体只能 loader。2.0 详情图走 SO-13，不要两条都写。
 - SO-05 列裁剪：宽表禁默认全列，`DerivePartialModel`/`into_partial_model` 只取所需（SELECT * 是带宽与反序列化双税）。跨表投影用 `#[sea_orm(nested)]` 嵌进 typed partial，不要 join 完再丢全实体。
 - SO-06 大结果集用 `.stream()` 流式消费，不 `.all()` 收全量 `Vec`（SIMP-05 的数据层版）。
-- SO-07 深分页用 `cursor_by`（游标），不用大 offset 的 `paginate`（DB 扫描代价随页深线性涨）。
+- SO-07 深分页用 `cursor_by`（游标），不用大 offset 的 `paginate`（DB 扫描代价随页深线性涨）。`Entity::load().paginate` 先切**根**再按页 load 关系——禁止在 1-N JOIN 结果上 paginate（按子行切片）。
 - SO-08 批量写入走 `insert_many` 并按 DB 参数上限分块；2.0 用 `exec_with_returning()` 取回写入行（**仅 PG/SQLite** 有 RETURNING）。MySQL 走 `last_insert_id` 或再查，不要假装 returning 通用。空迭代返回空/`None`，不要再写 `on_empty_do_nothing` 仪式。
 
 ```rust
@@ -34,6 +34,36 @@ let cakes = Cake::find().all(db).await?;
 let fruits = cakes.load_many(Fruit, db).await?;
 ```
 
+**Entity Loader 策略**（2.0 读图正门）
+
+- SO-13 混合策略，不是「全部 JOIN」也不是「全部 IN」（[Entity Loader](https://www.sea-ql.org/SeaORM/docs/relation/entity-loader/)）。生成物概念上就是 `find_also`（1-1）+ `LoaderTrait::load_many`（1-N），不是新引擎。
+  - **1-1**：JOIN，最多三表一条 SQL。1-1 不爆炸行数，所以才 JOIN。
+  - **1-N / M-N**：data loader，`WHERE fk IN (..)`；M-N 连 junction 仍一条。JOIN 1-N 会笛卡尔复制父行。
+  - **嵌套**：收齐上一跳 ID 再发一条。`user JOIN profile` + `post WHERE user_id IN` + `comment WHERE post_id IN` = 3 条，不是 N+1。
+  - `.with(Rel)` = 根上的兄弟关系；`.with((Child, Grand))` = 沿 Child 再下一跳。要 `#[sea_orm::model]` 或 `#[sea_orm::compact_model]`；1.x compact 没有 Loader。不要把 `find_related` 循环当 Loader。
+- SO-26 三条读路径按形状选，不要叠用：
+  - 列表/API 投影、列裁剪 → SO-05 `DerivePartialModel` + join，一条 SQL。
+  - 详情整棵 `ModelEx` → `Entity::load().with(..)`（SO-13）。
+  - 已有 `Vec<Model>`，相关行还要过滤 → `load_many(Entity::find().filter(..), db)`（SO-04）。
+  列表页 `load().with(posts)` = 过取（SO-22）。
+- SO-27 `HasOne`/`HasMany` 是三态不是 `Option`（[HasOne/HasMany](https://www.sea-ql.org/blog/2025-11-11-sea-orm-2.0/)）：`HasOne::{Unloaded, NotFound, Loaded}`；`HasMany::{Unloaded, Loaded(Vec)}`。`Unloaded` = 没 `.with()`；`NotFound` = 加载了但没有行。禁止 `if profile.is_none()` 把 Unloaded 当缺失。钻石两 FK 指向同一表：`.with(Relation::Manager)` 不是两次 `.with(Worker)`（[#3030](https://github.com/SeaQL/sea-orm/pull/3030)）。深层链式 1-1 不要指望 `.with((b, (c, (d, e))))`（[discussion 2840](https://github.com/SeaQL/sea-orm/discussions/2840)）——逐步 load 或 PartialModel join。自引用走 `load_self` / `load_self_many`。
+
+```rust
+// ✗ JOIN 1-N 再 paginate；Unloaded 当 None；深层 1-1 塞进一层 tuple
+User::find().find_with_related(Post).paginate(db, 10);
+let u = user::Entity::load().one(db).await?.unwrap();
+if u.profile.is_none() { /* Unloaded，不是没 profile */ }
+user::Entity::load().with((b::Entity, (c::Entity, d::Entity))).all(db);
+
+// ✓ 1-1 JOIN + 1-N IN；详情才 load 整棵
+let u = user::Entity::load()
+    .filter_by_id(id)
+    .with(profile::Entity)                 // JOIN
+    .with((post::Entity, comment::Entity)) // IN + IN
+    .one(db)
+    .await?;
+```
+
 **事务与一致性**
 
 - SO-09 事务优先闭包式 `db.transaction(|txn| …)`（Err 自动回滚）；手动 `begin`/`commit` 需说明理由。
@@ -43,7 +73,6 @@ let fruits = cakes.load_many(Fruit, db).await?;
 
 - SO-11 复杂分析查询别硬掰查询构建器（SIMP-02：付不起解释成本的 ORM 体操）——2.0 的 `*_raw` 方法是正门；raw SQL 也要参数化。
 - SO-12 迁移用 sea-orm-migration 版本化入库；实体由迁移后重新生成（schema-first）或 2.0 entity-first（要 `entity-registry` + `schema-sync`）。禁手改生成物不改迁移。已用 `sqlx::migrate!` / 纯 SQL 迁表、SeaORM 只生成实体是合法分工（X：[ccQpein](https://x.com/ccQpein/status/2051691030001422508)），不要为「更 SeaORM」再加一套 migrator。慢查询先 `EXPLAIN`（META-02）——ORM 不会替你建索引。`schema-sync` 幂等只 **建** 缺表/列/键，不 DROP 表/列/FK（可 DROP INDEX）；生产关该 feature，启动路径禁 `sync()`（全量发现）。`apply()` 不检查现有 schema，只给初始化。
-- SO-13 N+1 的 2.0 正门是 Entity Loader：`Entity::load().filter(..).with(Relation)`，返回 `ModelEx`。1-1 走 JOIN（最多三表一条 SQL）；1-N / M-N 走 data loader（含 junction 的一条 SQL；嵌套会把 ID 收齐再发下一条）。`LoaderTrait::load_many` 仍可用。需要 `#[sea_orm::model]` 或 `#[sea_orm::compact_model]`；compact 1.x 实体没有 Loader——先过渡宏或生成新格式。不要假装 `find_related` 循环已经是 Loader。
 
 **2.0 API**
 

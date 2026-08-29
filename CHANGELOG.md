@@ -1,6 +1,14 @@
 # Changelog
 
+## 0.0.59 — 2026-08-29
+
+- `/seaorm` 蒸馏 Entity Loader 策略：SO-13 混合 JOIN(1-1, ≤3 表) + data loader(1-N/M-N, `IN` + junction)；生成物是 `find_also` + `load_many`，不是新引擎。
+- SO-26 三条读路径：列表 PartialModel / 详情 `Entity::load`→`ModelEx` / 已有 Vec 再 `load_many`+filter。SO-27 `HasOne::{Unloaded,NotFound,Loaded}` 不是 `Option`；钻石用 Relation 枚举（[#3030](https://github.com/SeaQL/sea-orm/pull/3030)）；深层链式 1-1 不要 `.with((b,(c,(d))))`（[discussion 2840](https://github.com/SeaQL/sea-orm/discussions/2840)）。
+- 权威 [Entity Loader](https://www.sea-ql.org/SeaORM/docs/relation/entity-loader/)、[Nested Selects](https://www.sea-ql.org/SeaORM/docs/relation/nested-selects/)、[Model Loader](https://www.sea-ql.org/SeaORM/docs/relation/model-loader/)、[HasOne/HasMany](https://www.sea-ql.org/blog/2025-11-11-sea-orm-2.0/)。
+- 场景 91。触发：「Entity Loader / ModelEx / Unloaded」。
+
 ## 0.0.58 — 2026-08-29
+
 
 - `/seaorm` 蒸馏 2.0 用法：SO-17 ActiveValue 三态（`NotSet` ≠ `Set(None)`）、SO-18 嵌套 `.save`、SO-19 EXISTS 过滤、SO-20 迁移原子性/历史 seed、SO-21 不把 Model 当 API、SO-22 列表不用整棵 `ModelEx`。
 - SO-23 `on_conflict` / `try_insert`（0 行 = `RecordNotInserted`）、SO-24 单行 `save` 按 PK 分流 ≠ upsert、SO-25 `from_json` 缺字段→`NotSet` 且 Entity `rename_all` 有错位先例。SO-08 `exec_with_returning` 仅 PG/SQLite；SO-12 生产禁启动 `schema-sync`（不 DROP）。

@@ -34,6 +34,7 @@
 - 用 `cargo clean`/`sweep` 当加速，或未获「清磁盘」授权就删共享 `target/` / `$CARGO_HOME`（BUILD-07/11、HY-03/10）。
 - `ActiveModel` 把 PK / `DEFAULT` 列写成 `Set(0)` / `Set(now)`，或 `Set(None)` 当默认值（SO-17）；有 `#[sea_orm::model]` 却手循环 insert 子行（SO-18）。
 - `on_conflict` 0 行当成功、用 `save()` 当 upsert（SO-23/24）；handler 把 Entity JSON/`rename_all` 直接 `from_json`（SO-25）；生产启动 `schema-sync`（SO-12）。
+- 列表页 `Entity::load().with(..)` 整棵 `ModelEx`（SO-22/26）；把 `HasOne::Unloaded` 当 `None`（SO-27）；JOIN 1-N 再 paginate（SO-07/13）。
 
 ## 规范形状（直接按这个写）
 

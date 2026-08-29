@@ -292,7 +292,7 @@ axum 子 playbook：scaffold / routing / extractors / handlers / middleware / re
 #### 框架
 /rust-skills:rust axum [target]              # axum 0.8 服务：状态、边界防护、流式、超时；按信号深入路由/提取器/中间件/鉴权/实时/测试/迁移
 /rust-skills:rust tauri [target]             # Tauri v2：体积、启动、IPC 选型；按信号深入权限/命令/窗口/插件/移动端/迁移
-/rust-skills:rust seaorm [target]            # SeaORM 2.x：池、Entity Loader、ActiveValue/NotSet、嵌套 save、upsert/on_conflict、from_json、迁移原子性
+/rust-skills:rust seaorm [target]            # SeaORM 2.x：Entity Loader 策略（JOIN vs data loader）、ActiveValue/NotSet、嵌套 save、upsert、from_json、迁移原子性
 /rust-skills:rust sqlx [target]              # SQLx 0.8/0.9：池、query!、sqlx.toml、事务 Executor、row/领域分界
 /rust-skills:rust cli [target]               # clap 4.6 CLI：derive、子命令、env、退出码、补全；解析只在 bin
 

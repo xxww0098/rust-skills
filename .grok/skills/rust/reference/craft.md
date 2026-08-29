@@ -57,7 +57,7 @@ fn first_word(s: &str) -> Option<&str> {
 | `sqlx` / `sea-orm` / axum / Tauri / clap / tracing 证据 | 对应框架/语言 reference；axum/Tauri 的 owner 再按「深入」表加载子 playbook（一次 1–2 个） |
 | `get_` 字段读取 / `as_` 却分配 / `row_to_user` 自由函数 / `utils`/`*-rs` 包名 | [name.md](name.md) |
 | 磁盘满 / 过期开发文件 / 孤儿 `.rs` / 误提交火焰图 | [slim/hygiene.md](slim/hygiene.md)；活文件死码仍走 [distill.md](distill.md) |
-| `sea-orm` / `ActiveModel` / `find_related` 循环 / `on_conflict` / `from_json` | [seaorm.md](seaorm.md)；`Set(0)` 盖 DB 默认、手插子行、`save` 当 upsert、Entity JSON 直接入站 |
+| `sea-orm` / `ActiveModel` / `find_related` 循环 / `Entity::load` / `ModelEx` / `on_conflict` / `from_json` | [seaorm.md](seaorm.md)；JOIN 1-N、Unloaded 当 None、`Set(0)` 盖默认、手插子行、`save` 当 upsert |
 | 用户要评审而不是改 | [review.md](review.md)，只读 |
 
 ## 权威源（有争议时以这些为准）
