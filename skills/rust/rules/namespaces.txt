@@ -31,4 +31,5 @@ TA local reference/tauri.md
 TR local reference/obs.md
 NM local reference/name.md
 HY local reference/slim/hygiene.md
+HP local reference/bench/layers.md
 XP local reference/xplat.md

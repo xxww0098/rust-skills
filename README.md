@@ -297,7 +297,7 @@ axum 子 playbook：scaffold / routing / extractors / handlers / middleware / re
 /rust-skills:rust cli [target]               # clap 4.6 CLI：derive、子命令、env、退出码、补全；解析只在 bin
 
 #### 交付
-/rust-skills:rust bench <target>             # 性能纪律：同机前后对比；火焰图测→看 self 帧→改一处→墙钟复测
+/rust-skills:rust bench <target>             # 性能纪律：高层 SQL/HTTP/锁先于火焰图；同机前后对比；测→看 self→改一处→墙钟
 /rust-skills:rust ship [target]              # 发布工程：容器产线 / 桌面签名 + 公证 + updater
 /rust-skills:rust xplat [target]             # 跨平台一致性：平台边界、CI 矩阵、差异账本
 

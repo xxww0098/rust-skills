@@ -1,0 +1,31 @@
+{
+  "id": "95",
+  "title": "高层剖析：N+1 + 串行 HTTP + 锁跨 await，先开火焰图",
+  "commands": [
+    "bench"
+  ],
+  "fixture": "hits.rs",
+  "fixture_needles": [
+    "comments(db, p.id)",
+    ".send().await?",
+    "lock.write().await",
+    "cargo_flamegraph_first"
+  ],
+  "skill_needles": {
+    "skills/rust/reference/bench/layers.md": [
+      "HP-01",
+      "层序",
+      "try_join",
+      "hotpath",
+      "cargo flamegraph"
+    ],
+    "skills/rust/reference/bench.md": [
+      "layers.md",
+      "没点名火焰图"
+    ],
+    "tests/pressure-scenarios.md": [
+      "### 场景 95",
+      "HP-01"
+    ]
+  }
+}

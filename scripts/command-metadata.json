@@ -519,7 +519,7 @@
     },
     "bench": {
       "category": "交付",
-      "summary": "性能纪律：同机前后对比；火焰图测→看 self 帧→改一处→墙钟复测",
+      "summary": "性能纪律：高层 SQL/HTTP/锁先于火焰图；同机前后对比；测→看 self→改一处→墙钟",
       "argumentHint": "<target>",
       "triggers": [
         "性能对比",
@@ -527,14 +527,21 @@
         "这改动快了多少",
         "火焰图",
         "samply",
-        "读火焰图"
+        "读火焰图",
+        "hotpath",
+        "性能剖析",
+        "锁竞争",
+        "通道积压"
       ],
       "triggers_en": [
         "benchmark",
         "before/after perf",
         "how much faster",
         "flamegraph",
-        "samply"
+        "samply",
+        "hotpath",
+        "N+1 SQL",
+        "lock contention"
       ]
     },
     "ship": {

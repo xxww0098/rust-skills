@@ -2,7 +2,7 @@
 name: rust
 description: Use for Cargo/Rust work in a repo — implement, debug, rustc/borrow-checker, clippy, review, unsafe/FFI, axum/sqlx/tokio, clap/tracing, Tauri v2, edition 2024, 技术栈, 函数命名, crate命名, 清理过期文件, 编译报错, 代码审查, or /rust-skills:rust. Engage without a subcommand. Skip non-Cargo work and language trivia.
 license: MIT
-version: 0.0.63
+version: 0.0.64
 metadata:
   type: workflow
 argument-hint: "[搭建与设计: init|shape|crate|document|stack · 评审: review|audit|triage|doctor · 改造: harden|slim|modernize|distill|gate · 语言语义: concurrency|process|async|serde|obs|name · 框架: axum|tauri|seaorm|sqlx|cli · 交付: bench|ship|xplat · 治理: docs|capture] [target]"
@@ -105,7 +105,7 @@ argument-hint: "[搭建与设计: init|shape|crate|document|stack · 评审: rev
 | `seaorm` | 框架 | 「SeaORM」 · 「数据库查询」 · 「N+1」 · 「ActiveModel」 · 「NotSet」 · 「嵌套保存」 · 「entity-first」 · 「upsert」 · 「on_conflict」 · 「from_json」 · 「schema-sync」 · 「Entity Loader」 · 「ModelEx」 · 「Unloaded」 · 「Loader 内存」 · 「ModelEx 树」 · 「over-fetch」 · 「Loader 优化」 · 「切边」 · 「切根」 · 「内存泄漏」 · 「RSS」 · 「不释放」 · 「泄漏分诊」 · SeaORM · ORM N+1 · SeaORM query · ActiveModel · NotSet · nested save · upsert · on_conflict · from_json · Entity Loader · ModelEx · Unloaded · Entity Loader memory · ModelEx tree · over-fetch · Loader optimize · cut edges · cut roots · memory leak · RSS · allocator fragmentation · leak triage | [reference/seaorm.md](reference/seaorm.md) |
 | `sqlx` | 框架 | 「sqlx」 · 「query! 宏」 · 「编译期 SQL」 · 「连接池饿死」 · sqlx · query! macro · compile-time SQL · pool starvation | [reference/sqlx.md](reference/sqlx.md) |
 | `cli` | 框架 | 「clap」 · 「命令行」 · 「子命令」 · 「shell 补全」 · 「CLI 参数」 · clap · CLI args · subcommands · shell completion | [reference/cli.md](reference/cli.md) |
-| `bench` | 交付 | 「性能对比」 · 「benchmark」 · 「这改动快了多少」 · 「火焰图」 · 「samply」 · 「读火焰图」 · benchmark · before/after perf · how much faster · flamegraph · samply | [reference/bench.md](reference/bench.md) |
+| `bench` | 交付 | 「性能对比」 · 「benchmark」 · 「这改动快了多少」 · 「火焰图」 · 「samply」 · 「读火焰图」 · 「hotpath」 · 「性能剖析」 · 「锁竞争」 · 「通道积压」 · benchmark · before/after perf · how much faster · flamegraph · samply · hotpath · N+1 SQL · lock contention | [reference/bench.md](reference/bench.md) |
 | `ship` | 交付 | 「要发版」 · 「打镜像」 · 「签名/公证/updater」 · 「发布链路」 · 「交叉编译」 · 「双端编译」 · 「cargo-xwin」 · 「NSIS」 · release · container image · signing/notarization/updater · cross-compile Windows · cargo-xwin · NSIS from macOS | [reference/ship.md](reference/ship.md) |
 | `xplat` | 交付 | 「Windows 报错 Mac 正常」 · 「跨平台」 · 「CI 矩阵」 · Windows fails Mac works · cross-platform · CI matrix | [reference/xplat.md](reference/xplat.md) |
 | `docs` | 治理 | 「整理文档」 · 「docs 首页」 · 「链接失效」 · 「文档治理」 · docs index · broken links · documentation governance | [reference/docs.md](reference/docs.md) |

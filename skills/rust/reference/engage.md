@@ -23,6 +23,7 @@
 | 「函数名 / get_xx / as_ 还是 to_ / crate 怎么命名 / 包名 / -rs / 命名规范」 | 加载 [name.md](name.md)，只体检 | 不改公开 API 或已发布包名；不 distill 结构 |
 | 「磁盘满了 / target 太大 / 清理过期文件 / 孤儿 .rs / cargo sweep」 | 加载 [slim/hygiene.md](slim/hygiene.md)，只出四层表 | 不用 `cargo clean` 当加速；不 `rm -rf ~/.cargo` |
 | 「SeaORM / ActiveModel / N+1 / Entity Loader / ModelEx / Loader 内存 / 内存泄漏 / RSS / 嵌套保存 / NotSet / upsert / from_json / schema-sync」 | 加载 [seaorm.md](seaorm.md)，只体检 | 不把 RSS 台阶当泄漏；不把 ModelEx 进静态；不每请求 connect；不把 Unloaded 当 None；`with().filter(子列)` 不切 has_many；不双开 sqlx |
+| 「慢 / hotpath / 剖析 / 火焰图 / samply / 这改动快了多少」 | 加载 [bench.md](bench.md)；没点名火焰图先 [bench/layers.md](bench/layers.md) | 不先 `cargo flamegraph`；不加 default `hotpath` feature；不 sudo |
 | 「看看这个仓库 / 全仓审查 / 生成画像」且 workspace ≥2 crate | 先 inspect 一份图，再按 [kernel/swarm.md](../kernel/swarm.md) 并行取证 | 不为单文件 craft/triage 开 swarm；不让子 agent 写文件 |
 
 同一轮最多主动做 **一件主动作 + 至多一句旁注**（画像缺失 / edition 漂移 / 下一步 review）。禁止连开 document+review+init。

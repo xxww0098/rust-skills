@@ -45,7 +45,7 @@
 | `ship` | 容器产线 · 签名/公证 · 交叉矩阵 | 把 xwin NSIS 当正式 Windows 包 |
 | `xplat` | `cfg` 边界 · CI 矩阵 · 差异账本 | 未声明平台误杀 |
 | `docs` | 首页/权威源 · 断链 · 生命周期 | 默认为写 |
-| `bench` | 仅盘点：已有装置 · profiling profile 是否在 | 采集后的改帧循环（串行） |
+| `bench` | 高层 SQL/HTTP/锁 · 已有装置/profiling profile | 采集后的改帧循环（串行）；先开火焰图 |
 
 `audit <domain>` 只开该域车道。`slim` 的 `/cargo` `/test` `/cargo tools` `/cargo hygiene` 是四条车道的 pin，不是新命令。
 

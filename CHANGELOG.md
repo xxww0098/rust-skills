@@ -1,6 +1,12 @@
 # Changelog
 
+## 0.0.64 — 2026-08-29
+
+- `/bench` 蒸馏 [hotpath 完全指南](https://hotpath.rs/blog/profiling-rust-guide)（B 站 [BV18cbQ6vEu4](https://www.bilibili.com/video/BV18cbQ6vEu4/)）：HP-01..11 层序 SQL/HTTP → I/O → 锁/通道 → 分配 → CPU。没点名火焰图禁止先采样。async wait 用墙钟不是 samply。`hotpath` 0.24 feature-gate；SeaORM 无自动 SQL tracing。PERF-04 补 instrumentation。
+- 场景 95。触发：「hotpath / 剖析 / N+1 / 锁竞争」。
+
 ## 0.0.63 — 2026-08-29
+
 
 - `/seaorm` SO-30 补分诊顺序：一次 RSS 台阶 ≠ 泄漏（2901 指纹：10MB JSON `ActiveModel` 10→121MB，raw SQL ~13MB）；分配字节回落但 RSS 不还 OS 仍是分配器；跨请求单调涨才查活图/连接/heaptrack。假优化：调池参数当治泄漏。
 - 场景 94 针补「分诊顺序 / mimalloc」。

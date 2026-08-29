@@ -58,6 +58,7 @@ fn first_word(s: &str) -> Option<&str> {
 | `get_` 字段读取 / `as_` 却分配 / `row_to_user` 自由函数 / `utils`/`*-rs` 包名 | [name.md](name.md) |
 | 磁盘满 / 过期开发文件 / 孤儿 `.rs` / 误提交火焰图 | [slim/hygiene.md](slim/hygiene.md)；活文件死码仍走 [distill.md](distill.md) |
 | `sea-orm` / `ActiveModel` / `find_related` 循环 / `Entity::load` / `ModelEx` / RSS 泄漏 | [seaorm.md](seaorm.md)；JOIN 1-N、列表整图、`with().filter(子列)`、RSS 当泄漏、每请求 connect |
+| 「慢 / hotpath / N+1 SQL / 串行 HTTP / 火焰图」 | [bench.md](bench.md) → 先 [bench/layers.md](bench/layers.md)；点名 samply 才火焰图 |
 | 用户要评审而不是改 | [review.md](review.md)，只读 |
 
 ## 权威源（有争议时以这些为准）
@@ -67,7 +68,7 @@ fn first_word(s: &str) -> Option<&str> {
 - 错误：thiserror 文档（库）、anyhow 文档（应用）；eyre 视为 anyhow 等价。二者都不是必依赖（ERR-08）
 - 数据层：sqlx `Pool` 文档（默认非生产）、`query!` + `SQLX_OFFLINE`
 - 构建：2025 Rust Compiler Performance Survey；Cargo `--timings` / `cargo report timings`；x86_64 Linux ≥1.90 默认 rust-lld
-- 运行时：nnethercote《The Rust Performance Book》（clone / clone_from / 分配）
+- 运行时：nnethercote《The Rust Performance Book》（clone / clone_from / 分配）；墙钟/N+1/HTTP 先 [hotpath 完全指南](https://hotpath.rs/blog/profiling-rust-guide)，CPU 才 samply
 - 环境：`std::env::set_var` Safety（Unix 多线程几乎无法证明；子进程用 `Command::env`）
 
 ## 完成条件
