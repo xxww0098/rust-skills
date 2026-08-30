@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- 安装入口改为 [SkillStar](https://github.com/xxww0098/SkillStar)：`skillstar add xxww0098/rust-skills`。安装单元是某一个 `.<harness>/` 层（或其中的 `skills/rust`），不是整仓；仓库根不再放 `SKILL.md` 垫片。
+
 ## 0.0.68 — 2026-08-31
 
 - 安装单元改为按 harness 落地：`.<harness>/`（或其中的 `skills/rust`）是独立副本，不再是指向仓内 `../../skills/rust` 的相对 symlink。SkillStar / 同类 Git 安装器取 `.cursor/` 或 `.dsh/` 时不会把 `tests/`、`scripts/`、`docs/` 和其它 harness 树当技能正文。
