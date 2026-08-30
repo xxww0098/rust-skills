@@ -1,0 +1,32 @@
+{
+  "id": "99",
+  "title": "散文 spec 与 port 语义漂移",
+  "commands": ["shape", "review"],
+  "fixture": "hits.rs",
+  "fixture_needles": [
+    "verified: bool",
+    "amount: i64",
+    "debug_assert!(touch_hmr",
+    "odd tail"
+  ],
+  "skill_needles": {
+    "skills/rust/rules/api.md": [
+      "能进类型、签名、穷尽 match",
+      "spec 可执行率"
+    ],
+    "skills/rust/reference/shape.md": [
+      "spec 可执行率",
+      "不要只放 PR 描述"
+    ],
+    "skills/rust/reference/review.md": [
+      "同语法异语义",
+      "debug_assert!(side_effect())",
+      "合并 ≠ 发布"
+    ],
+    "tests/pressure-scenarios.md": [
+      "### 场景 99",
+      "散文 spec",
+      "debug_assert!"
+    ]
+  }
+}

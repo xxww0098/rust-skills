@@ -72,7 +72,9 @@
 | CI 门禁、clippy/deny/静态分析、提交前检查 | [gate.md](gate.md) | 重复 Cargo fan-out 明确时加 cargo | gate；一个信号一个 owner |
 | 项目画像漂移、工程健康、基线是否过期 | [doctor.md](doctor.md) | 无 | doctor |
 | 发版链、签名/公证/updater、跨平台矩阵 | [ship.md](ship.md) 或 [xplat.md](xplat.md) | Tauri 证据明确时加 tauri | ship/xplat |
+| 跨语言迁移、Zig/C++/Go port、机械转译、语义映射文档 | 本文件 §10 | 触达 unsafe 才加 audit unsafe | 编译+原语言测试套件；合并不等于发布 |
 | 泛 code review、正确性、维护性、diff 有没有问题 | 本文件通用评审 | 仅由 diff 直接证据补一个镜头 | review |
+
 
 “深审”与“优化”的分界要稳定：`audit tests/build/deps` 负责找体系性缺陷；`test`/`cargo` 负责把反馈回路缩到最小充分。不能为了看起来全面同时跑两套相同检查。
 
@@ -109,6 +111,11 @@
    - SQL 迁移 / 缓存键前缀 / 指标名 → 核对滚动升级路径（双读、兼容期、dashboard 断流）。
    - clone/`&String`/`impl Deref` → OWN。
    - `tests/common.rs` → TEST-03；新增 pub 项缺 rustdoc/`# Errors` → API-02。
+   - 跨语言 port / 机械迁移 / `PORTING.md` / 语义映射表 → §10。
+   - yank 警告、`cargo update`、冷却期绕过 env → DEP-11/13 硬停，不当「修构建失败」。
+   - 目标是 `rust-lang/rust` / 给 rustc 提 PR → §11。LLM 只分析不创造。
+
+
 6. 按 facets 加权：artifact=lib 加审 API 破坏性与文档；service 加审 OBS/停机路径；cli 查薄 main；desktop 加审 TA/XP/SH；只有 maturity=prototype 才豁免 META-05 明示的域。有 axum 证据且触达 API/测试边界时叠加 [axum/testing.md](axum/testing.md) 的只读清单；鉴权等更强信号按 axum owner 深入。Tauri 权限面证据叠加 [tauri/security.md](tauri/security.md)，其余只加载命中的 Tauri 子 playbook。
 7. 运行与当前镜头相关的最小只读验证；没有 package/target 入口时才逐级扩到受影响反向依赖或 workspace。区分静态检查、编译/链接证据、行为证明和未验证运行时假设。
 
@@ -183,4 +190,28 @@ M 违规在前；每条给适用前提、代码证据和后果，不给感觉。
 
 禁止：在 `review` 里直接重构；为 1000 行阈值新建 crate；把任何 provider 的“go for it”当成写入授权。
 
+## 10. 跨语言 port / 机械迁移
+
+前提：diff 或提示点名 port / 转译 / Zig|C++|Go→Rust / `PORTING.md` / 生命周期映射表。未点名不套本档。
+
+1. **先冻映射再写码。** 语义契约（字段→生命周期、Zig 分配→Rust 所有权）应先于实现。缺映射文档标缺口，不在评审里发明新架构。
+2. **同语法异语义**（Bun Zig→Rust 回归类）：`debug_assert!(side_effect())` release 抹掉副作用（安全路径也查，不限于 UNSAFE-07）；切片重铸「奇数字节」源语言静默截断 vs Rust panic；源语言 ReleaseFast 无边界检查 vs Rust release 保留；comptime 格式串求值时机。漏网的几乎都在测试覆盖之外的 build profile / 边缘输入。
+3. **对抗评审独立上下文。** 实现者的推理过程不进评审镜头；评审假设代码是错的。能通过编译的 UAF/急切 `unwrap_or` 仍报。
+4. **合并 ≠ 发布。** CI 全绿只是分级信心的一层；发布/canary 是人掌握的下一步，本命令不批准发版。
+5. **散文 spec 不是真相**（API-08）。能进类型/签名的判断若只写在注释或 markdown，报缺口并指向 `/shape`。
+
+下一步：judo/结构 → `distill`；生产边界 → `harden`；发版 → `ship`。本档只读。
+
+## 11. rust-lang/rust LLM 政策（脚注）
+
+前提：目标仓是 `rust-lang/rust`，或用户点名给 rustc/libs/types/rustdoc/bootstrap 提 PR。其他仓不套。政策原文：[forge.rust-lang.org/policies/llm-usage.html](https://forge.rust-lang.org/policies/llm-usage.html)。线在「分析 vs 创造」：*But not to create.*
+
+- LLM 可私下问、总结、自审；**不要**用它生成将进入他人队列的评论、issue、PR 描述、文档、`// SAFETY`、诊断信息。
+- LLM review 不能当合并/拒绝的充分理由。
+- 代码生成是窄实验门：预约、非关键（trait/MIR/query 不算）、测得比人类 PR 更严、披露范围和目的。不要批量开 PR。
+- 流程不能写成必须 LLM（别只在 `AGENTS.md` 记测试在哪）。
+- 本 skill 不替 rustc 执法；违反项标缺口并指向 Zulip `#llm-mentoring`，不编造 CoC 处分。
+
 默认只输出一条可粘贴的 RUST.md 快照建议；只有显式 `--record` 才按 SKILL 的投影契约，在“最近评审”upsert `review:<date>:<scope-hash>`（日期、M/S/Y 计数、路由镜头和要点），不同键与其他 managed 节保持不变。是否存在值得 `/rust-skills:rust capture` 的教训只作为建议，不自动捕获。结尾注明“未改动任何文件”。
+
+

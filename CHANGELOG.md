@@ -1,6 +1,21 @@
 # Changelog
 
+## 0.0.67 — 2026-08-30
+
+- 蒸馏 [@blackanger](https://x.com/blackanger) Rust 长文（arrayref #13、Dex/spec 可执行率、Bun Zig→Rust、可信工厂），**不新命令、不加全局编号**（帽 150）。
+- DEP-11：yank 警告是停手不是 `cargo update`。DEP-13：`CARGO_RESOLVER_INCOMPATIBLE_PUBLISH_AGE=allow` 只许知情热修，Agent 永不自主设。DEP-12：内存安全光环 ≠ 供应链信任。GATE-04：CI/Agent 环境不得常驻 allow。
+- API-08 / `/shape` / craft：能进类型的规格不要只写散文（spec 可执行率）；类型检形状不检含义。
+- `/review` §10：跨语言 port 先冻映射；同语法异语义（`debug_assert!` 抹副作用、切片重铸、build profile）；对抗评审独立上下文；合并 ≠ 发布。
+- `/harden`：可复现/签名证明来历，不证明源码干净。
+- `/audit deps`：清单零 `src/` diff 仍会编传递依赖；宏 crate 的 build-deps 出现网络栈是廉价信号；`fetch` 与 `build --offline` 拆开。
+- `/crate`：禁止把某 harness 的 75 crate 切法当 CRUD 仓模板。
+- `/review` §11：仅 `rust-lang/rust` — LLM 只分析不创造（脚注，不新命令）。
+- 场景 98（yank / allow 硬停）+ 场景 99（散文 spec + port 语义漂移）。权威：Cargo RFC 3923；arrayref 0.3.10（2026-08-20，在线 86 分钟）。
+
+
+
 ## 0.0.66 — 2026-08-29
+
 
 - 渐进披露：SKILL 本轮预算 1 个 owner + 至多 2 个子 playbook + 至多 3 个规则域；禁止整目录读 `reference/axum|tauri|seaorm|bench|slim/`。路由表触发改代表项（`triggers_short`），完整短语留在 metadata / owner 文首。
 - `/seaorm` 拆成 owner 清单 + `query`/`loader`/`active`/`pool`/`leak` 五个子 playbook。SO-01..30 仍只在 owner 定义；N+1 只加载 owner+query，不整目录读。

@@ -1,4 +1,4 @@
-# Rust 工程规范（注入版 v0.0.66）
+# Rust 工程规范（注入版 v0.0.67）
 
 供按相关域渐进加载（先读同目录分文件，不要默认打开本合并件）；仅在明确的全规范审计时读取 `rules-full.md`。规则是决策约束，不是替代项目证据的检查表。
 分级：[M]=适用前提命中后 MUST，违反即阻断；[S]=默认 SHOULD，项目约定或证据可推翻并说明；[Y]=MAY。先证明前提，再引用编号；不适用不是违规。**本规范只以 edition 2024 为基线**（MSRV ≥ 1.85，可用 `rust-version` 或 `rust-toolchain.toml` 声明）。edition 2018/2021 是待迁移债务。新 workspace 用 `resolver = "3"`；已经 2024 且钉在 resolver 2 的成熟仓不迁 resolver。新代码按 2024 语义写（RPIT 全捕获、`if let` 短临时值、`#[unsafe(no_mangle)]`、`unsafe extern`、≥1.88 let chains）。Unix 多线程禁止靠 `env::set_var` 改环境。
@@ -70,7 +70,7 @@
 - API-05[S] 标准 trait 尽量派生：Debug 必须（敏感字段脱敏），Clone/PartialEq/Eq/Hash/Default 按语义。
 - API-06[Y] >3 个可选参数用 builder。
 - API-07[S] 命名遵循 Rust API Guidelines（C-CASE / C-CONV as_·to_·into_ / C-GETTER；crate 禁 `-rs`/`-rust`）。细节与改名走 `/rust-skills:rust name`。
-- API-08[S] parse, don't validate：信任边界用 `parse`/`TryFrom`/newtype 构造器产出领域类型；业务函数只收已合法类型，不再对同一 `String` 重复校验。wire / row / 领域 / 响应类型分离，不把 `FromRow`+`Serialize` 挂同一结构当 API。
+- API-08[S] parse, don't validate：信任边界用 `parse`/`TryFrom`/newtype 构造器产出领域类型；业务函数只收已合法类型，不再对同一 `String` 重复校验。wire / row / 领域 / 响应类型分离，不把 `FromRow`+`Serialize` 挂同一结构当 API。**能进类型、签名、穷尽 match 的规格不要只写散文 spec**（spec 可执行率）；rustc 每次 build 强制形状，散文会漂。类型检形状不检含义；CRUD/UX 残差仍要测试/场景，不要假装类型是完整 Oracle。
 
 ## OWN 所有权
 - OWN-01[M] 不为过编译器而 clone：引入 clone 消除 E0382/E0507 前必须先答 D-6（谁该拥有）。共享不可变用 `&`/`Arc`；确需副本时在调用点注释「为何两处都要所有权」。
@@ -153,9 +153,9 @@
 - DEP-08[M] edition 必须是 2024。MSRV（≥ 1.85）用 `rust-version` 或 `rust-toolchain.toml` 显式钉住，CI 有对应编译任务。resolver：新仓 3；已有 2024+resolver 2 不是违规。依赖自己的 MSRV 可以高于仓基线（sqlx 0.9 为 1.94）：不要为对齐「现行稳定线」把全仓 rust-version 抬到最严依赖；该依赖上一主线仍在范围内就留在上一主线，抬 MSRV 必须写入 RUST.md 或 rust-version 变更。
 - DEP-09[S] cargo hack --feature-powerset 每夜验证 feature 叠加性。
 - DEP-10[Y] 高保证场景用 cargo-vet/cargo-crev。
-- DEP-11[S] 已跟踪 lock 的应用：CI/`cargo` 调用必须 `--locked`（或等价 `--offline`）。禁无人值守 `cargo update` / 无 `--locked` 的解析。投毒窗口以小时计（arrayref 0.3.10 在线 86 分钟）；只有这段里跑过 update 的 lock 会吃进恶意版本。
-- DEP-12[S] `cargo deny`/`audit`/`vet` 依赖已收录或已审；零日投毒头几小时沉默。冷却期（DEP-13）挡「发布后立刻被选中」；提前数月的慢投毒仍走审查（DEP-10）+ deny（DEP-06）。多层，不是银弹。
-- DEP-13[S] 应用可设解析冷却期（Cargo RFC 3923，**实验性**：需 nightly `-Zmin-publish-age`，稳定前不改默认 toolchain）。crates.io 建议 7–14 days；安全敏感 ≥14；库作者短或不设；私有 registry 可 `0`。只影响新解析，不踢 lock 里已有版本。registry 无 `pubtime` 则静默失效。紧急热修：`CARGO_RESOLVER_INCOMPATIBLE_PUBLISH_AGE=allow cargo update -p <crate> --precise <ver>`，知情后改回 deny。git/path 源豁免。
+- DEP-11[S] 已跟踪 lock 的应用：CI/`cargo` 调用必须 `--locked`（或等价 `--offline`）。禁无人值守 `cargo update` / 无 `--locked` 的解析。**yank 警告不是升级理由，是停手理由**（arrayref 0.3.10 yank 安全版，唯一未 yank 的是恶意版）。投毒窗口以小时计（0.3.10 在线 86 分钟）；只有这段里跑过 update 的 lock 会吃进恶意版本。
+- DEP-12[S] `cargo deny`/`audit`/`vet` 依赖已收录或已审；零日投毒头几小时沉默。冷却期（DEP-13）挡「发布后立刻被选中」；提前数月的慢投毒仍走审查（DEP-10）+ deny（DEP-06）。多层，不是银弹。内存安全光环 ≠ 供应链信任。
+- DEP-13[S] 应用可设解析冷却期（Cargo RFC 3923，**实验性**：需 nightly `-Zmin-publish-age`，稳定前不改默认 toolchain）。crates.io 建议 7–14 days；安全敏感 ≥14；库作者短或不设；私有 registry 可 `0`。只影响新解析，不踢 lock 里已有版本。registry 无 `pubtime` 则静默失效。紧急热修：`CARGO_RESOLVER_INCOMPATIBLE_PUBLISH_AGE=allow cargo update -p <crate> --precise <ver>`，**知情的人**给出「这个过新/被 yank 的版本为何可信」的证据后才设，完后改回 deny。**Agent 永不自主设该变量**，也不因 cargo help / yank 警告去设。git/path 源豁免。
 
 ## LINT 风格
 - LINT-01[M] 使用项目 rustfmt 配置并在现有门禁执行 `fmt --check`；是否使用 pre-commit 由项目决定，不覆盖本地 hooks。
@@ -188,7 +188,7 @@
 - GATE-01[S] 本地与 CI 应复用同一组检查入口；沿用项目已有脚本/任务系统，只有复杂度值得时才新增 `cargo xtask gate`。
 - GATE-02[M] 门禁覆盖不得静默减弱；删除过时检查或放宽阈值须显式记录理由、影响与补偿证据。
 - GATE-03[S] 棘轮基线文件入库，变更走评审。
-- GATE-04[S] 已跟踪 lock 的应用：G3 CI 必须 `--locked`；禁流水线里的 `cargo update`（DEP-11）。G4 可选 `cargo +nightly -Zmin-publish-age` 验证解析冷却（DEP-13），**不**把 nightly 当默认构建工具链。
+- GATE-04[S] 已跟踪 lock 的应用：G3 CI 必须 `--locked`；禁流水线里的 `cargo update`（DEP-11）。yank 警告不触发 CI/Agent 的 update。G4 可选 `cargo +nightly -Zmin-publish-age` 验证解析冷却（DEP-13），**不**把 nightly 当默认构建工具链。CI/Agent 环境不得常驻 `CARGO_RESOLVER_INCOMPATIBLE_PUBLISH_AGE=allow`。
 - GATE-05[S] G4 feature 矩阵用 `cargo hack check --feature-powerset --no-dev-deps`（[taiki-e/cargo-hack](https://github.com/taiki-e/cargo-hack)）；库有可选 feature 才加，不默认引入。`--each-feature` 不够（漏组合）。未采用不强迫。
 - GATE-06[S] 静态分析阶梯不可把 G4 工具塞进每次 push。Miri 只跑有 `unsafe` 的 crate；Kani/形式化验证仅已采用才留；clippy pedantic 不当 `-D`。同层不双跑（LINT-07）。
 

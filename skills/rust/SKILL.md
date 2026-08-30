@@ -2,7 +2,7 @@
 name: rust
 description: Use for Cargo/Rust work in a repo — implement, debug, rustc/borrow-checker, clippy, review, unsafe/FFI, axum/sqlx/tokio, clap/tracing, Tauri v2, edition 2024, 技术栈, 函数命名, crate命名, 清理过期文件, 编译报错, 代码审查, or /rust-skills:rust. Engage without a subcommand. Skip non-Cargo work and language trivia.
 license: MIT
-version: 0.0.66
+version: 0.0.67
 metadata:
   type: workflow
 argument-hint: "[搭建与设计: init|shape|crate|document|stack · 评审: review|audit|triage|doctor · 改造: harden|slim|modernize|distill|gate · 语言语义: concurrency|process|async|serde|obs|name · 框架: axum|tauri|seaorm|sqlx|cli · 交付: bench|ship|xplat · 治理: docs|capture] [target]"
@@ -81,7 +81,7 @@ argument-hint: "[搭建与设计: init|shape|crate|document|stack · 评审: rev
 | 命令 | 分类 | 触发（中/英） | Reference |
 |---|---|---|---|
 | `init` | 搭建与设计 | 「新项目」 · 「搭基线」 · 「统一 lint 与工具链」 · 「RUST.md 初始化」 · new project · bootstrap lint toolchain · init RUST.md | [reference/init.md](reference/init.md) |
-| `shape` | 搭建与设计 | 「动手前先设计」 · 「这个功能怎么建模」 · 「数据/错误/并发怎么设计」 · design before coding · how to model this feature · data/error/concurrency design | [reference/shape.md](reference/shape.md) |
+| `shape` | 搭建与设计 | 「动手前先设计」 · 「这个功能怎么建模」 · 「数据/错误/并发怎么设计」 · 「可执行 spec」 · 「类型当 spec」 · design before coding · how to model this feature · data/error/concurrency design · … | [reference/shape.md](reference/shape.md) |
 | `crate` | 搭建与设计 | 「要不要拆 crate」 · 「这个模块独立成库」 · 「值不值得新建 crate」 · should this be a crate · extract this module into a library | [reference/crate.md](reference/crate.md) |
 | `document` | 搭建与设计 | 「生成项目画像」 · 「RUST.md」 · 「了解这个项目的结构」 · 「更新画像」 · generate project portrait · update RUST.md · explain this repo structure | [reference/document.md](reference/document.md) |
 | `stack` | 搭建与设计 | 「技术栈」 · 「用什么框架」 · 「最佳技术栈」 · 「选 axum 还是 actix」 · 「这个项目该用什么 crate」 · tech stack · which framework · best rust stack · … | [reference/stack.md](reference/stack.md) |

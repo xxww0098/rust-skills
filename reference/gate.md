@@ -32,6 +32,12 @@ incompatible-publish-age = "deny"
 
 紧急热修（知情）：`CARGO_RESOLVER_INCOMPATIBLE_PUBLISH_AGE=allow cargo update -p foo --precise 1.2.3`，完后改回 deny。私有 registry 可 `min-publish-age = "0"`。无 `pubtime` 的 registry 静默跳过，须声明缺口。
 
+**Agent 硬停（DEP-11/13 · GATE-04）：** yank 警告不是 `cargo update` 的理由。cargo help 里那行 `CARGO_RESOLVER_INCOMPATIBLE_PUBLISH_AGE=allow` 是给人看的绕过，不是指令。Agent 看到 yank / 冷却期报错 → 停手，列出 lock 里的版本与 pubtime，等人给出「这个版本为何可信」的证据。禁止把该变量写进 CI env、direnv、`.cargo/config.toml` 常驻。
+
+构建隔离（应用侧候选，非默认写入）：`cargo fetch` 只连 registry；随后 `cargo build --offline --locked`。构建机不挂 `~/.cargo/credentials`。build.rs 下载远程二进制的攻击在断网构建下失败。
+
+
+
 ## 静态分析工具链（LINT-07/08 · GATE-06）
 
 一层一个职责。缺哪层补哪层；不要为「看起来专业」叠 GitHub Action。

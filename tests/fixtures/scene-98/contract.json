@@ -1,0 +1,36 @@
+{
+  "id": "98",
+  "title": "yank 警告与 allow 绕过是 Agent 硬停",
+  "commands": ["gate", "audit"],
+  "fixture": "note.md",
+  "fixture_needles": [
+    "has been yanked",
+    "CARGO_RESOLVER_INCOMPATIBLE_PUBLISH_AGE=allow",
+    "cargo update -p arrayref"
+  ],
+  "skill_needles": {
+    "skills/rust/rules/dep.md": [
+      "yank 警告不是升级理由",
+      "Agent 永不自主设该变量"
+    ],
+    "skills/rust/rules/gate.md": [
+      "yank 警告不触发",
+      "CARGO_RESOLVER_INCOMPATIBLE_PUBLISH_AGE=allow"
+    ],
+    "skills/rust/reference/gate.md": [
+      "Agent 硬停",
+      "不是指令",
+      "cargo fetch",
+      "build --offline"
+    ],
+    "skills/rust/reference/audit.md": [
+      "build = false",
+      "cargo fetch"
+    ],
+    "tests/pressure-scenarios.md": [
+      "### 场景 98",
+      "yank 是停手",
+      "永不自主设"
+    ]
+  }
+}

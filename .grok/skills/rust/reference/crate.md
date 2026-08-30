@@ -1,6 +1,7 @@
 # /rust-skills:rust crate <module> — 值不值得拆成 crate
 
-目的：对用户点名的**模块或拟建 crate**做对抗审查，只给「拆 / 留 / 证据不足」建议，由用户决定是否迁移。本命令**不写码、不改 workspace**。拆 crate 的充分条件是 WS-12（独立编译、复用、发布或依赖隔离），行数和「看起来干净」不是理由。大型 workspace 里按编译单元切开（codegen/common 这类已有边界）算证据，不是「crate 太多所以继续拆」。
+目的：对用户点名的**模块或拟建 crate**做对抗审查，只给「拆 / 留 / 证据不足」建议，由用户决定是否迁移。本命令**不写码、不改 workspace**。拆 crate 的充分条件是 WS-12（独立编译、复用、发布或依赖隔离），行数和「看起来干净」不是理由。大型 workspace 里按编译单元切开（codegen/common 这类已有边界）算证据，不是「crate 太多所以继续拆」。**不要模仿某 Agent harness 的 75 crate 切法**——那是编译隔离的极端形态，CRUD/服务仓仍走 WS-12；没有第二调用方、独立 MSRV 或发布面就留 `mod`。
+
 
 编排：多文件时按 [kernel/swarm.md](../kernel/swarm.md) — 三路对抗各一条车道：赞成 · 反对 · 依赖方向。未回复「拆」不改 workspace。 单文件或已有快照则跳过。
 

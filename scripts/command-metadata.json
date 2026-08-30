@@ -32,12 +32,17 @@
       "triggers": [
         "动手前先设计",
         "这个功能怎么建模",
-        "数据/错误/并发怎么设计"
+        "数据/错误/并发怎么设计",
+        "可执行 spec",
+        "类型当 spec"
+
       ],
       "triggers_en": [
         "design before coding",
         "how to model this feature",
-        "data/error/concurrency design"
+        "data/error/concurrency design",
+        "executable spec"
+
       ]
     },
     "crate": {
@@ -99,14 +104,19 @@
         "这段 diff 有没有问题",
         "代码审查",
         "热核评审",
-        "严格可维护性"
+        "严格可维护性",
+        "跨语言迁移",
+        "port 评审"
+
       ],
       "triggers_en": [
         "review this PR",
         "code review",
         "review this diff",
         "thermo-nuclear",
-        "thermonuclear review"
+        "thermonuclear review",
+        "cross-language port"
+
       ]
     },
     "audit": {
@@ -259,7 +269,9 @@
         "提交前自动检查",
         "clippy 基线只收紧",
         "静态分析",
-        "静态分析工具链"
+        "静态分析工具链",
+        "yank 警告"
+
       ],
       "triggers_en": [
         "add CI gates",
@@ -267,7 +279,9 @@
         "pre-commit checks",
         "tighten clippy baseline",
         "static analysis",
-        "static analysis toolchain"
+        "static analysis toolchain",
+        "yank warning"
+
       ]
     },
     "concurrency": {

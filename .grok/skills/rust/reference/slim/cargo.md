@@ -104,7 +104,11 @@ cargo check -p <pkg> --test <integration-target> --profile test
 - 为速度关闭必要测试、改变 release 语义、把测试 helper 暴露进生产 API。
 - 未确认项目 MSRV/CI 就写 nightly-only 配置。
 - 为了“Rust 全家桶”同时引入 watcher、nextest、hack、deny、coverage、udeps、semver、bloat，却没有独占信号与车道。
+- 因 yank 警告跑 `cargo update`，或自主设 `CARGO_RESOLVER_INCOMPATIBLE_PUBLISH_AGE=allow`（DEP-11/13：yank 是停手，allow 要人给证据）。
+- 有网络的 `cargo build` 当日常默认却从不 `--offline`：应用侧应 `fetch` 与 `build --offline` 拆开（gate playbook），不是本命令为「更快」改网络策略。
+
 - 静默 `cargo install`/更新用户全局工具，或在 CI 每个 job 从源码重装 latest。
+
 
 ## 输出与完成条件
 

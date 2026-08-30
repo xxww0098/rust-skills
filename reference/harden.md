@@ -13,7 +13,8 @@
 4. **停机与资源**（service 模式）：优雅停机路径（统一取消信号是否贯通——CancellationToken 或可证等价的 watch/oneshot/shutdown future，见 AS-04）；spawn 任务归宿（JoinSet/TaskTracker）与总超时；channel 容量与背压在停机时的语义；连接/文件句柄的 Drop 路径。协作停机后再 abort 兜底 ≠ 失败；**硬 abort 作为唯一归宿且不 join/不观测 panic** 才判失败。axum 服务的信号/drain/健康检查接线见 [axum/deploy.md](axum/deploy.md)。
 5. **超时与重试**：每个外部调用有超时吗？重试有上界与抖动吗？幂等性说明？（细节 AS-11；出站 HTTP 见 AX-17）
 6. **密钥与日志**：源码/仓库无密钥；`#[instrument]` 与日志字段 skip 敏感值（OBS-02）；错误一次原则（OBS-03）。
-7. **供应链（应用）**：CI 有 lock 则 `--locked`（DEP-11）；不要为「刷新依赖」在流水线跑 `cargo update`。冷却期候选见 [gate.md](gate.md)，不是本命令默认写入。
+7. **供应链（应用）**：CI 有 lock 则 `--locked`（DEP-11）；不要为「刷新依赖」在流水线跑 `cargo update`；yank 警告停手。冷却期候选见 [gate.md](gate.md)，不是本命令默认写入。可复现构建 / 签名证明**来历**（二进制对应这棵源码），不证明源码干净；源码后门会完美复现。内存安全光环 ≠ 依赖值得信任。
+
 
 ## 输出
 

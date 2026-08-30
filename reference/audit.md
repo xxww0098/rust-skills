@@ -40,7 +40,11 @@ pub extern "C" fn plugin_init() {}
 
 ## audit deps（DEP-01..13）
 
-`cargo tree -d` 重复版本先判断是否造成类型不兼容、体积或安全影响，再给有收益的收敛路径；检查多成员共享版本是否应收口、有意局部差异是否有理由；核对 default feature 的实际内容、optional 配对与 feature 叠加性。仅在项目已配置时运行 `cargo deny check`；审 Cargo.lock 新传递依赖；现代化替代表扫一遍（lazy_static/once_cell/failure…→ 建议 `/rust-skills:rust modernize`）。供应链窗口（DEP-11..13）：CI/`Makefile` 是否无人值守 `cargo update` 或无 `--locked` 的构建；有 lock 的应用必须 `--locked`。`deny` 已覆盖 advisories 则 **不要**再跑 `cargo audit`（LINT-07）；二者都未配置标 MAY。冷却期是解析策略不是审计替代；未启用不判红，只给应用侧候选（GATE-04）。
+`cargo tree -d` 重复版本先判断是否造成类型不兼容、体积或安全影响，再给有收益的收敛路径；检查多成员共享版本是否应收口、有意局部差异是否有理由；核对 default feature 的实际内容、optional 配对与 feature 叠加性。仅在项目已配置时运行 `cargo deny check`；审 Cargo.lock 新传递依赖；现代化替代表扫一遍（lazy_static/once_cell/failure…→ 建议 `/rust-skills:rust modernize`）。供应链窗口（DEP-11..13）：CI/`Makefile` 是否无人值守 `cargo update` 或无 `--locked` 的构建；有 lock 的应用必须 `--locked`。yank 警告出现时停手，不当升级信号。`CARGO_RESOLVER_INCOMPATIBLE_PUBLISH_AGE=allow` 只许知情热修，Agent 不自主设。`deny` 已覆盖 advisories 则 **不要**再跑 `cargo audit`（LINT-07）；二者都未配置标 MAY。冷却期是解析策略不是审计替代；未启用不判红，只给应用侧候选（GATE-04）。
+
+lock / 清单 diff 额外看（arrayref 0.3.10 类）：`src/` 零 diff 但 manifest 新增依赖也要构建（`build = false` 只禁本 crate 的 build.rs，**不**禁传递依赖被编）。最便宜信号不必打开源码：token/宏 crate 的 `[build-dependencies]` 出现 `rustls`/`ureq`/`reqwest`/`native-tls`；repository 404；作者署名与 crates.io owner 对不上；crate 名落在 `proc-macro2` 这类序列空位。检查必须传递性。建议 `cargo fetch` 与 `cargo build --offline` 拆开，构建环境不放 `~/.cargo/credentials`。
+
+
 
 
 ## audit tests（TEST-01..16）

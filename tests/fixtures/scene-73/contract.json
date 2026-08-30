@@ -5,7 +5,8 @@
   "fixture": "ci.yml",
   "fixture_needles": ["cargo update", "cargo build"],
   "skill_needles": {
-    "skills/rust/rules/dep.md": ["DEP-11", "DEP-12", "DEP-13", "--locked"],
+    "skills/rust/rules/dep.md": ["DEP-11", "DEP-12", "DEP-13", "--locked", "yank 警告不是升级理由"],
+
     "skills/rust/rules/gate.md": ["GATE-04", "min-publish-age"],
     "skills/rust/reference/gate.md": ["-Zmin-publish-age", "incompatible-publish-age", "--locked"],
     "tests/pressure-scenarios.md": ["### 场景 73", "DEP-11", "cargo update"]

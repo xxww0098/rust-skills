@@ -6,4 +6,4 @@
 - API-05[S] 标准 trait 尽量派生：Debug 必须（敏感字段脱敏），Clone/PartialEq/Eq/Hash/Default 按语义。
 - API-06[Y] >3 个可选参数用 builder。
 - API-07[S] 命名遵循 Rust API Guidelines（C-CASE / C-CONV as_·to_·into_ / C-GETTER；crate 禁 `-rs`/`-rust`）。细节与改名走 `/rust-skills:rust name`。
-- API-08[S] parse, don't validate：信任边界用 `parse`/`TryFrom`/newtype 构造器产出领域类型；业务函数只收已合法类型，不再对同一 `String` 重复校验。wire / row / 领域 / 响应类型分离，不把 `FromRow`+`Serialize` 挂同一结构当 API。
+- API-08[S] parse, don't validate：信任边界用 `parse`/`TryFrom`/newtype 构造器产出领域类型；业务函数只收已合法类型，不再对同一 `String` 重复校验。wire / row / 领域 / 响应类型分离，不把 `FromRow`+`Serialize` 挂同一结构当 API。**能进类型、签名、穷尽 match 的规格不要只写散文 spec**（spec 可执行率）；rustc 每次 build 强制形状，散文会漂。类型检形状不检含义；CRUD/UX 残差仍要测试/场景，不要假装类型是完整 Oracle。

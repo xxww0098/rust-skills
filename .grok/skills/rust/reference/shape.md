@@ -12,7 +12,8 @@
    - **newtype 字段私有**：只能经构造器产出，不提供 `&mut` 内层。
    - **三分类型**：row（`FromRow`）≠ 领域实体 ≠ 响应 DTO；转换写显式 `From`/`TryFrom`。
    - **状态机**：生命周期非法跳转会损坏数据或安全时用 typestate（`Order<Paid>` 才有 `ship`）；要入库/混放不同状态时用 enum。不为 CRUD 发明 phantom 状态。
-   - 列出 3–6 个关键签名，标注 pub / `pub(crate)`。
+   - **spec 可执行率**（API-08）：能进类型/签名/穷尽 match 的义务写进代码，不要只放 PR 描述或 markdown spec。rustc 是免费 Oracle；散文两份真相必然漂。类型检形状不检含义（`transfer(from,to,amount)` 写反方向仍编译），列出 3–6 个关键签名就是把评审从「读两千行」前移到「是否按图施工」。
+
 3. **错误**（D-2）：每个可失败点是库错误（手写 enum 或已有 thiserror）还是应用错误（项目已有 anyhow/eyre）？变体少时不要为精简去加 crate（ERR-08）。哪些是不变量（expect 证明）？对外 API 是否把内部错误链映射成用户可处理变体（不泄 SQL/路径）？
 4. **并发**（D-3，若涉及）：共享模型是消息传递还是共享内存？锁的临界区在哪、跨不跨 await？channel 容量依据？
 
