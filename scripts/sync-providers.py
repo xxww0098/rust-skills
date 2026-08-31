@@ -7,11 +7,12 @@ Source of truth:
   .claude-plugin/plugin.json    plugin identity + version
 
 This script regenerates command tables from scripts/command-metadata.json,
-then writes vendor manifests, per-harness discovery links, and pack-root
-compatibility links (`SKILL.md`, `reference/`, `rules/`). Edit the
-sources above, then run it. Do not hand-edit generated files.
+then writes vendor manifests and per-harness **standalone copies**. Each
+`.<agent>/` tree is an install unit: SkillStar (and peers) can take that
+folder as `source_folder` without the rest of the monorepo. Do not hand-edit
+generated files.
 
-  ./scripts/sync-providers.py           write manifests and links
+  ./scripts/sync-providers.py           write manifests and materialized trees
   ./scripts/sync-providers.py --check   exit 1 if generated files drifted
 """
 
@@ -19,7 +20,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import os
 import re
 import shutil
 import subprocess
@@ -54,34 +54,23 @@ PROVIDERS = (
 
 PROVIDER_NAMES = tuple(p["name"] for p in PROVIDERS)
 
+# Former pack-root skill identity. One-level scanners must install a harness
+# tree (e.g. `.dsh/`), not the clone. A root `SKILL.md` with name `rust` is
+# what made Git installers treat the whole repository as one skill.
+ROOT_SKILL_IDENTITY = ("SKILL.md", "reference", "rules", "kernel", "agents")
 
-def harness_links() -> tuple[tuple[str, str], ...]:
+
+def harness_projections() -> tuple[tuple[str, str], ...]:
+    """Repo-relative dest → repo-relative canonical source."""
     command_pins = sorted(p.name for p in (REPO_ROOT / "commands").glob("*.md"))
-    links: list[tuple[str, str]] = []
+    pairs: list[tuple[str, str]] = []
     for provider in PROVIDERS:
         config_dir = provider["dir"]
-        links.append((f"{config_dir}/skills/rust", "../../skills/rust"))
+        pairs.append((f"{config_dir}/skills/rust", "skills/rust"))
         if provider["commands"]:
             for name in command_pins:
-                links.append((f"{config_dir}/commands/{name}", f"../../commands/{name}"))
-    return tuple(links)
-
-
-def root_compat_links() -> tuple[tuple[str, str], ...]:
-    """Links that make the pack root look like a one-level skill directory.
-
-    DeepSeek Harness (and peers) only load `<dir>/SKILL.md`. When the whole
-    pack is installed as that `<dir>` (for example `~/.dsh/skills/rust-skills`),
-    scanners never see `skills/rust/SKILL.md`. Root links keep a single source
-    of truth in `skills/rust/`.
-    """
-    return (
-        ("SKILL.md", "skills/rust/SKILL.md"),
-        ("reference", "skills/rust/reference"),
-        ("rules", "skills/rust/rules"),
-        ("kernel", "skills/rust/kernel"),
-        ("agents", "skills/rust/agents"),
-    )
+                pairs.append((f"{config_dir}/commands/{name}", f"commands/{name}"))
+    return tuple(pairs)
 
 
 def load_canonical() -> dict:
@@ -255,25 +244,6 @@ def expected_files(plugin: dict) -> dict[Path, str]:
     }
 
 
-_SYMLINK_OK: bool | None = None
-
-
-def symlink_supported() -> bool:
-    global _SYMLINK_OK
-    if _SYMLINK_OK is not None:
-        return _SYMLINK_OK
-    probe = REPO_ROOT / ".symlink-probe"
-    try:
-        if probe.exists() or probe.is_symlink():
-            probe.unlink()
-        os.symlink("skills", probe)
-        probe.unlink()
-        _SYMLINK_OK = True
-    except OSError:
-        _SYMLINK_OK = False
-    return _SYMLINK_OK
-
-
 def _file_equal(a: Path, b: Path) -> bool:
     if not a.is_file() or not b.is_file():
         return False
@@ -295,7 +265,7 @@ def _tree_equal(a: Path, b: Path) -> bool:
 def _copy_replace(src: Path, dst: Path) -> None:
     if src.is_file():
         dst.parent.mkdir(parents=True, exist_ok=True)
-        if dst.is_file() and _file_equal(src, dst):
+        if dst.is_file() and not dst.is_symlink() and _file_equal(src, dst):
             return
         if dst.exists() or dst.is_symlink():
             if dst.is_dir() and not dst.is_symlink():
@@ -306,58 +276,68 @@ def _copy_replace(src: Path, dst: Path) -> None:
         return
     dst.mkdir(parents=True, exist_ok=True)
     src_files = {p.relative_to(src).as_posix() for p in src.rglob("*") if p.is_file()}
-    dst_files = {p.relative_to(dst).as_posix() for p in dst.rglob("*") if p.is_file()} if dst.exists() else set()
+    dst_files = (
+        {p.relative_to(dst).as_posix() for p in dst.rglob("*") if p.is_file()} if dst.exists() else set()
+    )
     for rel in dst_files - src_files:
         (dst / rel).unlink(missing_ok=True)
     for rel in src_files:
         s, d = src / rel, dst / rel
         d.parent.mkdir(parents=True, exist_ok=True)
-        if d.is_file() and _file_equal(s, d):
+        if d.is_file() and not d.is_symlink() and _file_equal(s, d):
             continue
+        if d.is_symlink() or (d.exists() and d.is_dir()):
+            if d.is_dir() and not d.is_symlink():
+                shutil.rmtree(d)
+            else:
+                d.unlink()
         shutil.copy2(s, d)
 
 
-def ensure_link(link_rel: str, target: str, check: bool, drifts: list[str]) -> None:
-    """Validate provider projections by content, without migrating representation.
+def ensure_materialized(dest_rel: str, src_rel: str, check: bool, drifts: list[str]) -> None:
+    """Write a standalone copy. Outbound relative symlinks are not an install unit."""
+    dest = REPO_ROOT / dest_rel
+    src = REPO_ROOT / src_rel
+    if not src.exists():
+        raise SystemExit(f"missing canonical source: {src_rel}")
 
-    Grok and pack-root compatibility paths remain materialized copies. Other
-    harness paths prefer symlinks when first created, but an existing checked-in
-    copy is equally valid when its content exactly matches the canonical target.
-    Missing or content-drifted paths still fail `--check`.
-    """
-    link_path = REPO_ROOT / link_rel
-    resolved_target = (link_path.parent / target).resolve()
-    prefer_copy = (
-        link_rel.startswith(".grok/")
-        or link_rel in {"SKILL.md", "reference", "rules", "kernel", "agents"}
-        or not symlink_supported()
-    )
-
-    if prefer_copy:
-        if link_path.exists() and not link_path.is_symlink() and _tree_equal(link_path, resolved_target):
-            return
+    if dest.is_symlink():
         if check:
-            drifts.append(link_rel)
+            drifts.append(dest_rel)
             return
-        _copy_replace(resolved_target, link_path)
-        print(f"copied {link_rel} <- {target}")
+        dest.unlink()
+        _copy_replace(src, dest)
+        print(f"copied {dest_rel} <- {src_rel} (replaced symlink)")
         return
 
-    if link_path.is_symlink() and os.readlink(link_path) == target:
-        return
-    if link_path.exists() and not link_path.is_symlink() and _tree_equal(link_path, resolved_target):
+    if dest.exists() and _tree_equal(dest, src):
         return
     if check:
-        drifts.append(link_rel)
+        drifts.append(dest_rel)
         return
-    if link_path.exists() or link_path.is_symlink():
-        if link_path.is_dir() and not link_path.is_symlink():
-            shutil.rmtree(link_path)
+    if dest.exists():
+        if dest.is_dir() and not dest.is_symlink():
+            # Incremental copy below.
+            pass
         else:
-            link_path.unlink()
-    link_path.parent.mkdir(parents=True, exist_ok=True)
-    os.symlink(target, link_path)
-    print(f"linked {link_rel} -> {target}")
+            dest.unlink()
+    _copy_replace(src, dest)
+    print(f"copied {dest_rel} <- {src_rel}")
+
+
+def remove_root_skill_identity(check: bool, drifts: list[str]) -> None:
+    for name in ROOT_SKILL_IDENTITY:
+        path = REPO_ROOT / name
+        if not path.exists() and not path.is_symlink():
+            continue
+        if check:
+            drifts.append(name)
+            continue
+        if path.is_dir() and not path.is_symlink():
+            shutil.rmtree(path)
+        else:
+            path.unlink()
+        print(f"removed root skill-identity shim {name}")
 
 
 def generate_command_pins() -> None:
@@ -459,8 +439,9 @@ def main() -> int:
     set_spec_version(version, args.check, drifts)
     for path, content in expected_files(plugin).items():
         write_or_check(path, content, args.check, drifts)
-    for link_rel, target in (*harness_links(), *root_compat_links()):
-        ensure_link(link_rel, target, args.check, drifts)
+    remove_root_skill_identity(args.check, drifts)
+    for dest_rel, src_rel in harness_projections():
+        ensure_materialized(dest_rel, src_rel, args.check, drifts)
 
     if args.check:
         if drifts:
@@ -469,7 +450,7 @@ def main() -> int:
                 print(f"  {rel}", file=sys.stderr)
             print("run ./scripts/sync-providers.py", file=sys.stderr)
             return 1
-        print(f"OK: provider manifests and harness links match {version}")
+        print(f"OK: provider manifests and standalone harness trees match {version}")
         return 0
 
     print(f"OK: plugin/spec {version} synced to {', '.join(PROVIDER_NAMES)}")

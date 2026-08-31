@@ -1,0 +1,13 @@
+## WS 工作区与结构
+- WS-01[S] 多 crate 共享构建、依赖或发布生命周期时使用 workspace；新建 workspace 优先虚拟根，迁移现有根包须有实际收益。
+- WS-02[Y] 新 workspace 可把成员平铺在 `crates/`；已有清晰布局不为统一外观迁移。
+- WS-03[S] 不发布的内部 crate 设 `publish=false`；版本策略和可继承元数据由项目发布流程决定。
+- WS-04[S] 入口保持薄，只做解析、初始化与编排；用职责而非固定行数判断。
+- WS-05[M] `[workspace.package]` 统一 `edition = "2024"`。MSRV ≥ 1.85 由 `rust-version` **或** `rust-toolchain.toml` 声明（二者有一即可）。新 workspace 根清单 `resolver = "3"`；已是 2024 且 resolver 2 的成熟仓保持现状，不为统一数字迁 resolver。成员不得各自留在 2018/2021。
+- WS-06[S] 优先让同一变化原因的代码相邻；业务域布局通常优于横跨全仓的技术层。现有局部性良好的结构不强迁。
+- WS-07[M] 依赖单向无环；破环：共享类型下沉叶子 crate / 消费方定义 trait / 泛型回调参数化。
+- WS-08[S] 避免无收益的深依赖链；是否拆 crate 以编译边界、所有权和复用证据决定。
+- WS-09[S] 多成员共享的依赖版本在 `[workspace.dependencies]` 收口；仅单成员使用或需不同 feature/version 时可局部声明。
+- WS-10[M] 可见性 private 起步：pub(crate) 优先于 pub；pub 即承诺。
+- WS-11[S] 拆分三级，**不按行数阈值**。① 函数：clippy `too_many_lines`（默认 100）只是信号，抽函数不拆文件。② 文件/`mod`：同一文件出现**两个不变量、两套测试夹具、或两段独立变化原因**才拆 `mod`；难读/难测/增量编译变慢是证据，300–500 行只是线索。③ crate：仅 WS-12。生成代码、测试夹具表、单调用方转发层不拆。不设「文件 ≤ N 行」MUST，也不新增 `/split` 命令。
+- WS-12[Y] 只有明确需要独立编译、复用、发布或依赖隔离时才把模块拆成 crate。
