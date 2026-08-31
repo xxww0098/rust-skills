@@ -324,9 +324,36 @@ axum 子 playbook：scaffold / routing / extractors / handlers / middleware / re
 
 ## 安装
 
-技能正文只维护 `skills/rust/`。各 agent 的清单、发现目录，以及仓库根给一层扫描器准备的兼容链接（`SKILL.md` / `reference/` / `rules/`）由 `./scripts/sync-providers.py` 生成，不要手改副本。
+GitHub 仓库是源；**安装单元是某一个 `.<harness>/` 层**（或它里面的 `skills/rust`），不是整仓。不要把 `tests/`、`scripts/`、`docs/` 和其它 harness 树当技能正文一起拉进来。
+
+技能正文只维护 `skills/rust/`。各 harness 投影由 `./scripts/sync-providers.py` 生成，是**独立副本**（单独取出 `.cursor/` 或 `.dsh/` 时 `skills/rust/SKILL.md` 仍可读），不要手改。仓库根不再放 `SKILL.md`：一层扫描器请装对应 harness 层，不要把 clone 根当技能目录。
+
+### 按 harness 落地（SkillStar / 同类 Git 安装器）
+
+选你的 harness，把对应目录当作 `source_folder`。SkillStar 下一步会从 `.<harness>/` 装；本包已经是合法目标。
+
+| Harness | `source_folder` | 技能正文 |
+|---|---|---|
+| Cursor | `.cursor` | `.cursor/skills/rust` |
+| DeepSeek Harness (dsh) | `.dsh` | `.dsh/skills/rust` |
+| Claude Code | `.claude` | `.claude/skills/rust` |
+| Codex | `.agents`（不铺 `.codex/skills`） | `.agents/skills/rust` |
+| Grok Build | `.grok` | `.grok/skills/rust` |
+| Oh My Pi (omp) | `.omp` | `.omp/skills/rust` |
+| Kiro | `.kiro` | `.kiro/skills/rust` |
+| OpenCode | `.opencode` | `.opencode/skills/rust` |
+| Pi | `.pi` | `.pi/skills/rust` |
+| Qoder | `.qoder` | `.qoder/skills/rust` |
+| Trae | `.trae` | `.trae/skills/rust` |
+| Trae China | `.trae-cn` | `.trae-cn/skills/rust` |
+| Antigravity | `.agent` | `.agent/skills/rust` |
+| Hermes Agent | `.hermes` | `.hermes/skills/rust` |
+
+Cursor 装 `.cursor/` 会带上 `.cursor/commands/` 钉。dsh 只有 `.dsh/skills/rust`。也可以只取 `skills/rust` 这一层技能正文。技能名是 frontmatter 里的 `rust`，不是仓库名 `rust-skills`。
 
 ### 插件安装
+
+Claude / Grok / Cursor / Codex / omp 的 marketplace 仍以本仓库为插件源（`source: "./"`，技能指向 `./skills/`），与上面「按 harness 取一层」是两条路。
 
 ```bash
 # Claude Code
@@ -346,30 +373,9 @@ omp install rust-skills@rust-skills
 
 Claude Code 另有稳定别名 `/rust-skills:review`；不要使用裸 `/review`，它可能与内置命令冲突。Cursor / Codex 也可把本仓库当插件装（`.cursor-plugin/`、`.codex-plugin/`）。
 
-### 发现目录
+### 本机已有 clone 时手动链技能正文
 
-把仓库加进项目或链到用户技能目录后，各 harness 读下面这些路径（都指向同一份 `skills/rust`）。Codex 走 `.agents`，不单独铺 `.codex/skills`。dsh 也会扫 `.agents/skills`，但项目内优先 `.dsh/skills`。
-
-把**整仓**当作一条技能目录安装时（例如 `~/.dsh/skills/rust-skills`），仓库根的 `SKILL.md`、`reference/`、`rules/` 是指向 `skills/rust/` 的兼容链接。DeepSeek Harness 等只扫一层的 harness 依赖这个；技能名仍是 frontmatter 里的 `rust`，不是目录名 `rust-skills`。
-
-| Harness | 技能目录 |
-|---|---|
-| Claude Code | `.claude/skills/rust` |
-| Cursor | `.cursor/skills/rust` |
-| Codex | `.agents/skills/rust` |
-| Grok Build | `.grok/skills/rust` |
-| Kiro | `.kiro/skills/rust` |
-| OpenCode | `.opencode/skills/rust` |
-| Pi | `.pi/skills/rust` |
-| Oh My Pi (omp) | `.omp/skills/rust` |
-| DeepSeek Harness (dsh) | `.dsh/skills/rust` |
-| Qoder | `.qoder/skills/rust` |
-| Trae | `.trae/skills/rust` |
-| Trae China | `.trae-cn/skills/rust` |
-| Antigravity | `.agent/skills/rust` |
-| Hermes Agent | `.hermes/skills/rust` |
-
-用户级示例：
+已经把仓库放在本机、只想让 harness 读到技能正文时，链 `skills/rust`（不要链仓库根）：
 
 ```bash
 mkdir -p ~/.agents/skills ~/.cursor/skills ~/.omp/agent/skills ~/.dsh/skills

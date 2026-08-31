@@ -24,8 +24,8 @@
 
 ## 发布与同步
 
-- 插件和规范都从 `0.0.1` 起按补丁递增。权威文件是 `.claude-plugin/plugin.json`；改完后跑 `./scripts/sync-providers.py`，它会先重生成命令表与 `rules-full.md`，再写各 harness 清单、发现链接、`SKILL.md` 和 `rules/preamble.md` 的版本。Grok（`.grok/skills/rust`）落真实文件副本，不依赖 symlink；其他 harness 优先 symlink，文件系统禁止时回退为内容等价副本。
-- 技能正文只维护 `skills/rust/`。各 agent 的清单和发现目录由 sync 脚本生成，不要手改副本。sync 还会在仓库根落下 `SKILL.md` / `reference/` / `rules/` 兼容链接，让把整仓当作一条技能目录的一层扫描器（如 DeepSeek Harness 的 `~/.dsh/skills/rust-skills`）能读到同一份正文。
+- 插件和规范都从 `0.0.1` 起按补丁递增。权威文件是 `.claude-plugin/plugin.json`；改完后跑 `./scripts/sync-providers.py`，它会先重生成命令表与 `rules-full.md`，再写各 harness 清单、**独立副本**（不是出仓即断的相对 symlink）和 `skills/rust/SKILL.md` / `rules/preamble.md` 的版本。不要手改 `.<harness>/` 里的投影。
+- 技能正文只维护 `skills/rust/`。Git 安装单元是某一个 `.<harness>/` 层（或它里面的 `skills/rust`），不是整仓。仓库根不再放 `SKILL.md` / `reference/` / `rules/` 兼容垫片——那会让 SkillStar 一类扫描器把 clone 当一条技能，把 `tests/`、`scripts/`、其它 harness 一并装进去。一层扫描器请装 `.dsh/`（或对应 harness），不要把 clone 根当技能目录。
 - 当前修正版已用 Claude Code CLI 2.1.233 验证；尚未声明更早版本的兼容下限。
 
 ## 生长节奏

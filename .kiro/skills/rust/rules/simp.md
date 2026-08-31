@@ -1,0 +1,14 @@
+## SIMP 精简纪律（跨域：反过度工程与零浪费）
+- SIMP-01[M] YAGNI：只为已存在的变化维度抽象；单实现 trait、单调用方通用层或未来占位必须有当前测试、隔离或接口收益。
+- SIMP-02[M] 抽象必须付得起解释成本：一句话说不清「挡住了什么复杂度」的层（wrapper/单纯转发 mod/胶水 trait）删除。
+- SIMP-03[M] 代码量是负债：同等正确性与可读性，行数少者胜；删代码是贡献；pub 面最小（WS-10）。
+- SIMP-04[M] 静态分派默认：能 fn 不 trait、能泛型不 dyn、能 enum 不 Box<dyn>；用 dyn 须说明理由（异构集合/编译时间热点）。
+- SIMP-05[S] 热路径避免无收益的中间分配；在流式迭代与清晰循环中选更易读者，已知且显著的容量可预分配。
+- SIMP-06[S] 仪式最小化：builder/宏/getter-setter 只有在减少重复或编码约束时引入；参数多或单处 struct 只是审视信号。
+- SIMP-07[S] 不需要 async 不 async（async 传染整条调用链）；不需要并发不并发；同步直到度量说不行。
+- SIMP-08[S] `match` 不是更高级的 `if`：`bool`/比较用 `if`；互斥 enum/多种形状用 `match`（穷尽）；只要一种变体往下走用 `let-else` 或 `?`。禁把 `true`/`false` 写成 `match`，也禁对三态 enum 用一串 `if let` 漏分支。2024 里为延长 `if let` 临时值才改 `match`，不是审美。2024 + rustc ≥1.88 可用 let chains 把 `if let` 与布尔条件串在同一 `if`/`while`，减少嵌套；这不是把 enum 穷尽改成 if 链的许可。
+- SIMP-09[S] 本 diff 把手写源文件从 <1000 行推过 1000 行 → 默认评审红旗。处置走 WS-11：先抽函数，两不变量才拆 `mod`；**禁止为凑行数拆 crate**。生成代码 / bindings / 测试表豁免并声明。1000 不是 MUST 上限，是「必须问该不该分解」。
+- SIMP-10[M] 禁把特判 `if` / 布尔 flag / 租户名钉进无关共享路径（spaghetti growth）。新分支进专用抽象、enum 状态机或策略对象；在已忙函数中间加窄边案当设计问题，不是风格。
+- SIMP-11[M] 逻辑住在拥有不变量的一层（D-1）；复用已有 helper，禁近重复与 identity wrapper（SIMP-02）。feature 逻辑漏进通用模块、实现细节漏出 API = 边界漂移。
+- SIMP-12[S] 无故把独立工作串成编排、或相关更新半应用，当设计味。能并行且独立则不要为「看起来有序」串行；部分成功状态比一次事务更难推理。不是微优化许可。
+- SIMP-13[S] AI 过编译器味：`for i in 0..len` 复述 iterator、`clone()` 只为消 E0382（OWN-01）、`Vec<Box<dyn Trait>>` 而闭集 enum 够用（SIMP-04）。编译绿不是 idiomatic。

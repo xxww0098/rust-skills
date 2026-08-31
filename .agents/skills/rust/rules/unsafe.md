@@ -1,0 +1,12 @@
+## UNSAFE
+- UNSAFE-01[M] workspace 统一 unsafe_code="deny"；需要的 crate 单独放开并进本章约束。
+- UNSAFE-02[M] 每个 unsafe 块前置 `// SAFETY:` 逐条对应前置条件；作用域最小化。
+- UNSAFE-03[M] unsafe 封装进安全抽象，不变量不外溢；unsafe fn 内仍显式 unsafe {}。2024 默认 `unsafe_op_in_unsafe_fn`：函数标 `unsafe` 只声明调用约定，不授权体内裸 unsafe 操作。
+- UNSAFE-04[S] Miri 支持的 unsafe 路径应定期运行；并发内存序在 loom 可建模时补 loom。工具不支持时记录替代证据与缺口。
+- UNSAFE-05[M] 性能动机的 unsafe：先交安全版 + bench 证明不足，才允许。
+- UNSAFE-06[M] panic 安全次序：可 panic 操作（分配/clone/回调）做完，才做不可逆裸操作（写指针/改 len）；任何时刻展开析构器不得见到半初始化状态。
+- UNSAFE-07[M] unsafe 上下文的安全不变量检查用 assert!，禁 debug_assert!（release 被编译掉）。
+- UNSAFE-08[M] 手动 impl Send/Sync 视同 unsafe：附论证注释 + Miri/loom。
+- UNSAFE-09[S] 指针纪律：NonNull 优先 *mut；ptr.cast() 优先 as；禁 const→mut 转换写入；未初始化内存一律 MaybeUninit（引用/非零类型 zeroed 即时 UB）。
+- UNSAFE-10[M] 2024 要求影响链接/符号的属性显式 unsafe：`no_mangle` / `export_name` / `link_section` / `naked` 写成 `#[unsafe(...)]` 并附 SAFETY（符号全局唯一、段布局正确）。裸 `#[no_mangle]` 是迁移债务，不是「已经安全」。`cargo fix --edition` 只改语法，不证明用法正确。
+- UNSAFE-11[M] Unix 多线程程序禁止 `env::set_var` / `remove_var`（包在 `unsafe` 里也几乎无法证明无并发读环境；DNS/`ToSocketAddrs` 等都可能读）。给子进程传环境用 `Command::env`；测试隔离用独立进程或显式单线程证明。Windows 上这两函数是安全的，仍优先 `Command::env`，避免把测试污染进父进程。

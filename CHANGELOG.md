@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.0.68 — 2026-08-31
+
+- 安装单元改为按 harness 落地：`.<harness>/`（或其中的 `skills/rust`）是独立副本，不再是指向仓内 `../../skills/rust` 的相对 symlink。SkillStar / 同类 Git 安装器取 `.cursor/` 或 `.dsh/` 时不会把 `tests/`、`scripts/`、`docs/` 和其它 harness 树当技能正文。
+- 去掉仓库根 `SKILL.md` / `reference/` / `rules/` / `kernel/` / `agents/` 技能身份垫片。一层扫描器请装 `.dsh/`，不要把 clone 根当技能目录。
+- `sync-providers.py` 为全部 harness 落真实副本；`check-root-compat.py` 断言根不是 Git 安装身份，并复制 `.cursor/` / `.dsh/` 等目录验证单独取出仍可读。
+
 ## 0.0.67 — 2026-08-30
 
 - 蒸馏 [@blackanger](https://x.com/blackanger) Rust 长文（arrayref #13、Dex/spec 可执行率、Bun Zig→Rust、可信工厂），**不新命令、不加全局编号**（帽 150）。

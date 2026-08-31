@@ -135,10 +135,10 @@ if (( failed != 0 )); then
   exit 1
 fi
 
-# One-level scanners (DeepSeek Harness) that receive this repo as a skill
-# directory look for ./SKILL.md, not ./skills/rust/SKILL.md.
+# Git installers must take one .<harness>/ tree (or skills/rust), never the
+# clone. Root SKILL.md is not the install identity.
 if ! python3 "$repo_root/scripts/check-root-compat.py"; then
-  fail "pack root is not a one-level skill directory"
+  fail "pack root is a skill identity or a harness tree is not a standalone install unit"
 fi
 
 command_names() {
