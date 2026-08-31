@@ -324,13 +324,23 @@ axum 子 playbook：scaffold / routing / extractors / handlers / middleware / re
 
 ## 安装
 
-GitHub 仓库是源；**安装单元是某一个 `.<harness>/` 层**（或它里面的 `skills/rust`），不是整仓。不要把 `tests/`、`scripts/`、`docs/` 和其它 harness 树当技能正文一起拉进来。
+推荐用 [SkillStar](https://github.com/xxww0098/SkillStar) 安装并分发。GitHub 仓库是源；**安装单元是某一个 `.<harness>/` 层**（或它里面的 `skills/rust`），不是整仓。SkillStar 会把**这一层**部署到你启用的 Agent，不要把 `tests/`、`scripts/`、`docs/` 和其它 harness 树当技能正文一起拉进来。
 
 技能正文只维护 `skills/rust/`。各 harness 投影由 `./scripts/sync-providers.py` 生成，是**独立副本**（单独取出 `.cursor/` 或 `.dsh/` 时 `skills/rust/SKILL.md` 仍可读），不要手改。仓库根不再放 `SKILL.md`：一层扫描器请装对应 harness 层，不要把 clone 根当技能目录。
 
+### SkillStar（推荐）
+
+```bash
+skillstar add xxww0098/rust-skills
+skillstar add xxww0098/rust-skills --global                  # 用户级 Agent 目录
+skillstar add xxww0098/rust-skills --skill rust --agent claude-code,codex
+```
+
+`install` 与 `add` 等价。未加 `-y` 时会按需选择 Agent 和 Project/Global。没有 SkillStar 时用下面的 harness 目录、插件或手动链接。
+
 ### 按 harness 落地（SkillStar / 同类 Git 安装器）
 
-选你的 harness，把对应目录当作 `source_folder`。SkillStar 下一步会从 `.<harness>/` 装；本包已经是合法目标。
+选你的 harness，把对应目录当作 `source_folder`。SkillStar 会从 `.<harness>/` 装；本包已经是合法目标。
 
 | Harness | `source_folder` | 技能正文 |
 |---|---|---|
@@ -358,15 +368,15 @@ Claude / Grok / Cursor / Codex / omp 的 marketplace 仍以本仓库为插件源
 ```bash
 # Claude Code
 claude
-> /plugin marketplace add /path/to/rust-skills   # 或推 GitHub 后 <you>/rust-skills
+> /plugin marketplace add xxww0098/rust-skills
 > /plugin install rust-skills@rust-skills
 
 # Grok
-grok plugin marketplace add /path/to/rust-skills
+grok plugin marketplace add xxww0098/rust-skills
 grok plugin install rust-skills --trust
 
 # Oh My Pi (omp)
-omp marketplace add /path/to/rust-skills
+omp marketplace add xxww0098/rust-skills
 omp install rust-skills@rust-skills
 # 或直接：omp plugin install /path/to/rust-skills
 ```
