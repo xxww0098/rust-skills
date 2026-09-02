@@ -1,4 +1,4 @@
-# Rust 工程规范（注入版 v0.0.68）
+# Rust 工程规范（注入版 v0.0.69）
 
 供按相关域渐进加载（先读同目录分文件，不要默认打开本合并件）；仅在明确的全规范审计时读取 `rules-full.md`。规则是决策约束，不是替代项目证据的检查表。
 分级：[M]=适用前提命中后 MUST，违反即阻断；[S]=默认 SHOULD，项目约定或证据可推翻并说明；[Y]=MAY。先证明前提，再引用编号；不适用不是违规。**本规范只以 edition 2024 为基线**（MSRV ≥ 1.85，可用 `rust-version` 或 `rust-toolchain.toml` 声明）。edition 2018/2021 是待迁移债务。新 workspace 用 `resolver = "3"`；已经 2024 且钉在 resolver 2 的成熟仓不迁 resolver。新代码按 2024 语义写（RPIT 全捕获、`if let` 短临时值、`#[unsafe(no_mangle)]`、`unsafe extern`、≥1.88 let chains）。Unix 多线程禁止靠 `env::set_var` 改环境。
@@ -144,7 +144,7 @@
 
 ## DEP 依赖治理
 - DEP-01[S] 多成员共享的三方版本优先收口；有意使用不同版本或 feature 时局部声明并保留理由。
-- DEP-02[M] 新依赖评估 std/现有依赖的替代、维护状态、传递代价与 license；实现行数不是单独裁决标准。
+- DEP-02[M] 新依赖评估 std/现有依赖的替代、维护状态、传递代价与 license；实现行数不是单独裁决标准。绿场默认不推荐 2018/2021-only 或明显停更的 crate；edition 2024 + MSRV ≥1.85 是生成默认（ST-03/19）。本条是评审清单（META-01：技能仓无 xtask 机器门禁），靠压力场景 100 验证（META-03）。
 - DEP-03[S] 明确理解默认 feature 后决定是否关闭；不要机械写 `default-features=false`。
 - DEP-04[M] feature 必须可叠加：只增能力，不改语义、不互斥。
 - DEP-05[M] optional 依赖必须配具名 feature；禁只用 #[cfg] 门控。

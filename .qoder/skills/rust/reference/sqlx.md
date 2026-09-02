@@ -1,7 +1,7 @@
 # /rust-skills:rust sqlx [target] — SQLx 数据层优化
 
 目的：在有 `sqlx` 依赖证据时审查或优化连接池、编译期查询、事务与类型边界。现行稳定线 **0.8 与 0.9**（crates.io 0.9.0，2026-05，MSRV 1.94）。0.7 仍按本清单审；不要只为版本号升 0.9。0.9 可选用 crate 根 `sqlx.toml`（多库 `DATABASE_URL` 改名、宏类型覆盖、迁移表改名），**不是**新项目必做脚手架。本命令是 ASYNC/SIMP/API/PERF 的数据层特化；SeaORM 项目走 [seaorm.md](seaorm.md)。裸调用只体检。
-不要读：Cargo.toml 与当前改动都没有 `sqlx` 证据时停。sqlx 0.9 的 MSRV 1.94 高于仓基线 1.85 时不要为「现行稳定线」抬全仓 rust-version（DEP-08）。
+不要读：Cargo.toml 与当前改动都没有 `sqlx` 证据时停。sqlx 0.9 的 MSRV 1.94 高于仓基线 1.85 时不要为「现行稳定线」抬全仓 rust-version（DEP-08）。sqlx vs sea-orm 走 [stack.md](stack.md) ST-05；本文件只审已选 sqlx。
 
 编排：多文件时按 [kernel/swarm.md](../kernel/swarm.md) — query! · 池/事务 · row vs 领域。 单文件或已有快照则跳过。
 

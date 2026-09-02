@@ -1,0 +1,32 @@
+{
+  "id": "100",
+  "title": "这层用什么 crate，不展开生态目录",
+  "commands": ["stack"],
+  "fixture": "Cargo.toml",
+  "fixture_needles": [
+    "edition = \"2024\"",
+    "clap = { version = \"4.6.6\", features = [\"derive\"] }"
+  ],
+  "skill_needles": {
+    "skills/rust/reference/stack.md": [
+      "ST-16",
+      "ST-17",
+      "ST-18",
+      "ST-19",
+      "ureq",
+      "reqwest 0.13.4",
+      "2b114844ad5218692cdce4a3afe36624271bac5a",
+      "默认不加载",
+      "永不写码"
+    ],
+    "skills/rust/rules/dep.md": [
+      "2018/2021-only",
+      "ST-03/19"
+    ],
+    "tests/pressure-scenarios.md": [
+      "### 场景 100",
+      "ST-16/18",
+      "ureq"
+    ]
+  }
+}

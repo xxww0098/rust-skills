@@ -1,6 +1,6 @@
 # /rust-skills:rust cli [target] — clap CLI 边界
 
-目的：在有 `clap` 依赖、`artifact=cli`、或用户问「子命令 / 补全 / 环境变量 / 退出码」时审查或实现命令行入口。现行稳定线 **clap 4.6.x**（crates.io 4.6.6，2026-08）。3.x builder 是迁移债务。本清单是 API/ERR/OBS/SIMP 的 CLI 特化；库代码走 [craft.md](craft.md)，日志走 [obs.md](obs.md)。裸调用只体检。
+目的：在有 `clap` 依赖、`artifact=cli`、或用户问「子命令 / 补全 / 环境变量 / 退出码」时审查或实现命令行入口。现行稳定线 **clap 4.6.x**（crates.io 4.6.6，2026-08）。3.x builder 是迁移债务。本清单是 API/ERR/OBS/SIMP 的 CLI 特化；库代码走 [craft.md](craft.md)，日志走 [obs.md](obs.md)。裸调用只体检。选型（clap vs structopt/argh）走 [stack.md](stack.md) ST-06；本文件只管接线。
 不要读：Cargo.toml 与当前改动都没有 clap/`fn main` CLI 证据、且用户没问命令行时停。
 
 编排：多文件时按 [kernel/swarm.md](../kernel/swarm.md) — Parser 仅 bin · 退出码 · 补全。 单文件或已有快照则跳过。

@@ -84,14 +84,18 @@
         "用什么框架",
         "最佳技术栈",
         "选 axum 还是 actix",
-        "这个项目该用什么 crate"
+        "这个项目该用什么 crate",
+        "这层用什么 crate",
+        "reqwest 还是 ureq"
       ],
       "triggers_en": [
         "tech stack",
         "which framework",
         "best rust stack",
         "axum vs actix",
-        "what crates should this project use"
+        "what crates should this project use",
+        "which crate for this layer",
+        "reqwest vs ureq"
       ]
     },
     "review": {

@@ -1,7 +1,7 @@
 # /rust-skills:rust seaorm [target] — SeaORM 数据层优化
 
 目的：在有 sea-orm 依赖证据时审查或优化查询、连接池、事务、ActiveModel、upsert 与迁移。现行稳定线 **2.0.x**（crates.io 2.0.2，2026-08）。1.x 先确认 MSRV、runtime 与迁移约束，不凭版本号自动要求升级。本文件是 owner：先按 SO 清单体检，再按文末「深入」表只加载命中的 1–2 个子 playbook。
-不要读：Cargo.toml 与当前改动都没有 `sea-orm` 证据时停。
+不要读：Cargo.toml 与当前改动都没有 `sea-orm` 证据时停。sqlx vs sea-orm 走 [stack.md](stack.md) ST-05；本文件只审已选 SeaORM。
 触发族：SeaORM · N+1 · ActiveModel · Entity Loader · 内存泄漏（完整短语在 `scripts/command-metadata.json`）。
 
 编排：多文件时按 [kernel/swarm.md](../kernel/swarm.md) — Loader/过取/泄漏分诊 · ActiveValue/嵌套save/upsert · 池/迁移/schema-sync。仍只加载 1–2 个子 playbook。 单文件或已有快照则跳过。

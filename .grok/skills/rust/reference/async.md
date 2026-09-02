@@ -1,6 +1,6 @@
 # /rust-skills:rust async [target] — 异步深审与设计
 
-目的：审查 async 代码本身的正确性与设计。**该不该并发/用什么形态**归 [concurrency.md](concurrency.md) 选型节；全局底座 ASYNC-01..08，SIMP-07 门先过。停机/tracker 证据可引用邻接组合根，并标「邻接证据」。
+目的：审查 async 代码本身的正确性与设计。**该不该并发/用什么形态**归 [concurrency.md](concurrency.md) 选型节；运行时选型（tokio vs async-std）走 [stack.md](stack.md) ST-03。全局底座 ASYNC-01..08，SIMP-07 门先过。停机/tracker 证据可引用邻接组合根，并标「邻接证据」。
 
 编排：多文件时按 [kernel/swarm.md](../kernel/swarm.md) — JoinHandle · select! 取消 · 阻塞 IO。 单文件或已有快照则跳过。
 

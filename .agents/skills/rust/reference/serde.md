@@ -1,6 +1,6 @@
 # /rust-skills:rust serde [target] — 序列化边界优化
 
-目的：在 serde 位于外部输入、协议演进或已测性能热点时审查序列化边界。现行稳定线 **1.0.x**（crates.io serde 1.0.229 / serde_json 1.0.151）。仅有 serde 依赖、或 target 内 derive/调用面很少，都不等于无入站序列化风险；关联 API-01/04、SIMP-05、FFI-05、PERF-01。target 委托邻接 crate 做 peek/DTO（例如 `crates/proxy` 调用邻接 `RequestSpec::parse`）时：体检表必须含邻接行并标「邻接证据 · 不可写」，审委托边界；不要因本 crate derive 少就结案。
+目的：在 serde 位于外部输入、协议演进或已测性能热点时审查序列化边界。现行稳定线 **1.0.x**（crates.io serde 1.0.229 / serde_json 1.0.151）。仅有 serde 依赖、或 target 内 derive/调用面很少，都不等于无入站序列化风险；关联 API-01/04、SIMP-05、FFI-05、PERF-01。target 委托邻接 crate 做 peek/DTO（例如 `crates/proxy` 调用邻接 `RequestSpec::parse`）时：体检表必须含邻接行并标「邻接证据 · 不可写」，审委托边界；不要因本 crate derive 少就结案。选型（serde vs simd-json）走 [stack.md](stack.md) ST-03；本文件只管边界。
 
 编排：多文件时按 [kernel/swarm.md](../kernel/swarm.md) — Value/unwrap · enum 表示 · 版本字段。 单文件或已有快照则跳过。
 
