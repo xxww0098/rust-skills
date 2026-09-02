@@ -12,7 +12,7 @@
 4. `rust-toolchain.toml` / `rust-version`。低于 1.85 只标抬升代价，不在本命令改工具链。
 5. target 若是某个 crate 路径：只给该 crate 的栈，workspace 其它成员标邻接。
 
-禁止：为写推荐去 `cargo tree` 全图、扫 `src/` 每一文件、按「2026 热门」补桌面+ORM+前端。
+禁止：为写推荐去 `cargo tree` 全图、扫 `src/` 每一文件、按「2026 热门」补桌面+ORM+前端。禁止打开或复述生态目录清单（ST-16/18）。
 
 ## 判决顺序（ST-01..03）
 
@@ -56,7 +56,34 @@
 
 **ST-11** 推荐里的 crate 必须带线或 pinned，禁止「用最新 axum」。应用跟踪 Cargo.lock（DEP-07）；不把 `cargo update` 写进绿场脚本。
 
-**ST-15 配置**：业务配置由 **bin** 用 clap `env`（CL-13）注入到构造函数。库 crate 禁 `std::env::var("DATABASE_URL")` 当公共 API。`dotenv` / `dotenvy` 只许 dev；生产读编排注入的环境。密钥不进默认值、不进日志（OBS-02）。
+**ST-15 配置**：业务配置由 **bin** 用 clap `env`（CL-13）注入到构造函数。库 crate 禁 `std::env::var("DATABASE_URL")` 当公共 API。`dotenv` / `dotenvy` 只许 dev；生产读编排注入的环境。密钥不进默认值、不进日志（OBS-02）。多文件分层配置（用户点名）才考虑 `figment`/`config`；禁止 `config`+`figment`+`dotenv` 三开。
+
+## 按需层（ST-16..19）——先问要不要打开
+
+**ST-16 默认不加载本表。** 用户只问产物栈 / 「最佳技术栈」/ 「用什么框架」→ 只出上面 ST-01..15 主表。满足任一才打开 **一行** ST-17：本轮点名该层、或仓库已有该层依赖、或「这层用什么 crate」。未点名的行当 `N-A`。禁止为「完整」展开全表。禁止 clone / 镜像 / 复述生态目录的分类或条目。
+
+**ST-17 点名才开一行**（活栈仍按 ST-02 留；绿场只写决策，未入 `version-floor.json` 的 crate 不写 latest，`--apply` 前再钉）：
+
+| 层 | 选 | 不要 |
+|---|---|---|
+| HTTP 客户端 | 异步服务 **reqwest 0.13.4**（进程级 Client，AX-17）；同步 CLI 且无 tokio → `ureq` | 无出站 HTTP 也加；`hyper` 当应用客户端；`surf`/`isahc` 绿场；reqwest+ureq 双开 |
+| TLS | reqwest/rustls 默认 | 无证据上 `openssl-sys`；为哈希拉 OpenSSL |
+| 日期时间 | 绿场 `jiff` 或 `time` 0.3；已有 `chrono` 0.4 留 | `time` 0.1；`date`；chrono+jiff+time 三开 |
+| JWT / OAuth | JWT → `jsonwebtoken`（接线走 `axum`）；用户点了 IdP 才 `oauth2` | 手写 JWT；无 IdP 上 OAuth 全家桶 |
+| Redis / KV | 用户说了 Redis → `redis`（已有 `fred` 留） | 清单里有就加 Redis |
+| 模板 | 编译期 HTML → `askama`；已有运行时模板 → 留 `tera`/`handlebars` | 三套模板引擎并列 |
+| 解析 | 正在写解析器：组合子 `winnow`（已有 `nom` 留）；文法先行 `pest` | 为 JSON/TOML 加解析器（那是 serde） |
+| 哈希 / 随机 | 哈希 `sha2`/`hmac`（RustCrypto）；随机 `rand` | `rust-crypto`（停更）；为哈希拉 OpenSSL |
+| 压缩 | gzip/deflate → `flate2`；用户说 zstd → `zstd` | 预防性 brotli+zstd+gzip 三开 |
+| TUI / 进度 | 用户要 TUI → `ratatui`；进度条 `indicatif`；交互提问 `inquire` | 每个 CLI 默认加 TUI |
+| 文档 / OpenAPI | 用户要 OpenAPI → `utoipa` | 无 API 契约也加 |
+| CPU 并行 | 走 `/rust-skills:rust concurrency`（tokio vs rayon） | 在本表摊开并行 crate |
+
+**ST-18 当噪声拒绝（不列表、不入推荐）：** Applications 整章（游戏 / 链 / ML / 嵌入式 / 音频 / 天文 / 汽车 / 生物 / 金融应用 / 模拟器 / 编辑器）、Development tools 清单、Registries / Resources、GUI 框架目录（桌面只走 ST-07）、WASM 框架目录（只走产物表）、gRPC/GraphQL/消息队列/搜索引擎——用户没点名该域就当噪声。停更或 2018/2021-only 不当绿场默认（ST-19），不是「为完整列上」。
+
+**ST-19 edition 2024 / 维护：** 绿场推荐必须能在 edition **2024** + MSRV **≥1.85** 下编译（DEP-08）。依赖自己的更高 MSRV（如 sqlx 0.9 / 1.94）按 DEP-08 留上一主线，不为此抬仓。明显停更（`rust-crypto`、`stdweb`、`iron`/`nickel`/`gotham`、`structopt`、`async-std`、`failure`）不当新默认；活着但非本规范默认仍按 ST-02 留。
+
+出处（已蒸馏为选型政策，不复述清单；源树不入库）：https://github.com/rust-unofficial/awesome-rust @ `2b114844ad5218692cdce4a3afe36624271bac5a`
 
 ## 输出（ST-12）
 
@@ -72,9 +99,10 @@
 | 桌面 | 无 | N-A（产物不是桌面） | ST-01 | 顺手加 Tauri |
 | 观测/错误 | println | tracing 0.1.44 + anyhow | ST-08/09 | env_logger 当主栈 |
 | 配置 | 库里 env::var | clap env → 构造注入 | ST-15 | dotenv 当生产源 |
+| 附加层 | （未点名，N-A） | N-A | ST-16 | 展开生态目录 |
 ```
 
-混合产物：每个 crate 一张表，或一表多行但 **HTTP 与桌面不得写在同一 crate 的推荐里**。
+混合产物：每个 crate 一张表，或一表多行但 **HTTP 与桌面不得写在同一 crate 的推荐里**。附加层未点名不占行。
 
 下一步最多 2 条：回复「改」按 ST-14 加缺失层；接线走 `/rust-skills:rust obs --apply` 或对应框架命令。默认**未改动任何文件**（ST-13）。
 
@@ -83,7 +111,7 @@
 这是**新的写入授权**，不是默认行为。只动冻结 crate 的 `Cargo.toml`（项目跟踪 lock 则把 `Cargo.lock` 列入写入清单）。**不写 `main.rs`、不改 edition**（edition 走 `init`，subscriber 接线走 `obs`）。
 
 1. 先把将要执行的 `cargo add` **逐条展示**（crate + pinned + features），再跑。
-2. **只加「现状=无」且本轮已选定的层**。未回答的数据层跳过。
+2. **只加「现状=无」且本轮已选定的层**。未回答的数据层跳过。ST-17 附加层未在本轮点名则跳过；不因「清单里有」加 Redis/TUI/OAuth。
 3. **不 `cargo remove`、不降级、不替换活栈**（ST-02）。死亡线（rocket 0.4 等）与绿场默认不得并列：HTTP 层标「先迁」并跳过，直到用户明确「迁」。
 4. 同层不双开：sqlx/sea-orm、axum/actix、tracing/env_logger。
 5. 版本只允许 floor pinned，禁止 `@latest` / `"*"`。workspace 成员用 `--package`；`cargo add` 必须钉项目根。
@@ -106,5 +134,7 @@ cargo add --manifest-path <根>/Cargo.toml tracing-subscriber@0.3.23 --features 
 - 裸调用就写 `Cargo.toml` 或 `cargo add`。
 - `--apply` 时 `cargo remove rocket` 或 axum+rocket 双栈。
 - 版本写 latest / `axum = "*"`。
+- 把生态目录分类/条目复述成推荐，或 clone 进仓。
+- 未点名就展开 ST-17 全表；为同步 CLI 同时加 tokio+reqwest+ureq。
 
 只读调用：上表 + 现状证据（manifest 行号或「无仓库」）。`--apply` **不**在未展示表之前改依赖。

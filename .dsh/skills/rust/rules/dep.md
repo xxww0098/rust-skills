@@ -1,6 +1,6 @@
 ## DEP 依赖治理
 - DEP-01[S] 多成员共享的三方版本优先收口；有意使用不同版本或 feature 时局部声明并保留理由。
-- DEP-02[M] 新依赖评估 std/现有依赖的替代、维护状态、传递代价与 license；实现行数不是单独裁决标准。
+- DEP-02[M] 新依赖评估 std/现有依赖的替代、维护状态、传递代价与 license；实现行数不是单独裁决标准。绿场默认不推荐 2018/2021-only 或明显停更的 crate；edition 2024 + MSRV ≥1.85 是生成默认（ST-03/19）。本条是评审清单（META-01：技能仓无 xtask 机器门禁），靠压力场景 100 验证（META-03）。
 - DEP-03[S] 明确理解默认 feature 后决定是否关闭；不要机械写 `default-features=false`。
 - DEP-04[M] feature 必须可叠加：只增能力，不改语义、不互斥。
 - DEP-05[M] optional 依赖必须配具名 feature；禁只用 #[cfg] 门控。
