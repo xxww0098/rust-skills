@@ -14,13 +14,14 @@
 | `files` | 冻结清单内的路径，禁止扩围 |
 | `invariant` | 本补丁保护什么（所有权 / 非法状态 / 错误 / 边界） |
 | `shape` | 采用下方哪条规范形状 |
-| `refused` | 明确拒绝的捷径（至少一条，或「未见捷径」） |
+| `refused` | 明确拒绝的捷径（至少一条，或「朮见捷径」） |
 | `verification` | 将跑的最小 `cargo test`/`cargo check`；跑不了就写原因 |
 
 落盘后输出 Patch 表。没有这张表 = 这次写入不合格。
 
 机械入口：`python3 scripts/check_patch.py --patch <Patch.json> --root <项目根>`。
 没有 Patch JSON 就不要跑目录扫描冒充补丁检查。`check_patch` 只核验 `files` 里的路径；目录不是 Patch。
+写完验证入口：`python3 scripts/verify_patch.py --patch <Patch.json> --root <项目根>`。没有 `--run` 不得声称已验证。
 
 ## 拒绝落盘（即使能编译）
 
@@ -73,6 +74,6 @@ enum AppError { NotFound, Internal(anyhow::Error) }
 
 ## 写完
 
-1. 按 [kernel/verification.md](verification.md) 跑 `check_patch.py` + Patch 里的 cargo 命令。
+1. 按 [kernel/verification.md](verification.md) 跑 `python3 scripts/verify_patch.py --patch <Patch.json> --root <项目根>`。没有 `--run` 就只能写缺口，不能说已验证。
 2. 范围行来自 snapshot，文件数对得上 `files`。
 3. 下一步最多一条：`/rust-skills:rust review <刚改的路径>`。
