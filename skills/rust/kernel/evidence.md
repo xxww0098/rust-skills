@@ -13,6 +13,7 @@
 
 机械采集入口：`python3 scripts/inspect_project.py <根>`（crate 图、环、fan-in、孤儿、入口、unwrap/println 信号）。投影节入口：`python3 scripts/render_rust_md.py <根>`。调用方/cfg 仍由模型补进 `change_surface`，标 provenance。大仓探索时按 [swarm.md](swarm.md) 并行补 B/C/D 车道；子结果是证据条，禁止第二份 crate 图。
 
+`source-scan` 只扫生产代码事实。注释（含嵌套块注释）、字符串/原始字符串、`#[cfg(test)]` 项、`tests/` `examples/` `benches/`、`build.rs`、`*_test.rs` 不是信号。判定相对**最近 Cargo.toml**，所以技能仓自己的 `tests/projects/**` 不会把被测 crate 的 `src/` 误判成测试。传文件和传目录必须走同一套 `scripts/rs_scan.py` 谓词；`check_patch.py` 复用它，禁止各写各的排除规则。
 
 ## ProjectSnapshot（只读、可丢弃、带来源）
 
@@ -40,6 +41,7 @@ signals[].kind / path / provenance / confidence
 | `crate` | 用 graphs + 调用方评估边界，不另画图 |
 | `distill` | 在冻结范围内减复杂度，并声明改前/改后用同一快照字段比较 |
 | `harden` | 只加外部边界/错误/生命周期覆盖，不重扫结构 |
+| `slim` / `cargo` / `test` | 同一份快照上分镜头：cargo 钉指纹，test 选证明集，hygiene 只用 `orphans` 与体积；禁止再跑 metadata |
 
 ## RUST.md 投影（仅 document / init 复用）
 
