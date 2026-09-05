@@ -68,6 +68,20 @@ def validate(metadata: dict) -> None:
         problems.append(f"reference file without metadata: {missing}.md")
     for orphan in sorted(set(commands) - references):
         problems.append(f"metadata command without reference file: {orphan}")
+    for name, entry in commands.items():
+        for pin in entry.get("pins") or []:
+            pin_name = pin.get("name")
+            ref = pin.get("reference")
+            if pin_name in commands:
+                problems.append(f"{name} pin {pin_name!r} collides with an owner command")
+            if not ref:
+                problems.append(f"{name} pin {pin_name!r} missing reference")
+                continue
+            path = REPO_ROOT / "skills" / "rust" / ref
+            if not path.is_file():
+                problems.append(f"{name} pin {pin_name!r} missing file {ref}")
+            if not pin.get("triggers") or not pin.get("triggers_en"):
+                problems.append(f"{name} pin {pin_name!r} missing triggers")
     if problems:
         raise SystemExit(f"{METADATA}: " + "; ".join(problems))
 
@@ -93,6 +107,12 @@ def skill_block(metadata: dict) -> str:
             f"| `{name}` | {entry['category']} | {format_triggers(entry)} | "
             f"[reference/{name}.md](reference/{name}.md) |"
         )
+        for pin in entry.get("pins") or []:
+            ref = pin["reference"]
+            lines.append(
+                f"| `{pin['name']}` | {entry['category']} · `{name}` 入口 | {format_triggers(pin)} | "
+                f"[{ref}]({ref}) |"
+            )
     return "\n".join(lines) + "\n"
 
 
@@ -102,15 +122,21 @@ def command_text(name: str, entry: dict) -> str:
 
 
 def readme_block(metadata: dict) -> str:
-    entries = list(metadata["commands"].items())
-    width = max(len(command_text(n, e)) for n, e in entries) + 2
+    rows_meta: list[tuple[str, dict]] = []
+    for name, entry in metadata["commands"].items():
+        rows_meta.append((name, entry))
+        for pin in entry.get("pins") or []:
+            rows_meta.append((pin["name"], pin))
+    width = max(len(command_text(n, e)) for n, e in rows_meta) + 2
     out = []
     for category in metadata["categories"]:
-        rows = [
-            f"{command_text(n, e):<{width}} # {e['summary']}"
-            for n, e in entries
-            if e["category"] == category
-        ]
+        rows = []
+        for name, entry in metadata["commands"].items():
+            if entry["category"] != category:
+                continue
+            rows.append(f"{command_text(name, entry):<{width}} # {entry['summary']}")
+            for pin in entry.get("pins") or []:
+                rows.append(f"{command_text(pin['name'], pin):<{width}} # {pin['summary']}")
         out.append(f"#### {category}")
         out.extend(rows)
         out.append("")
@@ -121,11 +147,12 @@ def argument_hint(metadata: dict) -> str:
     """Category-grouped command hint, impeccable-style: visible when typing the slash command."""
     groups = []
     for category in metadata["categories"]:
-        names = [
-            name
-            for name, entry in metadata["commands"].items()
-            if entry["category"] == category
-        ]
+        names = []
+        for name, entry in metadata["commands"].items():
+            if entry["category"] != category:
+                continue
+            names.append(name)
+            names.extend(pin["name"] for pin in entry.get("pins") or [])
         groups.append(f"{category}: " + "|".join(names))
     return "[" + " · ".join(groups) + "] [target]"
 
