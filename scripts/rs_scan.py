@@ -33,6 +33,7 @@ PATCH_RULES = (
     ("amp_string", AMP_STRING_RE, "OWN-02"),
     ("index_loop", INDEX_LOOP_RE, "SIMP-13"),
 )
+# Blocking shapes fail a Patch. Signals need a Finding with counterevidence.
 PATCH_BLOCKING = frozenset({"unwrap", "println", "dbg"})
 PATCH_SIGNALS = frozenset({"clone", "amp_string", "index_loop"})
 
@@ -95,3 +96,179 @@ def iter_prod_rs(targets: list[Path]) -> list[Path]:
                         seen.add(rp)
                         out.append(path)
     return out
+
+
+def _raw_hashes(text: str, i: int) -> int:
+    n = 0
+    while i + n < len(text) and text[i + n] == "#":
+        n += 1
+    return n
+
+
+def mask_non_code(text: str) -> str:
+    """Replace comments and string/char literals with spaces; keep newlines."""
+    out: list[str] = []
+    i = 0
+    n = len(text)
+
+    def space_out(chunk: str) -> str:
+        return "".join("\n" if ch == "\n" else " " for ch in chunk)
+
+    while i < n:
+        ch = text[i]
+        nxt = text[i + 1] if i + 1 < n else ""
+
+        if ch == "r" or (ch == "b" and nxt == "r"):
+            j = i + (2 if ch == "b" else 1)
+            hashes = _raw_hashes(text, j)
+            if j + hashes < n and text[j + hashes] == '"':
+                start = i
+                i = j + hashes + 1
+                close = '"' + ("#" * hashes)
+                k = text.find(close, i)
+                if k == -1:
+                    out.append(space_out(text[start:]))
+                    break
+                i = k + len(close)
+                out.append(space_out(text[start:i]))
+                continue
+
+        if ch == "b" and nxt == '"':
+            start = i
+            i += 2
+            while i < n:
+                if text[i] == "\\":
+                    i = min(i + 2, n)
+                    continue
+                if text[i] == '"':
+                    i += 1
+                    break
+                i += 1
+            out.append(space_out(text[start:i]))
+            continue
+
+        if ch == "b" and nxt == "'":
+            start = i
+            i += 2
+            if i < n and text[i] == "\\":
+                i = min(i + 2, n)
+            elif i < n:
+                i += 1
+            if i < n and text[i] == "'":
+                i += 1
+            out.append(space_out(text[start:i]))
+            continue
+
+        if ch == "/" and nxt == "/":
+            start = i
+            i += 2
+            while i < n and text[i] != "\n":
+                i += 1
+            out.append(space_out(text[start:i]))
+            continue
+
+        if ch == "/" and nxt == "*":
+            start = i
+            i += 2
+            depth = 1
+            while i < n and depth:
+                if text[i] == "/" and i + 1 < n and text[i + 1] == "*":
+                    depth += 1
+                    i += 2
+                    continue
+                if text[i] == "*" and i + 1 < n and text[i + 1] == "/":
+                    depth -= 1
+                    i += 2
+                    continue
+                i += 1
+            out.append(space_out(text[start:i]))
+            continue
+
+        if ch == '"':
+            start = i
+            i += 1
+            while i < n:
+                if text[i] == "\\":
+                    i = min(i + 2, n)
+                    continue
+                if text[i] == '"':
+                    i += 1
+                    break
+                i += 1
+            out.append(space_out(text[start:i]))
+            continue
+
+        if ch == "'":
+            start = i
+            i += 1
+            if i < n and text[i] == "\\":
+                i = min(i + 2, n)
+            elif i < n:
+                i += 1
+            if i < n and text[i] == "'":
+                i += 1
+                out.append(space_out(text[start:i]))
+                continue
+            out.append(ch)
+            continue
+
+        out.append(ch)
+        i += 1
+    return "".join(out)
+
+
+def _skip_item(text: str, i: int) -> int:
+    m = ITEM_START_RE.search(text, i)
+    if not m:
+        return i
+    j = m.end()
+    while j < len(text) and text[j] not in "{;":
+        j += 1
+    if j >= len(text):
+        return len(text)
+    if text[j] == ";":
+        return j + 1
+    depth = 0
+    while j < len(text):
+        if text[j] == "{":
+            depth += 1
+        elif text[j] == "}":
+            depth -= 1
+            if depth == 0:
+                return j + 1
+        j += 1
+    return len(text)
+
+
+def mask_cfg_test(text: str) -> str:
+    """Blank #[cfg(test)] items. Run after mask_non_code so attrs stay visible."""
+    out = list(text)
+    for match in CFG_TEST_RE.finditer(text):
+        end = _skip_item(text, match.end())
+        for k in range(match.start(), end):
+            if out[k] != "\n":
+                out[k] = " "
+    return "".join(out)
+
+
+def production_code(text: str) -> str:
+    return mask_cfg_test(mask_non_code(text))
+
+
+def scan_rules(path: Path, rules: tuple) -> list[tuple[int, str, str, str]]:
+    """Return (lineno, rule_name, extra, line_text) hits in production code."""
+    try:
+        raw = path.read_text(encoding="utf-8")
+    except OSError:
+        return []
+    masked = production_code(raw)
+    raw_lines = raw.splitlines()
+    hits = []
+    for i, line in enumerate(masked.splitlines(), 1):
+        for spec in rules:
+            name, rx = spec[0], spec[1]
+            extra = spec[2] if len(spec) > 2 else ""
+            if rx.search(line):
+                src = raw_lines[i - 1].strip() if i <= len(raw_lines) else line.strip()
+                hits.append((i, name, extra, src))
+    return hits
