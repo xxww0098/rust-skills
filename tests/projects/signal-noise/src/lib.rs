@@ -18,3 +18,7 @@ mod tests {
         let _ = Result::<u8, ()>::Err(()).unwrap();
     }
 }
+
+pub fn share(value: std::sync::Arc<String>) -> std::sync::Arc<String> {
+    value.clone()
+}
