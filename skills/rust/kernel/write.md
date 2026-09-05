@@ -19,6 +19,9 @@
 
 落盘后输出 Patch 表。没有这张表 = 这次写入不合格。
 
+机械入口：`python3 scripts/check_patch.py --patch <Patch.json> --root <项目根>`。
+没有 Patch JSON 就不要跑目录扫描冒充补丁检查。`check_patch` 只核验 `files` 里的路径；目录不是 Patch。
+
 ## 拒绝落盘（即使能编译）
 
 - 为过编译器而 `.clone()` / `clone()` 满天飞（OWN-01）。先改所有权或 API。
