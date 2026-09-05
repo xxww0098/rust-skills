@@ -4,8 +4,10 @@
 Does not invent facets. Model may add 待确认; this script only emits
 Facets/基线/Crate 图/域划分 from inspect JSON.
 
-  python3 scripts/render_rust_md.py <project-root>
+  python3 scripts/render_rust_md.py --snapshot <snapshot.json|->
   python3 scripts/render_rust_md.py --check-fixtures
+
+The renderer does not inspect. Collection is inspect_project's job.
 """
 from __future__ import annotations
 
@@ -77,9 +79,13 @@ def render(snapshot: dict) -> str:
         counts[s["kind"]] = counts.get(s["kind"], 0) + 1
     signal_line = "、".join(f"{k} {v}" for k, v in sorted(counts.items())) or "无机械信号"
     default_art = infer_artifact(crates[0], snapshot) if crates else "lib"
+    raw_mat = (snapshot.get("facets") or {}).get("maturity") or "unknown"
+    maturity = "待确认" if raw_mat in {"", "unknown", None} else raw_mat
+    if snapshot.get("identity", {}).get("degraded_reasons"):
+        maturity = "待确认"
     lines = [
         "## Facets",
-        f"默认: artifact={default_art}, maturity=prototype",
+        f"默认: artifact={default_art}, maturity={maturity}",
         ("覆盖: " + ", ".join(facets)) if facets else "覆盖: (无)",
         "## 基线",
         f"edition {edition} · MSRV unknown · resolver {resolver} · 规范版本 v{skill_version()}（{rule_count()} 条分级规则）",
@@ -97,7 +103,7 @@ def check_fixtures(write: bool = False) -> int:
     roots = sorted(p for p in (REPO_ROOT / "tests" / "projects").iterdir() if (p / "expected.json").is_file())
     for root in roots:
         golden = root / "projection.md"
-        got = render(inspect(root))
+        got = render(inspect(root))  # fixture driver only
         if write:
             golden.write_text(got, encoding="utf-8")
             print(f"wrote {golden.relative_to(REPO_ROOT)}")
@@ -117,14 +123,30 @@ def check_fixtures(write: bool = False) -> int:
     return failed
 
 
+def load_snapshot(source: str) -> dict:
+    if source == "-":
+        return json.load(sys.stdin)
+    path = Path(source)
+    if not path.is_file():
+        raise SystemExit(f"render_rust_md: snapshot not found: {source}")
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
 def main() -> int:
-    write = "--write" in sys.argv
-    if "--check-fixtures" in sys.argv:
+    argv = sys.argv[1:]
+    write = "--write" in argv
+    if "--check-fixtures" in argv:
         return check_fixtures(write=write)
-    args = [a for a in sys.argv[1:] if not a.startswith("-")]
-    root = Path(args[0]) if args else Path.cwd()
-    sys.stdout.write(render(inspect(root)))
-    return 0
+    if "--snapshot" in argv:
+        i = argv.index("--snapshot")
+        if i + 1 >= len(argv):
+            print("usage: render_rust_md.py --snapshot <file|->", file=sys.stderr)
+            return 2
+        sys.stdout.write(render(load_snapshot(argv[i + 1])))
+        return 0
+    print("usage: render_rust_md.py --snapshot <file|->", file=sys.stderr)
+    print("collect first: python3 scripts/inspect_project.py <root>", file=sys.stderr)
+    return 2
 
 
 if __name__ == "__main__":

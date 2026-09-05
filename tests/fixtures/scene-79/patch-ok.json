@@ -1,0 +1,10 @@
+{
+  "intent": "keep ping as a total function",
+  "finding_id": "greenfield",
+  "owner_layer": "lib",
+  "files": ["tests/projects/single-lib/src/lib.rs"],
+  "invariant": "ping returns a literal, no unwrap",
+  "shape": "ownership: no clone, Result only at the boundary",
+  "refused": "clone-to-compile",
+  "verification": "cargo test --manifest-path tests/projects/single-lib/Cargo.toml --lib ping"
+}

@@ -1,0 +1,9 @@
+{
+  "members": ["signal_noise"],
+  "edges": [],
+  "cycles": [],
+  "orphans": ["src/lib_test.rs"],
+  "entrypoints": ["src/lib.rs"],
+  "fan_in": ["signal_noise:0"],
+  "signals": ["unwrap:1"]
+}

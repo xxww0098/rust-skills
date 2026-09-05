@@ -1,1 +1,1 @@
-pub fn reachable() {}
+mod foo;

@@ -16,6 +16,9 @@ import subprocess
 import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from rs_scan import SIGNAL_RULES, is_prod_rs, scan_rules
+
 REPO_ROOT = Path(__file__).resolve().parent.parent
 FIXTURES = REPO_ROOT / "tests" / "projects"
 MOD_RE = re.compile(r"^\s*(?:pub(?:\([^)]+\))?\s+)?mod\s+(\w+)\s*;", re.M)
@@ -25,11 +28,6 @@ DEP_TABLE_RE = re.compile(r"(?ms)^\[dependencies\](.*?)(?=^\[|\Z)")
 DEP_NAME_RE = re.compile(r"(?m)^([A-Za-z0-9_-]+)\s*=")
 EDITION_RE = re.compile(r'(?m)^edition\s*=\s*"([^"]+)"')
 RESOLVER_RE = re.compile(r'(?m)^resolver\s*=\s*"([^"]+)"')
-UNWRAP_RE = re.compile(r"\.unwrap\s*\(")
-EXPECT_RE = re.compile(r"\.expect\s*\(")
-PRINTLN_RE = re.compile(r"\bprintln!\s*\(")
-DBG_RE = re.compile(r"\bdbg!\s*\(")
-
 
 
 def git_head(root: Path) -> str | None:
@@ -43,6 +41,19 @@ def git_head(root: Path) -> str | None:
     if proc.returncode != 0:
         return None
     return proc.stdout.strip() or None
+
+
+def git_dirty(root: Path) -> bool:
+    try:
+        proc = subprocess.run(
+            ["git", "-C", str(root), "status", "--porcelain"],
+            check=False, capture_output=True, text=True,
+        )
+    except FileNotFoundError:
+        return False
+    if proc.returncode != 0:
+        return False
+    return bool(proc.stdout.strip())
 
 
 def edition_of(manifest: Path) -> str | None:
@@ -85,50 +96,42 @@ def fan_maps(edges: list[tuple[str, str]], names: list[str]) -> tuple[dict[str, 
     return fan_in, fan_out
 
 
-def is_prod_rs(path: Path) -> bool:
-    parts = {p.lower() for p in path.parts}
-    if "tests" in parts or "examples" in parts or "benches" in parts:
-        return False
-    if path.name.endswith("_test.rs"):
-        return False
-    return path.suffix == ".rs"
-
-
-def scan_signals(root: Path, member_dirs: list[Path]) -> list[dict]:
+def scan_signals(root: Path, member_dirs: list[Path]) -> tuple[list[dict], list[str]]:
     found: list[dict] = []
-    kinds = (
-        ("unwrap", UNWRAP_RE),
-        ("expect", EXPECT_RE),
-        ("println", PRINTLN_RE),
-        ("dbg", DBG_RE),
-    )
+    excluded: list[str] = []
+    seen_excl: set[str] = set()
     for d in member_dirs:
         src = d / "src"
-        if not src.is_dir():
-            continue
-        for path in src.rglob("*.rs"):
-            if not is_prod_rs(path):
-                continue
-            try:
-                lines = path.read_text(encoding="utf-8").splitlines()
-            except OSError:
-                continue
-            rel = rel_to(root, path)
-            for i, line in enumerate(lines, 1):
-                stripped = line.lstrip()
-                if stripped.startswith("//"):
+        search_roots = [src] if src.is_dir() else []
+        if (d / "build.rs").is_file():
+            rel = rel_to(root, d / "build.rs")
+            if rel not in seen_excl:
+                seen_excl.add(rel)
+                excluded.append(rel)
+        for search in search_roots:
+            for path in search.rglob("*.rs"):
+                rel = rel_to(root, path)
+                if not is_prod_rs(path, relative_to=d):
+                    if rel not in seen_excl:
+                        seen_excl.add(rel)
+                        excluded.append(rel)
                     continue
-                for kind, rx in kinds:
-                    if rx.search(line):
-                        found.append(
-                            {
-                                "kind": kind,
-                                "path": f"{rel}:{i}",
-                                "provenance": "source-scan",
-                                "confidence": "high",
-                            }
-                        )
-    return found
+                for lineno, kind, _extra, _src in scan_rules(path, SIGNAL_RULES):
+                    found.append(
+                        {
+                            "kind": kind,
+                            "path": f"{rel}:{lineno}",
+                            "provenance": "source-scan",
+                            "confidence": "high",
+                        }
+                    )
+        tests_dir = d / "tests"
+        if tests_dir.is_dir():
+            rel = rel_to(root, tests_dir)
+            if rel not in seen_excl:
+                seen_excl.add(rel)
+                excluded.append(rel)
+    return found, sorted(excluded)
 
 
 def fail(msg: str) -> None:
@@ -167,12 +170,12 @@ def declared_deps(manifest: Path) -> list[str]:
     return sorted(set(DEP_NAME_RE.findall(block.group(1))))
 
 
-def cargo_metadata(root: Path) -> dict | None:
+def cargo_metadata(root: Path, locked: bool) -> dict | None:
     cmd = [
         "cargo", "metadata", "--no-deps", "--format-version", "1",
         "--manifest-path", str(root / "Cargo.toml"),
     ]
-    if (root / "Cargo.lock").is_file():
+    if locked:
         cmd.append("--locked")
     env = os.environ.copy()
     env["CARGO_TERM_COLOR"] = "never"
@@ -275,12 +278,18 @@ def inspect(root: Path) -> dict:
     root = root.resolve()
     manifest = root / "Cargo.toml"
     degraded: list[str] = []
-    lock_policy = "tracked" if (root / "Cargo.lock").is_file() else "absent"
+    lock_exists = (root / "Cargo.lock").is_file()
+    lock_policy = "tracked" if lock_exists else "absent"
     meta = None
-    if manifest.is_file() and (root / "Cargo.lock").is_file():
-        meta = cargo_metadata(root)
+    if manifest.is_file() and lock_exists:
+        meta = cargo_metadata(root, locked=True)
         if meta is None:
-            degraded.append("cargo-metadata-failed")
+            unlocked = cargo_metadata(root, locked=False)
+            if unlocked is not None:
+                lock_policy = "drift"
+                degraded.append("lock-drift")
+            else:
+                degraded.append("cargo-metadata-failed")
     elif manifest.is_file():
         degraded.append("lock-absent-manifest-scan")
 
@@ -320,7 +329,6 @@ def inspect(root: Path) -> dict:
                         "targets": [],
                     }
                 )
-
         for n, d in ws_names.items():
             for dep in declared_deps(d / "Cargo.toml"):
                 if dep in ws_names:
@@ -338,18 +346,23 @@ def inspect(root: Path) -> dict:
     edges = sorted(set(edges))
     names = [c["name"] for c in crates]
     fan_in, fan_out = fan_maps(edges, names)
-    signals = scan_signals(root, member_dirs)
+    signals, excluded = scan_signals(root, member_dirs)
     return {
         "identity": {
             "workspace_root": str(root),
             "manifest_path": rel_to(root, manifest) if manifest.is_file() else str(manifest),
             "git_head": git_head(root),
-            "dirty": False,
+            "dirty": git_dirty(root),
             "lock_policy": lock_policy,
             "degraded_reasons": degraded,
             "resolver": resolver_of(root),
         },
-        "scope": {"requested_target": None, "primary_files": [], "adjacent_evidence": [], "excluded_paths": []},
+        "scope": {
+            "requested_target": None,
+            "primary_files": [],
+            "adjacent_evidence": [],
+            "excluded_paths": excluded,
+        },
         "crates": crates,
         "graphs": {
             "crate_edges": [{"from": a, "to": b} for a, b in edges],
@@ -392,7 +405,6 @@ def check_fixtures() -> int:
             if key not in expected:
                 continue
             if set(got.get(key, [])) != set(expected.get(key, [])):
-
                 fail(f"{root.name}.{key}: got {got.get(key)} want {expected.get(key)}")
                 failed += 1
     if failed == 0:

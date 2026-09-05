@@ -1,0 +1,10 @@
+{
+  "intent": "make it compile",
+  "finding_id": "greenfield",
+  "owner_layer": "app",
+  "files": ["tests/fixtures/scene-79/hits.rs"],
+  "invariant": "",
+  "shape": "clone until rustc is quiet",
+  "refused": "",
+  "verification": "cargo test"
+}

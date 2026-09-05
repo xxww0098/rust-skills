@@ -5,9 +5,10 @@
   "fixture": "hits.rs",
   "fixture_needles": [".clone()", "unwrap()", "&String", "println!"],
   "skill_needles": {
-    "skills/rust/kernel/write.md": ["Patch", "拒绝落盘", "&str"],
+    "skills/rust/kernel/write.md": ["Patch", "拒绝落盘", "&str", "check_patch.py --patch", "verify_patch.py"],
     "skills/rust/rules/meta.md": ["META-07", "clone-to-compile"],
     "skills/rust/reference/craft.md": ["kernel/write.md", "Patch"],
-    "tests/pressure-scenarios.md": ["### 场景 79", "META-07"]
+    "tests/pressure-scenarios.md": ["### 场景 79", "META-07"],
+    "skills/rust/kernel/verification.md": ["verify_patch", "--patch", "--manifest-path", "proven"]
   }
 }
