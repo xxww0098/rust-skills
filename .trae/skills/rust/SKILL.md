@@ -2,10 +2,10 @@
 name: rust
 description: Use for Cargo/Rust work in a repo — implement, debug, rustc/borrow-checker, clippy, review, unsafe/FFI, axum/sqlx/tokio, clap/tracing, Tauri v2, edition 2024, 技术栈, 函数命名, crate命名, 清理过期文件, 编译报错, 代码审查, or /rust-skills:rust. Engage without a subcommand. Skip non-Cargo work and language trivia.
 license: MIT
-version: 0.0.69
+version: 0.0.70
 metadata:
   type: workflow
-argument-hint: "[搭建与设计: init|shape|crate|document|stack · 评审: review|audit|triage|doctor · 改造: harden|slim|modernize|distill|gate · 语言语义: concurrency|process|async|serde|obs|name · 框架: axum|tauri|seaorm|sqlx|cli · 交付: bench|ship|xplat · 治理: docs|capture] [target]"
+argument-hint: "[搭建与设计: init|shape|crate|document|stack|batteries · 评审: review|audit|triage|doctor · 改造: harden|slim|modernize|distill|gate · 语言语义: concurrency|process|async|serde|obs|name · 框架: axum|tauri|seaorm|sqlx|cli · 交付: bench|ship|xplat · 治理: docs|capture] [target]"
 ---
 
 这是 Rust 工程任务的薄路由器。命令是加速器，不是开关。技能已加载且人在 Cargo 项目里时，先走 [reference/engage.md](reference/engage.md) 主动介入。分级规则按域加载 `rules/<domain>.md`；`rules/rules-full.md` 只给明确的全规范审计。普通实现走 [reference/craft.md](reference/craft.md)。**本轮只建一份** [ProjectSnapshot](kernel/evidence.md)。
@@ -33,7 +33,7 @@ argument-hint: "[搭建与设计: init|shape|crate|document|stack · 评审: rev
 1. **判定动作**：回答/设计/评审/诊断默认只读；用户说「实现、修、改、生成、应用」或命令带 `--apply` 即授权目标内写入。语言语义/框架命令本身不暗示写入。
 2. **范围**：按 [kernel/scope.md](kernel/scope.md) 钉根并冻结主目标｜邻接证据｜已排除。
 3. **事实**：按 [kernel/evidence.md](kernel/evidence.md) 采集一份 ProjectSnapshot（lock-safe metadata 一次）。**仅当**范围不是单文件且本命令在 [kernel/swarm.md](kernel/swarm.md)「开」表时才读 swarm 并扇出，仍合并进这一份快照。后续命令只读这份快照。
-4. **渐进披露（本轮预算）**：1 个命令 owner + **至多 2** 个子 playbook + **至多 3** 个 `rules/<domain>.md`。禁止 `rules/rules-full.md`（除非用户要全规范审计）；禁止整目录读 `reference/axum|tauri|seaorm|bench|slim/`。框架/bench/slim 先 owner 编号清单，再按文末「深入」表叠加命中项。普通实现：engage → craft；测试才 [reference/testing.md](reference/testing.md)；编译错误才 [reference/triage.md](reference/triage.md)。
+4. **渐进披露（本轮预算）**：1 个命令 owner + **至多 2** 个子 playbook + **至多 3** 个 `rules/<domain>.md`。禁止 `rules/rules-full.md`（除非用户要全规范审计）；禁止整目录读 `reference/axum|tauri|seaorm|bench|slim|batteries/`。框架/bench/slim/batteries 先 owner 编号清单，再按文末「深入」表叠加命中项。普通实现：engage → craft；测试才 [reference/testing.md](reference/testing.md)；编译错误才 [reference/triage.md](reference/triage.md)。
 5. **完成闭环**：范围内每项已处理或列为缺口。Finding 按 [kernel/finding.md](kernel/finding.md)。**已授权写入**才读 [kernel/write.md](kernel/write.md) 与 [kernel/verification.md](kernel/verification.md)；只读调用不打开这两份。
 
 
@@ -70,7 +70,7 @@ argument-hint: "[搭建与设计: init|shape|crate|document|stack · 评审: rev
 - **评审类永远只读**：`review`、`audit`、`triage`、`doctor`。只出报告/建议；`--record` 仅额外授权写 RUST.md 快照。
 - **改造/语言语义/框架/交付类先体检**：`harden`、`modernize`、`distill`、`slim`、`gate`、`bench`、`concurrency`、`process`、`async`、`serde`、`obs`、`name`、`axum`、`tauri`、`seaorm`、`sqlx`、`cli`、`ship`、`xplat`。裸调用 = 体检/列计划/给可粘贴命令，不落盘；带 `--apply` 或同一请求明确「修/改/实现」才写各自 reference 声明的目标。
 - **搭建/治理类直写其声明文件**：`init`、`document` 写 RUST.md（`init` 另改冻结的工程基线）；`capture` 写项目 `.rust-skills/capture-outbox.md`；`docs` 默认只读，明确「创建/整理/更新索引/修复链接/移动/归档」才写冻结的文档与入链。
-- `shape`、`crate`、`stack` 默认只出建议，永不写码。`crate` 在用户明确回复「拆 / 迁」后才按已展示映射改 workspace；`stack` 在用户明确回复「改」或 `--apply` 后才按已展示表给缺失层加依赖（钉 floor，不删活栈），均算一次新的写入授权。
+- `shape`、`crate`、`stack`、`batteries` 默认只出建议，永不写码。`crate` 在用户明确回复「拆 / 迁」后才按已展示映射改 workspace；`stack` / `batteries` 在用户明确回复「改」或 `--apply` 后才按已展示表给缺失层加依赖（钉 floor，不删活栈），均算一次新的写入授权。`stack` 管技术选型；`batteries` 管按图组装最小 kit。
 - `--record` 只额外授权写 RUST.md 的 `rust-skills:managed` 块，不授权改代码。凡 reference 声明支持 `--record` 的命令均可使用；未声明则只输出可粘贴候选。
 - 保留现有结构和项目约定是默认；大规模迁移、pub API 变化、依赖新增或破坏性操作先征求同意。
 - 不隐式 stash/commit，不覆盖 Git hooks，不清理共享构建缓存。
@@ -85,6 +85,7 @@ argument-hint: "[搭建与设计: init|shape|crate|document|stack · 评审: rev
 | `crate` | 搭建与设计 | 「要不要拆 crate」 · 「这个模块独立成库」 · 「值不值得新建 crate」 · should this be a crate · extract this module into a library | [reference/crate.md](reference/crate.md) |
 | `document` | 搭建与设计 | 「生成项目画像」 · 「RUST.md」 · 「了解这个项目的结构」 · 「更新画像」 · generate project portrait · update RUST.md · explain this repo structure | [reference/document.md](reference/document.md) |
 | `stack` | 搭建与设计 | 「技术栈」 · 「用什么框架」 · 「最佳技术栈」 · 「选 axum 还是 actix」 · 「这个项目该用什么 crate」 · tech stack · which framework · best rust stack · … | [reference/stack.md](reference/stack.md) |
+| `batteries` | 搭建与设计 | 「补最小依赖」 · 「crate 工具箱」 · 「batteries」 · crate kit · batteries · … | [reference/batteries.md](reference/batteries.md) |
 | `review` | 评审 | 「帮我 review」 · 「评审这次改动」 · 「这段 diff 有没有问题」 · 「代码审查」 · 「热核评审」 · review this PR · code review · review this diff · … | [reference/review.md](reference/review.md) |
 | `audit` | 评审 | 「深审 unsafe」 · 「依赖审计」 · 「测试质量」 · 「安全审计」 · audit unsafe · dependency audit · security audit · … | [reference/audit.md](reference/audit.md) |
 | `triage` | 评审 | 「编译报错」 · 「这个错误怎么修」 · 「borrow checker 打架」 · compiler error · how do I fix this rustc error · borrow checker fight · … | [reference/triage.md](reference/triage.md) |
@@ -116,6 +117,7 @@ argument-hint: "[搭建与设计: init|shape|crate|document|stack · 评审: rev
 
 - 优先级（固定，不打分）：**显式命令 > 显式只读/写入意图 > 编译错误 > 动作动词 > 框架/领域证据 > target > 裸入口帮助**。`/review --apply` 因显式命令是评审类，仍只读。
 - 裸 `/rust-skills:rust`：读 [reference/routing.md](reference/routing.md)，只推荐，不执行。
+- **命令边界**：`doctor` = 发现/分类，只读；`document` = 只投影画像；`init` = 只引导其声明文件，不自动串联 document/gate/stack；`gate` = 门禁/CI 入口，不是 `cargo add`。绿场旅程：`init` → `shape` → `document` → `doctor` → `gate` → `stack` → `batteries` → `craft`。用户正在做功能时不要按旅程抢主动作。
 - 显式命令：按路由表「触发」列（代表项；完整短语在各 owner 文首与 `scripts/command-metadata.json`）匹配用户语言后加载**一个**对应 reference。改造/语言语义/框架/交付命令裸调用为只读体检；`--apply` 或同一请求明确「修/改/实现」时直接在冻结范围应用该清单，无需单独的 apply 子命令。
 - 普通 Rust 任务：先 [reference/engage.md](reference/engage.md)，再 [reference/craft.md](reference/craft.md)；编译错误叠加 [reference/triage.md](reference/triage.md)。不要求用户先选子命令，也不因缺少 RUST.md 拒绝修改。
 - 叠加顺序：engage（主动）→ craft（普通实现）→ 全局规则 → 语言语义（concurrency/process/async/serde/obs/name）→ 框架（axum/tauri/seaorm/sqlx/cli，owner 清单 → 命中的子 playbook）→ 交付（ship/xplat）。重复问题只保留证据更具体的一条。

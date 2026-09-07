@@ -1,6 +1,6 @@
 # /rust-skills:rust document — 投影项目画像
 
-目的：把 **本轮 ProjectSnapshot** 确定性投影为 RUST.md；直接调用时只写 RUST.md，供 `init` 在修改基线后复用同一流程。老项目通常先 document 再决定 init 改多少，但显式 init 不以此为前置条件。禁止在本命令里另扫一套 crate 图；采集协议见 [kernel/evidence.md](../kernel/evidence.md)，范围见 [kernel/scope.md](../kernel/scope.md)。
+目的：把 **本轮 ProjectSnapshot** 确定性投影为 RUST.md。本命令**只管画像/文档投影**，不改基线、不加依赖、不上 CI。直接调用时只写 RUST.md，供 `init` 在修改基线后复用同一流程。老项目通常先 document 再决定 init 改多少，但显式 init 不以此为前置条件。禁止在本命令里另扫一套 crate 图，也禁止顺手跑 `init`/`doctor`/`gate`/`stack`；采集协议见 [kernel/evidence.md](../kernel/evidence.md)，范围见 [kernel/scope.md](../kernel/scope.md)。
 
 编排：workspace ≥2 crate 时按 [kernel/swarm.md](../kernel/swarm.md) — 测试布局 · 风险 signals · 依赖/lock。inspect 只一次。
 

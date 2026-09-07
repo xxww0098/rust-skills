@@ -1,0 +1,33 @@
+{
+  "id": "102",
+  "title": "绿场 HTTP API + Postgres 最小 kit，不写 Cargo.toml",
+  "commands": ["batteries"],
+  "fixture": "Cargo.toml",
+  "fixture_needles": [
+    "name = \"newapi\"",
+    "edition = \"2024\""
+  ],
+  "skill_needles": {
+    "skills/rust/reference/batteries.md": [
+      "BAT-02",
+      "BAT-05",
+      "BAT-06",
+      "axum",
+      "tokio",
+      "serde_json",
+      "sqlx",
+      "OpenAPI",
+      "Redis",
+      "永不写码"
+    ],
+    "skills/rust/reference/batteries/http-service.md": [
+      "http-service/min",
+      "BAT-06"
+    ],
+    "tests/pressure-scenarios.md": [
+      "### 场景 102",
+      "HTTP API + Postgres",
+      "BAT-06"
+    ]
+  }
+}

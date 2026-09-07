@@ -1,6 +1,6 @@
 # rust-skills — Rust 工程技能包
 
-`/rust-skills:rust <命令> [target]`：一个入口、30 条命令。同一份技能源同步到支持的全部 harness。
+`/rust-skills:rust <命令> [target]`：一个入口、31 条命令。同一份技能源同步到支持的全部 harness。
 
 > 立场：先守用户边界和项目事实，再追求正确、精简、可验证。规则是候选约束，不是把现有项目改造成统一模板的许可。**只推崇 edition 2024**（MSRV ≥ 1.85）。新仓 resolver 3；成熟 2024 仓钉 resolver 2 不迁。2018/2021 当迁移债务。
 
@@ -21,7 +21,7 @@
 - **评审类**（`review` `audit` `triage` `doctor`）永远只读，只出报告。
 - **改造 / 语言语义 / 框架 / 交付类**（`harden` `modernize` `distill` `slim` `gate` `bench` `concurrency` `process` `async` `serde` `obs` `axum` `tauri` `seaorm` `sqlx` `cli` `ship` `xplat`）裸调用只体检、列计划；带 `--apply` 或明确说「改」才动代码。
 - **搭建 / 治理类**（`init` `document` `capture`）只写自己声明的文件：RUST.md 或项目 outbox。
-- `shape`、`crate` 默认只出建议。`crate` 你回复「拆」之后才改 workspace。`stack` 回复「改」后只给缺失层加依赖，不删活栈。
+- `shape`、`crate` 默认只出建议。`crate` 你回复「拆」之后才改 workspace。`stack` 管选型，`batteries` 按图组装最小 kit；回复「改」后只给缺失层加依赖，不删活栈。
 - `--record` 只额外写 RUST.md 的 managed 块，不改业务代码。
 
 ---
@@ -53,6 +53,20 @@
 ```
 
 只读。edition 还是 2021 会标 DRIFT；2024 + resolver 2 + 只有 `rust-toolchain.toml` 是 OK。
+
+绿场（空仓 / 刚 init）常见顺序，**不要一次跑完**：
+
+```text
+init → shape → document → doctor → gate → stack → batteries → craft
+```
+
+`stack` 决定用什么框架。`batteries` 按 crate 图给出最小依赖清单，默认不写 `Cargo.toml`：
+
+```text
+/rust-skills:rust batteries 这是 HTTP API + Postgres
+```
+
+回复「改」或 `--apply` 才按已展示 kit 加缺失 crate。已有 sqlx 不会再塞一套 ORM。
 
 ### 2. 写功能（多数情况不用命令）
 
@@ -241,6 +255,8 @@ axum 子 playbook：scaffold / routing / extractors / handlers / middleware / re
 | 「capabilities / 插件 / 托盘 / 移动端 / v1 迁移」 | `tauri`（自动深入子 playbook） |
 | 「新项目 / 补基线」 | `init` |
 | 「先了解这个仓库」 | `document` |
+| 「用什么框架 / 选 axum 还是 actix」 | `stack` |
+| 「缺哪些依赖 / crate 工具箱」 | `batteries` |
 | 裸 `/rust-skills:rust` | 只推荐 2–3 步，不执行 |
 
 ---
@@ -249,7 +265,7 @@ axum 子 playbook：scaffold / routing / extractors / handlers / middleware / re
 
 | 分类 | 什么时候用它 |
 |---|---|
-| 搭建与设计 | 进项目、动手前：`init` 搭基线、`document` 生成画像、`shape` 先设计、`crate` 决定拆不拆 |
+| 搭建与设计 | 进项目、动手前：`init` 搭基线、`document` 生成画像、`shape` 先设计、`crate` 决定拆不拆、`stack` 选型、`batteries` 最小 kit |
 | 评审 | 只想看有没有问题，永远只读 |
 | 改造 | 要动手改（加固/减肥/现代化/精简/门禁），裸调用只体检 |
 | 语言语义 | 任何 Rust 项目的通用深层问题：并发、多进程、异步、序列化、函数/crate 命名 |
@@ -263,48 +279,49 @@ axum 子 playbook：scaffold / routing / extractors / handlers / middleware / re
 
 <!-- commands-table:start -->
 #### 搭建与设计
-/rust-skills:rust init                       # 把工程调和到最小基线并生成/刷新 RUST.md 画像；新项目从这里开始
-/rust-skills:rust shape <feature>            # 写码前设计：落点/类型/错误/并发四问，只出一页设计小结
-/rust-skills:rust crate <module>             # 对抗审查一个模块值不值得拆成 crate，只出建议
-/rust-skills:rust document                   # 从当前项目事实生成/刷新 RUST.md 画像；老项目先跑这个
-/rust-skills:rust stack [target] [--apply]   # 分析仓库与口述产物，推荐并（仅 --apply/「改」）按表给缺失层加依赖；不删活栈
+/rust-skills:rust init                           # 把工程调和到最小基线并生成/刷新 RUST.md 画像；新项目从这里开始
+/rust-skills:rust shape <feature>                # 写码前设计：落点/类型/错误/并发四问，只出一页设计小结
+/rust-skills:rust crate <module>                 # 对抗审查一个模块值不值得拆成 crate，只出建议
+/rust-skills:rust document                       # 从当前项目事实生成/刷新 RUST.md 画像；老项目先跑这个
+/rust-skills:rust stack [target] [--apply]       # 分析仓库与口述产物，推荐并（仅 --apply/「改」）按表给缺失层加依赖；不删活栈
+/rust-skills:rust batteries [target] [--apply]   # 按项目图 / Facets 组装最小 crate 工具箱；默认只读，改/--apply 才加缺失层
 
 #### 评审
-/rust-skills:rust review [target]            # 按分级规则评审当前改动或指定路径，只读出问题清单
-/rust-skills:rust audit <domain>             # 单域深审：unsafe / deps / tests / build / async / api / security
-/rust-skills:rust triage [error]             # 编译错误分诊：先回答设计问题再动手，三次不过升级设计
-/rust-skills:rust doctor                     # 体检技能库与项目画像的一致性/漂移，只读
+/rust-skills:rust review [target]                # 按分级规则评审当前改动或指定路径，只读出问题清单
+/rust-skills:rust audit <domain>                 # 单域深审：unsafe / deps / tests / build / async / api / security
+/rust-skills:rust triage [error]                 # 编译错误分诊：先回答设计问题再动手，三次不过升级设计
+/rust-skills:rust doctor                         # 体检技能库与项目画像的一致性/漂移，只读
 
 #### 改造
-/rust-skills:rust harden [target]            # 生产加固：错误路径、边界、可观测性、优雅停机
-/rust-skills:rust slim [target]              # 构建减肥与文件卫生：timings 定位、裁依赖；过期开发文件/target 分层清理
-/rust-skills:rust modernize [target]         # 把过时写法换成现代等价物（lazy_static → OnceLock 等）
-/rust-skills:rust distill [target]           # 旧代码优化入口：删抽象、结构梯子、crate 只建议不擅迁
-/rust-skills:rust gate                       # 生成/维护 xtask 门禁与 clippy 基线（只收紧不放宽）
+/rust-skills:rust harden [target]                # 生产加固：错误路径、边界、可观测性、优雅停机
+/rust-skills:rust slim [target]                  # 构建减肥与文件卫生：timings 定位、裁依赖；过期开发文件/target 分层清理
+/rust-skills:rust modernize [target]             # 把过时写法换成现代等价物（lazy_static → OnceLock 等）
+/rust-skills:rust distill [target]               # 旧代码优化入口：删抽象、结构梯子、crate 只建议不擅迁
+/rust-skills:rust gate                           # 生成/维护 xtask 门禁与 clippy 基线（只收紧不放宽）
 
 #### 语言语义
-/rust-skills:rust concurrency [target]       # 并发/并行选型与调优：rayon/tokio 桥、锁与调度；正确性测法见 testing.md
-/rust-skills:rust process [target]           # 多进程选型与编排：隔离/故障域、Command 生命周期、fork 边界、进程池、IPC、信号停机
-/rust-skills:rust async [target]             # 异步深审：取消安全、结构化停机、Stream 背压
-/rust-skills:rust serde [target]             # 序列化边界：零拷贝、enum 表示、字段纪律、兼容演进
-/rust-skills:rust obs [target]               # tracing 接线：只在 main 装一次、EnvFilter、json/pretty、字段/span 基数、WorkerGuard、测试 try_init
-/rust-skills:rust name [target] [--apply]    # 函数/方法/crate 命名：as_/to_/into_、getter 禁 get_、From 构造器、包名 kebab 禁 -rs；按 API Guidelines 体检或改名
+/rust-skills:rust concurrency [target]           # 并发/并行选型与调优：rayon/tokio 桥、锁与调度；正确性测法见 testing.md
+/rust-skills:rust process [target]               # 多进程选型与编排：隔离/故障域、Command 生命周期、fork 边界、进程池、IPC、信号停机
+/rust-skills:rust async [target]                 # 异步深审：取消安全、结构化停机、Stream 背压
+/rust-skills:rust serde [target]                 # 序列化边界：零拷贝、enum 表示、字段纪律、兼容演进
+/rust-skills:rust obs [target]                   # tracing 接线：只在 main 装一次、EnvFilter、json/pretty、字段/span 基数、WorkerGuard、测试 try_init
+/rust-skills:rust name [target] [--apply]        # 函数/方法/crate 命名：as_/to_/into_、getter 禁 get_、From 构造器、包名 kebab 禁 -rs；按 API Guidelines 体检或改名
 
 #### 框架
-/rust-skills:rust axum [target]              # axum 0.8 服务：状态、边界防护、流式、超时；按信号深入路由/提取器/中间件/鉴权/实时/测试/迁移
-/rust-skills:rust tauri [target]             # Tauri v2：体积、启动、IPC 选型；按信号深入权限/命令/窗口/插件/移动端/迁移
-/rust-skills:rust seaorm [target]            # SeaORM 2.x：Entity Loader 策略/内存六杠杆/泄漏分诊、ActiveValue/NotSet、嵌套 save、upsert、迁移原子性
-/rust-skills:rust sqlx [target]              # SQLx 0.8/0.9：池、query!、sqlx.toml、事务 Executor、row/领域分界
-/rust-skills:rust cli [target]               # clap 4.6 CLI：derive、子命令、env、退出码、补全；解析只在 bin
+/rust-skills:rust axum [target]                  # axum 0.8 服务：状态、边界防护、流式、超时；按信号深入路由/提取器/中间件/鉴权/实时/测试/迁移
+/rust-skills:rust tauri [target]                 # Tauri v2：体积、启动、IPC 选型；按信号深入权限/命令/窗口/插件/移动端/迁移
+/rust-skills:rust seaorm [target]                # SeaORM 2.x：Entity Loader 策略/内存六杠杆/泄漏分诊、ActiveValue/NotSet、嵌套 save、upsert、迁移原子性
+/rust-skills:rust sqlx [target]                  # SQLx 0.8/0.9：池、query!、sqlx.toml、事务 Executor、row/领域分界
+/rust-skills:rust cli [target]                   # clap 4.6 CLI：derive、子命令、env、退出码、补全；解析只在 bin
 
 #### 交付
-/rust-skills:rust bench <target>             # 性能纪律：高层 SQL/HTTP/锁先于火焰图；同机前后对比；测→看 self→改一处→墙钟
-/rust-skills:rust ship [target]              # 发布工程：容器产线 / 桌面签名 + 公证 + updater
-/rust-skills:rust xplat [target]             # 跨平台一致性：平台边界、CI 矩阵、差异账本
+/rust-skills:rust bench <target>                 # 性能纪律：高层 SQL/HTTP/锁先于火焰图；同机前后对比；测→看 self→改一处→墙钟
+/rust-skills:rust ship [target]                  # 发布工程：容器产线 / 桌面签名 + 公证 + updater
+/rust-skills:rust xplat [target]                 # 跨平台一致性：平台边界、CI 矩阵、差异账本
 
 #### 治理
-/rust-skills:rust docs [target]              # 治理文档集合：首页/权威源/生命周期/链接，默认只读
-/rust-skills:rust capture [lesson]           # 把踩坑蒸馏进项目 outbox，人工确认后提升为规则
+/rust-skills:rust docs [target]                  # 治理文档集合：首页/权威源/生命周期/链接，默认只读
+/rust-skills:rust capture [lesson]               # 把踩坑蒸馏进项目 outbox，人工确认后提升为规则
 <!-- commands-table:end -->
 
 ## 输出长什么样

@@ -1,0 +1,27 @@
+{
+  "id": "101",
+  "title": "workspace bin+lib+sqlx 保留活栈，无 HTTP 不加 axum",
+  "commands": ["batteries"],
+  "fixture": "Cargo.toml",
+  "fixture_needles": [
+    "sqlx",
+    "postgres",
+    "[[bin]]",
+    "[lib]"
+  ],
+  "skill_needles": {
+    "skills/rust/reference/batteries.md": [
+      "BAT-03",
+      "BAT-05",
+      "BAT-06",
+      "保留 `sqlx`",
+      "不加** axum",
+      "inspect-only"
+    ],
+    "tests/pressure-scenarios.md": [
+      "### 场景 101",
+      "sqlx",
+      "axum"
+    ]
+  }
+}

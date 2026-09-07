@@ -1,0 +1,26 @@
+[workspace]
+members = ["crates/core", "crates/shop"]
+resolver = "2"
+
+[workspace.package]
+edition = "2024"
+
+# Fixture shape: bin + lib + live sqlx. Member manifests are inlined
+# below so the disk contract is one file; the playbook must retain sqlx
+# and not invent a second ORM/runtime or add axum without an HTTP signal.
+
+[package]
+name = "shop-workspace-hint"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+name = "core"
+path = "src/lib.rs"
+
+[[bin]]
+name = "shop"
+path = "src/main.rs"
+
+[dependencies]
+sqlx = { version = "0.8", features = ["runtime-tokio-rustls", "postgres"] }

@@ -4,19 +4,21 @@
 
 ## 架构
 
-- **SKILL.md 只做调度**：从用户动词判定读写授权（见 SKILL 的「写入边界」，按命令分类一条规则），再按需加载一个 playbook 和领域覆盖层。普通实现（未点名子命令）默认加载 `reference/craft.md`；Cargo 项目里的 Rust 轮次先加载 `reference/engage.md` 主动介入。二者与 `routing.md` 一样不进命令表。
+- **SKILL.md 只做调度**：从用户动词判定读写授权（见 SKILL 的「写入边界」，按命令分类一条规则），再按需加载一个 playbook 和领域覆盖层。普通实现（未点名子命令）默认加载 `reference/craft.md`；Cargo 项目里的 Rust 轮次先加载 `reference/engage.md` 主动介入（轻量纠正：一份 ProjectSnapshot、一件主动作）。二者与 `routing.md` 一样不进命令表。
+- **绿场旅程**：`init` → `shape` → `document` → `doctor` → `gate` → `stack` → `batteries` → `craft`。功能/修复轮次不按旅程抢主动作。`doctor` 只发现/分类；`document` 只投影画像；`init` 只引导声明文件且不自动串联；`gate` 是门禁/CI，不是 `cargo add`。
+- **stack vs batteries**：`stack` 做技术选型（ST-*）。`batteries` 按 crate 图 / Facets 减去活栈，给出最小 curated kit（BAT-01..06）。两者都问时先 stack，batteries 只旁注。
 - **一个画像投影器**：`document` 独占 RUST.md 画像投影；`init` 修改基线后复用它。投影节从 post-state 重算，其他命令的稳定键账本合并保留。
 - **画像与文档分权**：`document` 管机器可重算的 RUST.md；`docs` 管人类文档集合的首页、权威源、生命周期和入链，不替 ADR 作决定。
 - **状态在项目里，不在技能安装缓存里**：`init`/`document` 在项目根维护 `RUST.md`；`capture` 默认写项目内 `.rust-skills/capture-outbox.md`。已安装插件目录视为只读、可替换的运行时资源。
 - **适用性先于编号**：每条发现都要给规则前提、代码证据和可观察后果；项目约定或反证可推翻 SHOULD。
 - **正交画像**：每个 crate 分开记录 `artifact=lib|service|cli|desktop` 与 `maturity=prototype|production`，不拿仓库级标签覆盖所有成员。
-- **框架深入子 playbook**：`reference/axum/`、`reference/tauri/` 与 `reference/seaorm/` 存放按信号加载的深入材料。owner `reference/axum.md` / `tauri.md` / `seaorm.md` 独占 AX/TA/SO 编号，写成薄索引（门条款保留短说明，其余一句话 + 深入表），子文件只能括号引用编号，不得定义。一致性脚本校验子目录的 owner 存在、每个子文件有 `目的：`、被 owner 入链、规则引用合法。新增子文件只需在 owner 表里加一行；新增编号只在 owner 追加并保持连续。SKILL 本轮预算：1 个命令 owner + 至多 2 个子 playbook + 至多 3 个 `rules/<domain>.md`，禁止整目录读 `reference/axum|tauri|seaorm|bench|slim/`。出处（已蒸馏完毕，源包不再随仓保留，需要复核时重新 clone）：`https://github.com/Impertio-Studio/Axum-Claude-Skill-Package` @ f5b0cd4、`https://github.com/full-stack-skills/tauri-skills` @ 17c7356、`https://github.com/rust-unofficial/awesome-rust` @ 2b114844ad5218692cdce4a3afe36624271bac5a（只蒸馏为 `stack` 选型政策，禁止把 README 分类/条目镜像进仓）。
+- **框架深入子 playbook**：`reference/axum/`、`reference/tauri/` 与 `reference/seaorm/` 存放按信号加载的深入材料。owner `reference/axum.md` / `tauri.md` / `seaorm.md` 独占 AX/TA/SO 编号，写成薄索引（门条款保留短说明，其余一句话 + 深入表），子文件只能括号引用编号，不得定义。一致性脚本校验子目录的 owner 存在、每个子文件有 `目的：`、被 owner 入链、规则引用合法。新增子文件只需在 owner 表里加一行；新增编号只在 owner 追加并保持连续。SKILL 本轮预算：1 个命令 owner + 至多 2 个子 playbook + 至多 3 个 `rules/<domain>.md`，禁止整目录读 `reference/axum|tauri|seaorm|bench|slim|batteries/`。`batteries` 的产物文件在 `reference/batteries/`，BAT 编号只在 owner 定义。出处（已蒸馏完毕，源包不再随仓保留，需要复核时重新 clone）：`https://github.com/Impertio-Studio/Axum-Claude-Skill-Package` @ f5b0cd4、`https://github.com/full-stack-skills/tauri-skills` @ 17c7356、`https://github.com/rust-unofficial/awesome-rust` @ 2b114844ad5218692cdce4a3afe36624271bac5a（只蒸馏为 `stack` 选型政策，禁止把 README 分类/条目镜像进仓）。
 - **doctor 自反**：库自己也是软件——编号一致性、命令表↔文件对应、写入边界分类、场景覆盖、**每个命令的磁盘 fixture**、**version floor** 都有体检。一致性脚本必须在 `LC_ALL=C` 下也能跑（UTF-8 场景标题含全角括号）；优先本机/CI 的 `rg`（ripgrep），`rg` 垫片不得把缺文件吞成空匹配。有磁盘 fixture 的场景由 `scripts/eval-fixtures.py` 读 `tests/fixtures/scene-*/contract.json` 做机械契约，不是 LLM 会话替代品。`scripts/check-floor.py` 钉死 axum/tauri/sqlx/sea-orm 现行线和 edition/MSRV；`--fetch` 才打 crates.io。
 - **命令级 swarm**：`kernel/swarm.md` 是编排表不是命令。多文件探索可并行只读车道，合并进同一份 ProjectSnapshot。`craft`/`triage`/`shape`/`capture`/`init` 与火焰图改帧循环禁止扇出。子 agent 不写文件。
 
 ## 命令表单一事实源
 
-`scripts/command-metadata.json` 是命令的用户面事实（分类/一句话/参数提示/中英触发词）单一来源；`scripts/gen-command-tables.py` 生成 SKILL.md 路由表与 README 命令速查。新增/改名命令：改 metadata + reference + 压力场景 + 磁盘 fixture，跑 `./scripts/gen-command-tables.py` 与 `./scripts/check-consistency.sh`。
+`scripts/command-metadata.json` 是命令的用户面事实（分类/一句话/参数提示/中英触发词）单一来源；可选字段 `auth` / `owner` / `aliases` / `apply_gate` 供 inspect 类命令声明写入门。`scripts/gen-command-tables.py` 生成 SKILL.md 路由表与 README 命令速查。新增/改名命令：改 metadata + reference + 压力场景 + 磁盘 fixture，跑 `./scripts/gen-command-tables.py` 与 `./scripts/check-consistency.sh`。
 
 ## 规则治理
 

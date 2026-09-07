@@ -250,9 +250,13 @@ def reachable_mods(entry: Path) -> set[Path]:
             text = path.read_text(encoding="utf-8")
         except OSError:
             continue
+        # `mod bar` in foo.rs lives at foo/bar.rs, not sibling bar.rs.
+        child_root = path.parent if path.name == "mod.rs" else path.parent / path.stem
         for name in MOD_RE.findall(text):
             stack.append(path.parent / f"{name}.rs")
             stack.append(path.parent / name / "mod.rs")
+            stack.append(child_root / f"{name}.rs")
+            stack.append(child_root / name / "mod.rs")
     return seen
 
 

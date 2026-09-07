@@ -1,6 +1,6 @@
 # /rust-skills:rust init — 把规范落进项目
 
-目的：在保留有效项目约定的前提下，把当前工程调和到最小 Rust 基线，再用 [document.md](document.md) 投影 post-state。规则提供候选，不授权为统一外观迁移目录、引入工具或改发布策略。
+目的：在保留有效项目约定的前提下，把当前工程调和到最小 Rust 基线，再用 [document.md](document.md) 投影 post-state。**只引导本命令声明的文件**（默认根/成员 Cargo.toml 与 RUST.md；toolchain/CI 须逐项展示）。不自动串联 `document`/`doctor`/`gate`/`stack`/`batteries` 当第二份命令输出；缺 tracing 只在下一步**建议** `stack`，不 `cargo add`。规则提供候选，不授权为统一外观迁移目录、引入工具或改发布策略。
 
 编排：禁止 swarm。基线 diff 顺序落盘。
 

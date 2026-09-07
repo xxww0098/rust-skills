@@ -127,7 +127,7 @@ fi
 
 
 
-for pb in review document doctor crate; do
+for pb in review document doctor crate stack batteries; do
   rg -q 'ProjectSnapshot' "$reference_dir/$pb.md" || fail "$pb.md does not consume ProjectSnapshot"
 done
 
@@ -327,7 +327,7 @@ if not match:
 section = match.group(1)
 
 readonly = ("review", "audit", "triage", "doctor")
-advice = ("shape", "crate", "stack")
+advice = ("shape", "crate", "stack", "batteries")
 inspect_first = (
     "harden", "modernize", "distill", "slim", "gate", "bench",
     "concurrency", "process", "async", "serde", "obs", "name", "axum", "tauri",

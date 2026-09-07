@@ -98,6 +98,38 @@
         "reqwest vs ureq"
       ]
     },
+    "batteries": {
+      "category": "搭建与设计",
+      "summary": "按项目图 / Facets 组装最小 crate 工具箱；默认只读，改/--apply 才加缺失层",
+      "argumentHint": "[target] [--apply]",
+      "auth": "inspect",
+      "owner": "reference/batteries.md",
+      "aliases": ["battery"],
+      "apply_gate": true,
+      "triggers": [
+        "补最小依赖",
+        "按产物组装 crate",
+        "crate 工具箱",
+        "batteries",
+        "缺哪些依赖"
+      ],
+      "triggers_en": [
+        "crate kit",
+        "batteries",
+        "battery",
+        "minimal crate set",
+        "assemble crate kit"
+      ],
+      "triggers_short": [
+        "补最小依赖",
+        "crate 工具箱",
+        "batteries"
+      ],
+      "triggers_short_en": [
+        "crate kit",
+        "batteries"
+      ]
+    },
     "review": {
       "category": "评审",
       "summary": "按分级规则评审当前改动或指定路径，只读出问题清单",
