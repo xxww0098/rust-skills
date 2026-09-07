@@ -4,6 +4,15 @@
 
 - 安装入口改为 [SkillStar](https://github.com/xxww0098/SkillStar)：`skillstar add xxww0098/rust-skills`。安装单元是某一个 `.<harness>/` 层（或其中的 `skills/rust`），不是整仓；仓库根不再放 `SKILL.md` 垫片。
 
+## 0.0.70 — 2026-09-07
+
+- `engage` 改成基于 ProjectSnapshot 的轻量规范入口：一轮一份快照、一件主动作 + 至多一句旁注；功能/修复先 craft/triage，不连开 document+review+init。edition 2024 + resolver 2 仍不旁注。
+- 新命令 `/batteries`（alias `battery`）：按项目图 / Facets 组装最小 crate 工具箱（BAT-01..06）。默认 inspect-only，「改」/`--apply` 才加缺失层。不与 `slim`/`distill` 混：slim 管编译慢/磁盘/孤儿文件，distill 管过度抽象。
+- `stack` 仍管技术选型（ST-*）；kit 组装走 `batteries`。两者都问 → 先 stack，batteries 旁注。只问依赖 → batteries。项目坏了 → 先 triage/doctor。
+- 命令边界写清：`doctor` 发现/分类只读；`document` 只管画像；`init` 只引导声明文件且不自动串联；`gate` 是门禁/CI，不是 `cargo add`。
+- 场景 101（workspace 保留 sqlx）、102（绿场 HTTP+Postgres 无全家桶）、103（engage 功能轮次不抢卫生）。
+- `inspect_project.py`：`foo.rs` 里的 `mod bar` 会收到 `foo/bar.rs`（混合模块布局），不再误报孤儿。
+
 ## 0.0.68 — 2026-08-31
 
 - 安装单元改为按 harness 落地：`.<harness>/`（或其中的 `skills/rust`）是独立副本，不再是指向仓内 `../../skills/rust` 的相对 symlink。SkillStar / 同类 Git 安装器取 `.cursor/` 或 `.dsh/` 时不会把 `tests/`、`scripts/`、`docs/` 和其它 harness 树当技能正文。

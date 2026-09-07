@@ -34,6 +34,9 @@
 - 上次 `capture` 距今超过两周而会话里明显有踩坑痕迹 → 提醒 `capture`
 - docs 存在但无首页，或有竞争权威源、失效证据/链接、未表达的 supersession → 推荐 `docs`
 - 用户问「技术栈 / 用什么框架 / 选 axum 还是 actix / 该上 sqlx 还是 sea-orm」→ `stack`（默认只出表；「改」才加缺失层）
+- 用户问「缺哪些依赖 / 按图组装 crate / crate 工具箱 / batteries」→ `batteries`（inspect-only；「改」才加缺失 crate）。只问依赖、不问框架对比 → 不要先走 `stack`
+- 同一句既问「用什么框架」又问「该装哪些 crate」→ 先推荐 `stack`，`batteries` 只做一句旁注
+- 项目编不过 / 画像与快照明显对不上 → 先 `triage` 或 `doctor`，不要先 `stack`/`batteries` 加依赖
 - 都不命中 → 按类别列全表，用一句话问用户现在关心什么。普通「改/实现」不要推菜单，让用户直接干，技能自己走 craft。
 - 中英触发等价：路由表「触发」列含中文「」短语与英文短语，任一命中即可。改造四条互斥见 SKILL「路由」节：编译慢 → slim/cargo；磁盘/过期文件 → slim/hygiene；升 edition/过时 API → modernize；上生产加固 → harden；旧代码删仪式 → distill。
 

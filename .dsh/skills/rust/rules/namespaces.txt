@@ -26,6 +26,7 @@ SE local reference/serde.md
 SH local reference/ship.md
 SO local reference/seaorm.md
 ST local reference/stack.md
+BAT local reference/batteries.md
 SX local reference/sqlx.md
 TA local reference/tauri.md
 TR local reference/obs.md

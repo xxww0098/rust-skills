@@ -25,6 +25,7 @@
 | `doctor` | 技能仓一致性脚本 · 快照 vs RUST.md · toolchain/edition | 修 DRIFT |
 | `crate` | 赞成（边界/复用） · 反对（过早拆） · 依赖方向 | 改 workspace |
 | `stack` | 产物/Facets · 活栈 · 死亡线 | `cargo add` |
+| `batteries` | 产物/Facets · 活栈 · 冲突/排除 | `cargo add`；打开全部 `batteries/` |
 | `audit` | 按域：unsafe 清单 · deps/deny · tests 孤儿 · async 锁 | 多域混成一张表先扇出再分域输出 |
 | `harden` | 错误路径 · 入站边界 · 观测/停机 | 扩到旁路 crate |
 | `slim` | `slim/cargo` 指纹 · `slim/test` 证明集 · `slim/tooling` owner · `slim/hygiene` 四层 | 各跑一遍 metadata；清共享 target；把死码当文件删 |

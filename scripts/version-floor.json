@@ -16,7 +16,7 @@
       "pinned": "0.8.9",
       "pinned_date": "2026-04",
       "crate_msrv": "1.75",
-      "files": ["skills/rust/reference/axum.md"],
+      "files": ["skills/rust/reference/axum.md", "skills/rust/reference/batteries.md"],
       "must_contain": ["0.8.x", "0.8.9", "crates.io", "2026-04"]
     },
     {
@@ -35,7 +35,7 @@
       "pinned_date": "2026-05",
       "crate_msrv": "1.94",
       "note": "0.8 remains in range; do not bump workspace MSRV to 1.94 just to take 0.9",
-      "files": ["skills/rust/reference/sqlx.md"],
+      "files": ["skills/rust/reference/sqlx.md", "skills/rust/reference/batteries.md"],
       "must_contain": ["0.9.0", "1.94", "0.8"]
     },
     {
@@ -59,7 +59,7 @@
       "stable_line": "1.53",
       "pinned": "1.53.1",
       "pinned_date": "2026-08",
-      "files": ["skills/rust/reference/stack.md"],
+      "files": ["skills/rust/reference/stack.md", "skills/rust/reference/batteries.md"],
       "must_contain": ["1.53.1", "1.53"]
     },
     {
@@ -67,7 +67,7 @@
       "stable_line": "0.1",
       "pinned": "0.1.44",
       "pinned_date": "2025-12",
-      "files": ["skills/rust/reference/obs.md"],
+      "files": ["skills/rust/reference/obs.md", "skills/rust/reference/batteries.md"],
       "must_contain": ["0.1.44", "crates.io"]
     },
     {
@@ -83,7 +83,7 @@
       "stable_line": "1.0",
       "pinned": "1.0.229",
       "pinned_date": "2026-08",
-      "files": ["skills/rust/reference/serde.md"],
+      "files": ["skills/rust/reference/serde.md", "skills/rust/reference/batteries.md"],
       "must_contain": ["1.0.x", "1.0.229", "crates.io"]
     },
     {
@@ -91,7 +91,7 @@
       "stable_line": "1.0",
       "pinned": "1.0.151",
       "pinned_date": "2026-08",
-      "files": ["skills/rust/reference/serde.md"],
+      "files": ["skills/rust/reference/serde.md", "skills/rust/reference/batteries.md"],
       "must_contain": ["1.0.151", "crates.io"]
     },
     {
@@ -100,7 +100,7 @@
       "pinned": "0.6.11",
       "pinned_date": "2026-08",
       "note": "axum 0.8.9 requires tower-http ^0.6.8; do not pair 0.7 with axum 0.8",
-      "files": ["skills/rust/reference/stack.md"],
+      "files": ["skills/rust/reference/stack.md", "skills/rust/reference/batteries.md"],
       "must_contain": ["0.6.11", "0.6.x"]
     },
     {

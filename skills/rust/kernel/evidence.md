@@ -1,6 +1,6 @@
 # kernel/evidence — 只决定什么算事实
 
-本轮核心命令（`review` `document` `doctor` `crate` `distill` `harden`）**只消费一份** ProjectSnapshot。禁止各 playbook 再扫一遍 workspace 另画 crate 图。
+本轮核心命令（`review` `document` `doctor` `crate` `distill` `harden` `stack` `batteries`）**只消费一份** ProjectSnapshot。禁止各 playbook 再扫一遍 workspace 另画 crate 图。
 
 `RUST.md` 是报告与账本，**不是**事实源。事实源永远是当前仓库。技能仓的 version-floor 是生成默认值，压不过用户 lock / `rust-version` / 发布承诺。
 
@@ -39,6 +39,8 @@ signals[].kind / path / provenance / confidence
 | `crate` | 用 graphs + 调用方评估边界，不另画图 |
 | `distill` | 在冻结范围内减复杂度，并声明改前/改后用同一快照字段比较 |
 | `harden` | 只加外部边界/错误/生命周期覆盖，不重扫结构 |
+| `stack` | 用 Facets + 活栈做技术选型，不另画图 |
+| `batteries` | 用同一张图减去活栈，组装最小 kit，不另画图 |
 
 ## RUST.md 投影（仅 document / init 复用）
 

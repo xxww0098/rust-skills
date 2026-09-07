@@ -41,3 +41,13 @@
 - 期望：四层表（target / CARGO_HOME / 未入库垃圾 / 入库孤儿）；拒绝 `rm -rf ~/.cargo`；`cargo clean` 不是加速（HY-03）。
 - 失败：立刻清缓存并宣称更快，或把死函数当文件删。
 - 场景 88。
+
+## 5. 按图组装最小 kit → batteries，不写 Cargo.toml
+
+```text
+/rust-skills:rust batteries 这是 HTTP API + Postgres
+```
+
+- 期望：产物 http-service；必装 axum+tokio+serde+serde_json+sqlx(postgres)；可选 tower-http/tracing 须有触发；无 ORM/Redis/OpenAPI/鉴权/容器全家桶；未改文件。
+- 失败：倒出时尚全栈，或裸调用 `cargo add`。
+- 场景 102。已有 sqlx 的 workspace 见场景 101（保留 sqlx，无 HTTP 信号不加 axum）。
