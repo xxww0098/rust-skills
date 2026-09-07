@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- README 改成安装优先的用户入口：SkillStar → 60 秒提示 → 写授权 → engage → 四条旅程 → 压缩路由；长用例与 harness/插件对照表移到 [examples/first-prompts.md](examples/first-prompts.md) / [docs/DESIGN.md](docs/DESIGN.md)。命令表仍由 `gen-command-tables.py` 生成。
 - 安装入口改为 [SkillStar](https://github.com/xxww0098/SkillStar)：`skillstar add xxww0098/rust-skills`。安装单元是某一个 `.<harness>/` 层（或其中的 `skills/rust`），不是整仓；仓库根不再放 `SKILL.md` 垫片。
 
 ## 0.0.70 — 2026-09-07
