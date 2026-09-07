@@ -1,281 +1,145 @@
 # rust-skills — Rust 工程技能包
 
-`/rust-skills:rust <命令> [target]`：一个入口、31 条命令。同一份技能源同步到支持的全部 harness。
+`/rust-skills:rust <cmd> [target]`：一个入口，31 条命令；多数 Rust 工作直接说人话即可。
 
-> 立场：先守用户边界和项目事实，再追求正确、精简、可验证。规则是候选约束，不是把现有项目改造成统一模板的许可。**只推崇 edition 2024**（MSRV ≥ 1.85）。新仓 resolver 3；成熟 2024 仓钉 resolver 2 不迁。2018/2021 当迁移债务。
+> **立场**：先守用户边界和项目事实，再追求正确、精简、可验证。新项目默认 edition 2024（MSRV ≥ 1.85）；成熟的 edition 2024 + resolver 2 项目不要为了“更新”迁到 resolver 3。
 
-## 先记住五件事
+## 安装
 
-1. **多数时候不必选命令。** 人在 Cargo 项目里改代码或贴 rustc，技能应主动走 craft / triage。命令用来要一份确定格式的报告或授权写入。
-2. **裸命令默认不改你的代码。** 评审永远只读。改造类要 `--apply` 或说「改」才动。
-3. **旧代码优化用 `distill`，不要等 `/optimize` 或 `/split`。** 拆不拆 crate 用 `crate`，由你拍板。
-4. **大仓探索才开 swarm。** 多文件命令按 [kernel/swarm.md](skills/rust/kernel/swarm.md) 并行只读取证，合并进一份 ProjectSnapshot。`craft` / `triage` / 火焰图改帧循环禁止扇出。
-5. **按信号加载。** SKILL 只路由。框架/bench/slim 先读 owner 清单，子 playbook 一次最多两份，禁止整目录读。
+推荐用 [SkillStar](https://github.com/xxww0098/SkillStar)：
 
-不确定用哪条：直接说人话，或敲 `/rust-skills:rust` 看推荐。首轮提示见 [examples/first-prompts.md](examples/first-prompts.md)。
+```bash
+skillstar add xxww0098/rust-skills
+```
 
-机械检查是 **E1/E2**（结构 + 磁盘 fixture），不是 E3 LLM 盲测：`./scripts/check-consistency.sh`。不得把绿灯写成「行为已验证」。
+安装单元是一个 `.<harness>/` 层，或该层里的 `skills/rust`；**不是整个仓库**。不要把 `tests/`、`scripts/`、`docs/` 和其它 harness 投影当成技能正文一起安装。
 
-## 写授权：一条规则
+技能正文的 SSOT 是 [`skills/rust/`](skills/rust/)。已有 clone、需要手动接入 harness 时，链接 `skills/rust/`，不要链接仓库根。按 harness / 插件安装细节见 [docs/DESIGN.md](docs/DESIGN.md)。
 
-- **评审类**（`review` `audit` `triage` `doctor`）永远只读，只出报告。
-- **改造 / 语言语义 / 框架 / 交付类**（`harden` `modernize` `distill` `slim` `gate` `bench` `concurrency` `process` `async` `serde` `obs` `axum` `tauri` `seaorm` `sqlx` `cli` `ship` `xplat`）裸调用只体检、列计划；带 `--apply` 或明确说「改」才动代码。
-- **搭建 / 治理类**（`init` `document` `capture`）只写自己声明的文件：RUST.md 或项目 outbox。
-- `shape`、`crate` 默认只出建议。`crate` 你回复「拆」之后才改 workspace。`stack` 管选型，`batteries` 按图组装最小 kit；回复「改」后只给缺失层加依赖，不删活栈。
-- `--record` 只额外写 RUST.md 的 managed 块，不改业务代码。
+## 60 秒开始
 
----
+第一次进老仓库：
 
-## 用例：你怎么说，它怎么做
+```text
+先读这个 Rust workspace 的实际结构和约束，生成项目画像；不要改业务代码。
+```
 
-每条都是可复制的。把路径换成你的模块即可。
+要实现功能：
 
-### 1. 刚进一个老仓库
+```text
+给 invoices 加按状态筛选。先遵守现有边界和错误模型，再实现并补最小必要测试。
+```
+
+遇到编译错误：
+
+```text
+error[E0382]: borrow of moved value
+先解释根因，再给最小正确修复；不要为了过编译器直接 clone。
+```
+
+更多可复制提示词见 [`examples/first-prompts.md`](examples/first-prompts.md)。
+
+## 写授权：只记一条规则
+
+**没有明确写授权，就先 inspect，不擅自改。**
+
+- `review` / `audit` / `triage` / `doctor` 永远只读。
+- 改造 / 语言语义 / 框架 / 交付类默认只体检；说「改」或带 `--apply` 才写代码。
+- 搭建 / 治理类只写命令声明的文件（如 `RUST.md`、项目 outbox），不借机改业务代码。
+- `shape` / `crate` / `stack` / `batteries` 先给建议再过 apply gate：`crate` 要明确「拆」；`stack` / `batteries` 要「改」或 `--apply`。
+- `--record` 只额外写 `RUST.md` 的 managed 块，不等于业务写授权。
+
+## Engage：通常不用先挑命令
+
+在 Cargo 项目里直接描述任务即可。编码请求自动走 **craft**；贴 rustc / borrow-checker 错误自动走 **triage**。
+
+每一轮只选 **一个 primary**，最多补 **一个 side-note**。不要因为缺画像或基线，就把 `document + review + init` 串成一轮全做。
+
+裸 `/rust-skills:rust` 只推荐接下来 2–3 步，不自动执行。
+
+## Top journeys
+
+### 1. 老仓库：先建立事实，不先重构
 
 ```text
 /rust-skills:rust document
-```
-
-生成 / 刷新根目录 `RUST.md`（crate 图、facets、基线）。其余命令靠它提速。不改业务代码。
-
-还没基线、lint 很乱时：
-
-```text
-/rust-skills:rust init
-```
-
-补 edition 2024、workspace lint 等最小工程差。**已是 2024 且 resolver 2 不会被改成 3。** 会先展示再落盘。
-
-过一阵画像是否过期：
-
-```text
 /rust-skills:rust doctor
+/rust-skills:rust review
 ```
 
-只读。edition 还是 2021 会标 DRIFT；2024 + resolver 2 + 只有 `rust-toolchain.toml` 是 OK。
+`document` 生成/刷新 `RUST.md`；`doctor` 看漂移；`review` 看当前改动或指定路径。三者都不授权顺手改业务代码。
 
-绿场（空仓 / 刚 init）常见顺序，**不要一次跑完**：
+### 2. 新功能：先说需求；需要设计时再 shape
+
+多数时候直接说：
 
 ```text
-init → shape → document → doctor → gate → stack → batteries → craft
+给 crates/app/src/invoice.rs 加按状态筛选，沿用现有错误类型和测试风格。
 ```
 
-`stack` 决定用什么框架。`batteries` 按 crate 图给出最小依赖清单，默认不写 `Cargo.toml`：
-
-```text
-/rust-skills:rust batteries 这是 HTTP API + Postgres
-```
-
-回复「改」或 `--apply` 才按已展示 kit 加缺失 crate。已有 sqlx 不会再塞一套 ORM。
-
-### 2. 写功能（多数情况不用命令）
-
-直接说：
-
-```text
-给 invoices 加上按状态筛选，改 crates/app/src/invoice.rs
-```
-
-技能应走 craft：`&str` 而不是 `&String`，钱不用 `f64`，不为过编译器 `.clone()`。
-
-动手前想先定模型：
+需要先定模型：
 
 ```text
 /rust-skills:rust shape 发票按状态筛选
 ```
 
-只出一页设计（落点 / 类型 / 错误 / 并发），不写码。拿不准拆不拆库时它会让你去 `crate`，不会自己搬家。
+`shape` 只收敛落点、类型、错误和并发边界。拆不拆 crate 交给 `crate`；“文件长”不等于“该拆 crate”。
 
-### 3. 编译器报 E0382 / borrow checker
-
-贴报错即可，不必先选命令：
+### 3. 报错：贴 rustc，先 HOW → WHY → WHAT
 
 ```text
-交易系统报 E0382：audit.push(record); ledger.push(record);
-```
-
-或显式：
-
-```text
-/rust-skills:rust triage
 /rust-skills:rust triage error[E0382]: borrow of moved value
 ```
 
-合格输出是 HOW → WHY → WHAT，不会先丢 `record.clone()`。审计类不可变事实倾向 `Arc`。拼写 / 缺 import 一次修掉，不走三层。
+目标不是最快塞 `.clone()`，而是先判断 ownership 是否正确，再给最小修复。
 
-### 4. 改完想自查
-
-```text
-/rust-skills:rust review
-/rust-skills:rust review crates/app/src/invoice.rs
-/rust-skills:rust review --record
-```
-
-无 target = 当前 git 改动；给路径 = 看这个路径的完整内容。永远只读。`--record` 只往 RUST.md 记一条评审快照。回复「改」才按表修。
-
-单域挖深（仍只读）：
+### 4. 技术栈 + batteries：先选层，再补最小 kit
 
 ```text
-/rust-skills:rust audit unsafe
-/rust-skills:rust audit tests
-/rust-skills:rust audit deps
+/rust-skills:rust stack 这是一个 HTTP API + Postgres 服务
+/rust-skills:rust batteries 这是一个 HTTP API + Postgres 服务
 ```
 
-域：`unsafe` / `deps` / `tests` / `build` / `async` / `api` / `security`。
+`stack` = 技术选型（ST-*）；`batteries` = 按项目图 / Facets 组装最小 kit（BAT-*）。都先展示，不先改 `Cargo.toml`；不替换活栈。
 
-### 5. 优化一段旧代码（精简 + 结构，不擅拆 crate）
+绿场常见顺序（**不要一次全做**）：
 
 ```text
-/rust-skills:rust distill src/legacy.rs
-/rust-skills:rust distill src/legacy.rs --apply
+init → shape → document → doctor → gate → stack → batteries → craft
 ```
 
-必须点路径，不扫全仓。只读时列五遍候选：死码、塌层、去仪式、去无用分配、结构梯子（抽函数 / 拆 `mod`）。`--apply` 可改码、可拆 `mod`，**不会改 Cargo.toml**。值得独立成库时只会建议下一条。
+另外：`slim ≠ distill`。`slim` 管编译慢 / `target` / 过期文件；`distill` 管旧代码抽象、仪式、分配和模块结构。
 
-### 6. 这个模块要不要独立成 crate
+## 人话 → command
 
-```text
-/rust-skills:rust crate src/billing
-```
-
-三路对抗审查（赞成 / 反对 / 依赖方向），三选一：建议拆 / 建议留 / 证据不足。行数不是理由。你回复「拆」才按已展示映射改 workspace。
-
-不要用 `crate` 当「文件太长」的拆分器——那是 `distill` / craft。
-
-### 7. 能跑，但要上生产
-
-```text
-/rust-skills:rust harden crates/server
-/rust-skills:rust harden crates/server --apply
-```
-
-补错误路径、边界、可观测、停机。裸调用只体检。
-
-过时 API / 还在 2021：
-
-```text
-/rust-skills:rust modernize
-/rust-skills:rust modernize --apply
-```
-
-`lazy_static` → `OnceLock`，edition 2018/2021 → 2024（`cargo fix --edition`）。授权后才改。
-
-编译太慢（要有 timings，不猜）：
-
-```text
-/rust-skills:rust slim
-```
-
-先体检；拆 crate 仍要 WS-12 证据，不按行数拆。
-
-磁盘被 `target/` 和过期开发文件吃满（不是「代码太多」）：
-
-```text
-/rust-skills:rust slim
-```
-
-先出四层表：可再生 `target/`、Cargo 全局缓存、未入库的 `perf.data`/火焰图、入库却没人引用的孤儿 `.rs`。不要 `rm -rf ~/.cargo`，也不要用 `cargo clean` 当加速。说「清磁盘」才动构建缓存；说「删」才动源文件。活文件里的死函数走 `distill`。
-
-把门禁落成真检查：
-
-```text
-/rust-skills:rust gate
-/rust-skills:rust gate --apply
-```
-
-假绿桩不算覆盖。不覆盖你已有的 `.git/hooks`。
-
-### 8. 项目里已经在用这些框架
-
-有 Cargo 证据才加载，不要先猜栈：
-
-```text
-/rust-skills:rust axum crates/server
-/rust-skills:rust sqlx crates/storage
-/rust-skills:rust seaorm crates/storage
-/rust-skills:rust tauri crates/app
-```
-
-裸调用 = 体检（超时、池默认值、`query!` 离线、N+1…）。说「改」或 `--apply` 才动对应范围。
-
-深入问题走同一条命令，owner 会按你的信号只加载 1–2 个子 playbook（`reference/axum/`、`reference/tauri/`），不整目录读：
-
-```text
-/rust-skills:rust axum 这个 JWT extractor 升到 0.8 后编译不过
-/rust-skills:rust axum crates/server WebSocket 断线没人发现
-/rust-skills:rust tauri capabilities 里 fs scope 怎么收紧
-/rust-skills:rust tauri src-tauri 托盘左键在 mac 和 Windows 行为不一样
-```
-
-axum 子 playbook：scaffold / routing / extractors / handlers / middleware / realtime / auth / data / observability / testing / deploy / migrate。Tauri 子 playbook：setup / security / ipc / window / plugins / mobile / develop。
-
-通用深层问题：
-
-```text
-/rust-skills:rust async crates/server
-/rust-skills:rust process src/runner.rs
-/rust-skills:rust concurrency
-/rust-skills:rust serde crates/api
-```
-
-### 9. 发版、比性能、Windows 才坏
-
-```text
-/rust-skills:rust bench crates/core
-/rust-skills:rust ship
-/rust-skills:rust xplat
-```
-
-`bench` 必须有 target，要同机前后数据。`ship` / `xplat` 默认跟主产物（service / desktop），旁路工具 crate 不进范围。
-
-### 10. 踩坑记下来 / 整理 docs
-
-```text
-/rust-skills:rust capture 为过编译器 clone 把审计记录复制成两份
-/rust-skills:rust docs
-/rust-skills:rust docs --apply
-```
-
-`capture` 写入项目 `.rust-skills/capture-outbox.md`，不会直接改技能包。`docs` 默认只读。
-
----
-
-## 人话 → 命令（路由速查）
-
-| 你说 | 走 |
+| 你说 | 路由 |
 |---|---|
-| （贴 rustc /「报 E0382」） | 主动 triage，不必喊命令 |
-| 「改 / 实现 / 补测试」 | 主动 craft |
-| 「优化旧代码 / 这段太乱」+ 路径 | `distill` |
-| 「要不要拆 crate」+ 模块 | `crate` |
-| 「文件太长要拆吗」 | 写码中 → craft；旧文件 → `distill` |
+| 「实现 / 改这个功能 / 补测试」 | 自动 craft |
+| 贴 rustc / borrow-checker 错误 | 自动 triage |
+| 「先设计这个功能」 | `shape` |
 | 「帮我 review」 | `review` |
-| 「函数名 / crate 名 / get_xx / as_ 还是 into_」 | `name` |
-| 「鉴权 / WebSocket / 中间件次序 / 0.8 迁移」 | `axum`（自动深入子 playbook） |
-| 「capabilities / 插件 / 托盘 / 移动端 / v1 迁移」 | `tauri`（自动深入子 playbook） |
-| 「新项目 / 补基线」 | `init` |
-| 「先了解这个仓库」 | `document` |
-| 「用什么框架 / 选 axum 还是 actix」 | `stack` |
-| 「缺哪些依赖 / crate 工具箱」 | `batteries` |
-| 裸 `/rust-skills:rust` | 只推荐 2–3 步，不执行 |
+| 「单独深审 unsafe / deps / tests」 | `audit` |
+| 「优化这段旧代码」+ 路径 | `distill` |
+| 「要不要拆成 crate」 | `crate` |
+| 「编译太慢 / target 太大」 | `slim` |
+| 「用什么框架 / 技术栈」 | `stack` |
+| 「还缺哪些 crate」 | `batteries` |
+| 「上生产前加固」 | `harden` |
+| 「axum / Tauri / SeaORM / SQLx / clap」 | 对应 framework command |
 
----
+## Command categories
 
-## 七个分类
-
-| 分类 | 什么时候用它 |
+| Category | Commands |
 |---|---|
-| 搭建与设计 | 进项目、动手前：`init` 搭基线、`document` 生成画像、`shape` 先设计、`crate` 决定拆不拆、`stack` 选型、`batteries` 最小 kit |
-| 评审 | 只想看有没有问题，永远只读 |
-| 改造 | 要动手改（加固/减肥/现代化/精简/门禁），裸调用只体检 |
-| 语言语义 | 任何 Rust 项目的通用深层问题：并发、多进程、异步、序列化、函数/crate 命名 |
-| 框架 | 项目用了对应框架才有证据加载：axum / Tauri / SeaORM / SQLx |
-| 交付 | 测性能（bench）、发版（ship）、跨平台一致性（xplat） |
-| 治理 | 文档集合治理（docs）、踩坑沉淀（capture） |
+| 搭建与设计 | `init` `shape` `crate` `document` `stack` `batteries` |
+| 评审 | `review` `audit` `triage` `doctor` |
+| 改造 | `harden` `slim` `modernize` `distill` `gate` |
+| 语言语义 | `concurrency` `process` `async` `serde` `obs` `name` |
+| 框架 | `axum` `tauri` `seaorm` `sqlx` `cli` |
+| 交付 | `bench` `ship` `xplat` |
+| 治理 | `docs` `capture` |
 
-## 命令速查
-
-命令表由 `scripts/command-metadata.json` 生成，勿手改；改源后跑 `./scripts/gen-command-tables.py`。
+完整命令表由 `scripts/command-metadata.json` 生成。下面两个 markers 是 generator contract，**必须保留**；改 metadata 后跑 `./scripts/gen-command-tables.py`，不要手工维护生成区。
 
 <!-- commands-table:start -->
 #### 搭建与设计
@@ -324,100 +188,18 @@ axum 子 playbook：scaffold / routing / extractors / handlers / middleware / re
 /rust-skills:rust capture [lesson]               # 把踩坑蒸馏进项目 outbox，人工确认后提升为规则
 <!-- commands-table:end -->
 
-## 输出长什么样
+## 输出契约
 
-所有命令同一骨架：一句话结论 → 范围行 → 明细（规则号只在这里）→ 验证 → 置信度 → 可复制的下一步。
+命令输出统一：**结论 → scope → findings → verification → confidence → next step**。规则号留在明细里。
 
-> **结论**：这次改动没有必须修的 M 级问题；2 处建议顺手处理。
-> 范围：\<项目根\> · 当前改动 · 12 个文件 · 只读
-> | 位置 | 规则号 | 级别 | 问题 | 修复建议 |
-> |---|---|---|---|---|
-> | src/parser.rs:42 | ERR-03 | S | 生产路径裸 unwrap | 换成错误枚举传播 |
-> 验证：未跑构建（只读评审）；置信度中。
-> 下一步：`/rust-skills:rust review src/parser.rs` 深看单文件；回复「改」让我按表修复。
-> 未改动任何文件。
+`check-consistency.sh` 绿灯只说明 **E1/E2**（结构 + 磁盘 fixture）通过，**不等于** behavioral verification / E3。
 
----
+## 深入阅读
 
-## 安装
+- [examples/first-prompts.md](examples/first-prompts.md)：更多可复制入口
+- [docs/DESIGN.md](docs/DESIGN.md)：架构、规则治理、harness sync、maintainer 细节
+- [CHANGELOG.md](CHANGELOG.md)
+- [skills/rust/](skills/rust/)：技能正文 SSOT
+- [SkillStar](https://github.com/xxww0098/SkillStar)
 
-推荐用 [SkillStar](https://github.com/xxww0098/SkillStar) 安装并分发。GitHub 仓库是源；**安装单元是某一个 `.<harness>/` 层**（或它里面的 `skills/rust`），不是整仓。SkillStar 会把**这一层**部署到你启用的 Agent，不要把 `tests/`、`scripts/`、`docs/` 和其它 harness 树当技能正文一起拉进来。
-
-技能正文只维护 `skills/rust/`。各 harness 投影由 `./scripts/sync-providers.py` 生成，是**独立副本**（单独取出 `.cursor/` 或 `.dsh/` 时 `skills/rust/SKILL.md` 仍可读），不要手改。仓库根不再放 `SKILL.md`：一层扫描器请装对应 harness 层，不要把 clone 根当技能目录。
-
-### SkillStar（推荐）
-
-```bash
-skillstar add xxww0098/rust-skills
-skillstar add xxww0098/rust-skills --global                  # 用户级 Agent 目录
-skillstar add xxww0098/rust-skills --skill rust --agent claude-code,codex
-```
-
-`install` 与 `add` 等价。未加 `-y` 时会按需选择 Agent 和 Project/Global。没有 SkillStar 时用下面的 harness 目录、插件或手动链接。
-
-### 按 harness 落地（SkillStar / 同类 Git 安装器）
-
-选你的 harness，把对应目录当作 `source_folder`。SkillStar 会从 `.<harness>/` 装；本包已经是合法目标。
-
-| Harness | `source_folder` | 技能正文 |
-|---|---|---|
-| Cursor | `.cursor` | `.cursor/skills/rust` |
-| DeepSeek Harness (dsh) | `.dsh` | `.dsh/skills/rust` |
-| Claude Code | `.claude` | `.claude/skills/rust` |
-| Codex | `.agents`（不铺 `.codex/skills`） | `.agents/skills/rust` |
-| Grok Build | `.grok` | `.grok/skills/rust` |
-| Oh My Pi (omp) | `.omp` | `.omp/skills/rust` |
-| Kiro | `.kiro` | `.kiro/skills/rust` |
-| OpenCode | `.opencode` | `.opencode/skills/rust` |
-| Pi | `.pi` | `.pi/skills/rust` |
-| Qoder | `.qoder` | `.qoder/skills/rust` |
-| Trae | `.trae` | `.trae/skills/rust` |
-| Trae China | `.trae-cn` | `.trae-cn/skills/rust` |
-| Antigravity | `.agent` | `.agent/skills/rust` |
-| Hermes Agent | `.hermes` | `.hermes/skills/rust` |
-
-Cursor 装 `.cursor/` 会带上 `.cursor/commands/` 钉。dsh 只有 `.dsh/skills/rust`。也可以只取 `skills/rust` 这一层技能正文。技能名是 frontmatter 里的 `rust`，不是仓库名 `rust-skills`。
-
-### 插件安装
-
-Claude / Grok / Cursor / Codex / omp 的 marketplace 仍以本仓库为插件源（`source: "./"`，技能指向 `./skills/`），与上面「按 harness 取一层」是两条路。
-
-```bash
-# Claude Code
-claude
-> /plugin marketplace add xxww0098/rust-skills
-> /plugin install rust-skills@rust-skills
-
-# Grok
-grok plugin marketplace add xxww0098/rust-skills
-grok plugin install rust-skills --trust
-
-# Oh My Pi (omp)
-omp marketplace add xxww0098/rust-skills
-omp install rust-skills@rust-skills
-# 或直接：omp plugin install /path/to/rust-skills
-```
-
-Claude Code 另有稳定别名 `/rust-skills:review`；不要使用裸 `/review`，它可能与内置命令冲突。Cursor / Codex 也可把本仓库当插件装（`.cursor-plugin/`、`.codex-plugin/`）。
-
-### 本机已有 clone 时手动链技能正文
-
-已经把仓库放在本机、只想让 harness 读到技能正文时，链 `skills/rust`（不要链仓库根）：
-
-```bash
-mkdir -p ~/.agents/skills ~/.cursor/skills ~/.omp/agent/skills ~/.dsh/skills
-ln -s /path/to/rust-skills/skills/rust ~/.agents/skills/rust
-ln -s /path/to/rust-skills/skills/rust ~/.cursor/skills/rust
-ln -s /path/to/rust-skills/skills/rust ~/.omp/agent/skills/rust
-ln -s /path/to/rust-skills/skills/rust ~/.dsh/skills/rust
-```
-
-首次进入一个 Rust 项目：`/rust-skills:rust document`（老项目）或 `/rust-skills:rust init`（新项目）。非 Claude / Grok 的技能名是 `rust`，同一套子命令。
-
-## 维护与升级
-
-- 踩坑/被打回 → `/rust-skills:rust capture`，先落项目 outbox，人工确认后才在源码仓库提升为规则与压力场景。
-- 每周：跑一遍 `tests/pressure-scenarios.md` 与 `./scripts/check-consistency.sh`（含 `eval-fixtures.py`、`eval-triggers.py`）；`/rust-skills:rust doctor` 看漂移。本机装 ripgrep（`brew install ripgrep`）。
-- 架构与规则治理细节见 [docs/DESIGN.md](docs/DESIGN.md)。
-- 版本从 `0.0.1` 起按补丁递增，权威文件是 `.claude-plugin/plugin.json`；改完后跑 `./scripts/sync-providers.py`（它会先重生成命令表）。
-- 仓库一致性检查：`./scripts/check-consistency.sh`。
+维护者：改 metadata 后保持 generator 可运行；harness projection 由仓库脚本生成，不要把用户路径和 provider-sync 细节重新混进 README。
