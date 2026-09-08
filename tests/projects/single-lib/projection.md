@@ -2,7 +2,7 @@
 默认: artifact=lib, maturity=待确认
 覆盖: single_lib=artifact:lib
 ## 基线
-edition 2024 · MSRV unknown · resolver ? · 规范版本 v0.0.70（150 条分级规则）
+edition 2024 · MSRV unknown · resolver ? · 规范版本 v0.0.71（150 条分级规则）
 ## Crate 图
 single_lib
 ## 域划分

@@ -1,6 +1,6 @@
 # 普通实现覆盖层（非命令）
 
-目的：用户说「实现 / 修 / 改 / 补测试」且未点名子命令时，用最小纪律写出正确 Rust。落盘前读 [kernel/write.md](../kernel/write.md)：每处改动一张 Patch。按 **edition 2024** 语义写（RPIT 默认捕获全部 in-scope 泛型、`if let` 短临时值、`#[unsafe(no_mangle)]`、`unsafe extern`、≥1.88 let chains）；不要为迁就 2021 而改写法。本文件不是菜单、不阻塞任务、不要求 RUST.md。设计未定升级 [shape.md](shape.md)；编译错误叠加 [triage.md](triage.md)；有框架证据再叠加对应 reference。
+目的：用户说「实现 / 修 / 改 / 补测试」且未点名子命令时，用最小纪律写出正确 Rust。落盘前读 [kernel/write.md](../kernel/write.md)：每处改动一张 Patch。按当前 crate 的 edition / MSRV 写；edition 2024 仅是生成默认，未经迁移授权不得改 edition/MSRV。RPIT 捕获、`if let` 临时值等以当前 edition 为准；新语法先核对 toolchain/MSRV。本文件不是菜单、不阻塞任务、不要求 RUST.md。设计未定升级 [shape.md](shape.md)；编译错误叠加 [triage.md](triage.md)；有框架证据再叠加对应 reference。
 
 编排：禁止 swarm。写码只走 Patch，复用已有快照。
 

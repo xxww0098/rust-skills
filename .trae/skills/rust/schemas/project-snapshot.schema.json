@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/xxww0098/rust-skills/schemas/project-snapshot.schema.json",
+  "title": "ProjectSnapshot",
+  "type": "object",
+  "required": ["identity", "scope", "crates", "graphs"],
+  "properties": {
+    "identity": {
+      "type": "object",
+      "required": ["workspace_root", "manifest_path", "lock_policy"],
+      "properties": {
+        "workspace_root": { "type": "string" },
+        "manifest_path": { "type": "string" },
+        "git_head": { "type": ["string", "null"] },
+        "dirty": { "type": "boolean" },
+        "lock_policy": { "enum": ["tracked", "absent", "drift"] },
+        "degraded_reasons": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "scope": {
+      "type": "object",
+      "required": ["primary_files"],
+      "properties": {
+        "requested_target": { "type": ["string", "null"] },
+        "primary_files": { "type": "array", "items": { "type": "string" } },
+        "adjacent_evidence": { "type": "array", "items": { "type": "string" } },
+        "excluded_paths": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "crates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "manifest"],
+        "properties": {
+          "name": { "type": "string" },
+          "manifest": { "type": "string" },
+          "edition": { "type": ["string", "null"] },
+          "targets": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "graphs": {
+      "type": "object",
+      "required": ["crate_edges", "cycles", "orphans", "entrypoints"],
+      "properties": {
+        "crate_edges": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["from", "to"],
+            "properties": {
+              "from": { "type": "string" },
+              "to": { "type": "string" }
+            }
+          }
+        },
+        "cycles": { "type": "array", "items": { "type": "array", "items": { "type": "string" } } },
+        "orphans": { "type": "array", "items": { "type": "string" } },
+        "entrypoints": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "signals": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["kind", "path", "provenance", "confidence"],
+        "properties": {
+          "kind": { "type": "string" },
+          "path": { "type": "string" },
+          "provenance": { "enum": ["cargo-metadata", "manifest", "git", "source-scan", "model"] },
+          "confidence": { "enum": ["high", "medium", "low"] }
+        }
+      }
+    }
+  }
+}

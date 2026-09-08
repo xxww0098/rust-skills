@@ -22,29 +22,14 @@ import os
 import shutil
 import sys
 import tempfile
+from importlib import import_module
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 
-# Keep in sync with scripts/sync-providers.py PROVIDERS.
-HARNESS_DIRS = (
-    ".claude",
-    ".cursor",
-    ".agents",
-    ".kiro",
-    ".opencode",
-    ".pi",
-    ".omp",
-    ".dsh",
-    ".qoder",
-    ".trae-cn",
-    ".trae",
-    ".grok",
-    ".agent",
-    ".hermes",
-)
-
-ROOT_SKILL_IDENTITY = ("SKILL.md", "reference", "rules", "kernel", "agents")
+distribution = import_module("sync-providers")
+HARNESS_DIRS = tuple(provider["dir"] for provider in distribution.PROVIDERS)
+ROOT_SKILL_IDENTITY = distribution.ROOT_SKILL_IDENTITY
 MONOREPO_NOISE = ("tests", "docs", "scripts", "evals", "examples")
 
 
@@ -191,13 +176,14 @@ def check_harness_standalone(harness: str) -> int:
         fail(f"missing harness install unit {harness}/")
         return 1
 
-    skill = src / "skills" / "rust"
-    if skill.is_symlink():
-        fail(
-            f"{harness}/skills/rust is an outbound symlink "
-            f"({os.readlink(skill)}); copying {harness}/ alone leaves a dangling link"
-        )
+    if src.is_symlink():
+        fail(f"harness install unit is a symlink: {harness}/")
         return 1
+    for path in src.rglob("*"):
+        if path.is_symlink():
+            fail(f"standalone install unit contains a symlink: {path.relative_to(REPO_ROOT)}")
+            return 1
+    skill = src / "skills" / "rust"
     if not (skill / "SKILL.md").is_file():
         fail(f"{harness}/skills/rust/SKILL.md missing (not a standalone install unit)")
         return 1
@@ -227,18 +213,10 @@ def check_harness_standalone(harness: str) -> int:
         dest = Path(tmp) / harness
         shutil.copytree(src, dest, symlinks=True, copy_function=shutil.copy2)
         copied = dest / "skills" / "rust"
-        if copied.is_symlink() and not copied.exists():
-            fail(
-                f"copying {harness}/ with symlinks preserved left a dangling "
-                f"skills/rust -> {os.readlink(copied)}"
-            )
-            return 1
-        if not (copied / "SKILL.md").is_file():
-            fail(f"copied {harness}/ has no readable skills/rust/SKILL.md")
-            return 1
-        if not (copied / "reference" / "engage.md").is_file():
-            fail(f"copied {harness}/ lost reference/engage.md")
-            return 1
+        for rel in ("SKILL.md", "reference/engage.md", "kernel/evidence.md", *distribution.RUNTIME_FILES):
+            if not (copied / rel).is_file():
+                fail(f"copied {harness}/ lost required runtime resource {rel}")
+                return 1
         if (dest / "tests").exists() or (dest / "scripts").exists():
             fail(f"copied {harness}/ ingested monorepo tests/ or scripts/")
             return 1

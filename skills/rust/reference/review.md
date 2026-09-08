@@ -22,7 +22,7 @@
 按以下顺序解析 `$ARGUMENTS`，避免把名为 `test`、`build`、`async` 的真实路径误当命令：
 
 1. 反引号/引号中的现存文件或目录，以及能在 workspace 内解析的现存路径，先作为 target；**现存路径先于意图关键词**。
-2. target 不存在时，只有 `git -C <root> rev-parse --verify --quiet <token>^{commit}` 能验证的 commit/range 才作为 revision；执行前原样回显。
+2. target 不存在时，commit 用 `git -C <root> rev-parse --verify --quiet --end-of-options "<commit>^{commit}"` 验证；`A..B` / `A...B` range 分别验证两端（省略端按 HEAD），不能给整段 range 加 `^{commit}`。只有验证通过才作为 revision，执行前原样回显。
 3. 剩余自然语言才作为评审意图、深度与约束。路径后的文字不丢弃，例如 `review crates/api 重点看取消安全，不跑全仓测试`。
 4. “不要跑测试”只禁止执行测试，不等于禁止静态审查测试；“只看安全”则排除非安全镜头。无法完全满足时按最窄安全解释继续，并把假设写在路由行，不悄悄扩域。
 

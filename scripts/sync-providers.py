@@ -54,6 +54,22 @@ PROVIDERS = (
 
 PROVIDER_NAMES = tuple(p["name"] for p in PROVIDERS)
 
+# Runtime closure installed next to SKILL.md; repository-only generators and
+# fixtures stay outside the install unit. All copies are generated from these owners.
+RUNTIME_FILES = (
+    "scripts/check_patch.py",
+    "scripts/verify_patch.py",
+    "scripts/rs_scan.py",
+    "scripts/inspect_project.py",
+    "scripts/render_rust_md.py",
+    "scripts/version-floor.json",
+    "scripts/command-metadata.json",
+    "schemas/finding.schema.json",
+    "schemas/patch.schema.json",
+    "schemas/project-snapshot.schema.json",
+)
+RUNTIME_IGNORE = shutil.ignore_patterns("__pycache__", "*.pyc")
+
 # Former pack-root skill identity. One-level scanners must install a harness
 # tree (e.g. `.dsh/`), not the clone. A root `SKILL.md` with name `rust` is
 # what made Git installers treat the whole repository as one skill.
@@ -86,15 +102,36 @@ def dumps(data: dict) -> str:
     return json.dumps(data, indent=2, ensure_ascii=False) + "\n"
 
 
+def reject_symlink_parents(path: Path) -> None:
+    for parent in path.parents:
+        if parent == REPO_ROOT:
+            break
+        if parent.is_symlink():
+            raise SystemExit(f"refusing symlink parent: {parent.relative_to(REPO_ROOT)}")
+
+
+def reject_source_symlinks(path: Path) -> None:
+    reject_symlink_parents(path)
+    if path.is_symlink():
+        raise SystemExit(f"canonical source is a symlink: {path.relative_to(REPO_ROOT)}")
+    if path.is_dir():
+        for child in path.rglob("*"):
+            if child.is_symlink():
+                raise SystemExit(f"canonical source contains a symlink: {child.relative_to(REPO_ROOT)}")
+
+
 def write_or_check(path: Path, content: str, check: bool, drifts: list[str]) -> None:
+    reject_symlink_parents(path)
     rel = path.relative_to(REPO_ROOT).as_posix()
-    current = path.read_text(encoding="utf-8") if path.is_file() else None
+    current = path.read_text(encoding="utf-8") if path.is_file() and not path.is_symlink() else None
     if current == content:
         return
     if check:
         drifts.append(rel)
         return
     path.parent.mkdir(parents=True, exist_ok=True)
+    if path.is_symlink():
+        path.unlink()
     path.write_text(content, encoding="utf-8")
     print(f"wrote {rel}")
 
@@ -251,12 +288,19 @@ def _file_equal(a: Path, b: Path) -> bool:
 
 
 def _tree_equal(a: Path, b: Path) -> bool:
+    if a.is_symlink() or b.is_symlink():
+        return False
     if a.is_file() and b.is_file():
         return _file_equal(a, b)
     if not a.is_dir() or not b.is_dir():
         return False
-    a_files = {p.relative_to(a).as_posix() for p in a.rglob("*") if p.is_file()}
-    b_files = {p.relative_to(b).as_posix() for p in b.rglob("*") if p.is_file()}
+    a_paths, b_paths = list(a.rglob("*")), list(b.rglob("*"))
+    if any(p.is_symlink() for p in a_paths + b_paths):
+        return False
+    a_files = {p.relative_to(a).as_posix() for p in a_paths
+               if p.is_file() and not RUNTIME_IGNORE("", p.relative_to(a).parts)}
+    b_files = {p.relative_to(b).as_posix() for p in b_paths
+               if p.is_file() and not RUNTIME_IGNORE("", p.relative_to(b).parts)}
     if a_files != b_files:
         return False
     return all(_file_equal(a / rel, b / rel) for rel in a_files)
@@ -274,53 +318,28 @@ def _copy_replace(src: Path, dst: Path) -> None:
                 dst.unlink()
         shutil.copy2(src, dst)
         return
-    dst.mkdir(parents=True, exist_ok=True)
-    src_files = {p.relative_to(src).as_posix() for p in src.rglob("*") if p.is_file()}
-    dst_files = (
-        {p.relative_to(dst).as_posix() for p in dst.rglob("*") if p.is_file()} if dst.exists() else set()
-    )
-    for rel in dst_files - src_files:
-        (dst / rel).unlink(missing_ok=True)
-    for rel in src_files:
-        s, d = src / rel, dst / rel
-        d.parent.mkdir(parents=True, exist_ok=True)
-        if d.is_file() and not d.is_symlink() and _file_equal(s, d):
-            continue
-        if d.is_symlink() or (d.exists() and d.is_dir()):
-            if d.is_dir() and not d.is_symlink():
-                shutil.rmtree(d)
-            else:
-                d.unlink()
-        shutil.copy2(s, d)
+    # Replacing the owned tree removes nested symlinks without writing through them.
+    if dst.is_symlink() or dst.is_file():
+        dst.unlink()
+    elif dst.exists():
+        shutil.rmtree(dst)
+    shutil.copytree(src, dst, ignore=RUNTIME_IGNORE)
 
 
 def ensure_materialized(dest_rel: str, src_rel: str, check: bool, drifts: list[str]) -> None:
     """Write a standalone copy. Outbound relative symlinks are not an install unit."""
     dest = REPO_ROOT / dest_rel
     src = REPO_ROOT / src_rel
+    reject_symlink_parents(dest)
+    reject_source_symlinks(src)
     if not src.exists():
         raise SystemExit(f"missing canonical source: {src_rel}")
-
-    if dest.is_symlink():
-        if check:
-            drifts.append(dest_rel)
-            return
-        dest.unlink()
-        _copy_replace(src, dest)
-        print(f"copied {dest_rel} <- {src_rel} (replaced symlink)")
-        return
 
     if dest.exists() and _tree_equal(dest, src):
         return
     if check:
         drifts.append(dest_rel)
         return
-    if dest.exists():
-        if dest.is_dir() and not dest.is_symlink():
-            # Incremental copy below.
-            pass
-        else:
-            dest.unlink()
     _copy_replace(src, dest)
     print(f"copied {dest_rel} <- {src_rel}")
 
@@ -422,6 +441,8 @@ def main() -> int:
     parser.add_argument("--check", action="store_true", help="report drift without writing")
     args = parser.parse_args()
 
+    for source in (SKILL_MD.parent, REPO_ROOT / "commands", CANONICAL_PLUGIN, REPO_ROOT / "README.md"):
+        reject_source_symlinks(source)
     plugin = load_canonical()
     version = plugin["version"]
     drifts: list[str] = []
@@ -440,6 +461,8 @@ def main() -> int:
     for path, content in expected_files(plugin).items():
         write_or_check(path, content, args.check, drifts)
     remove_root_skill_identity(args.check, drifts)
+    for rel in RUNTIME_FILES:
+        ensure_materialized(f"skills/rust/{rel}", rel, args.check, drifts)
     for dest_rel, src_rel in harness_projections():
         ensure_materialized(dest_rel, src_rel, args.check, drifts)
 

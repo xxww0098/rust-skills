@@ -2,7 +2,7 @@
 
 授权之后才读本文件。目标：落盘的 Rust **一开始就是规范形状**，不是先写绿再等 review 纠偏。
 
-每处写入填一张 Patch（[schemas/patch.schema.json](../../../schemas/patch.schema.json)）。写不出 Patch 就不要改文件。
+每处写入填一张 Patch（[schemas/patch.schema.json](../schemas/patch.schema.json)）。写不出 Patch 就不要改文件。
 
 ## Patch
 

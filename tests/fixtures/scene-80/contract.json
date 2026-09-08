@@ -7,7 +7,7 @@
   "skill_needles": {
     "skills/rust/kernel/verification.md": ["check_patch", "render_rust_md.py"],
     "skills/rust/kernel/evidence.md": ["fan-in", "render_rust_md.py"],
-    "skills/rust/reference/document.md": ["render_rust_md.py", "禁止手绘"],
+    "skills/rust/reference/document.md": ["render_rust_md.py --snapshot <快照.json>", "禁止手绘"],
     "tests/pressure-scenarios.md": ["### 场景 80", "render_rust_md"]
   }
 }

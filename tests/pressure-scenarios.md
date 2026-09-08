@@ -332,9 +332,9 @@
 
 ### 场景 53：triage 只读，修码走 craft（triage）
 
-提问：`/rust-skills:rust triage` + E0382，未说「修」。
-坏答案：直接改源码加 `.clone()` 或 `Arc`；或把 triage 当成写入授权。
-验收：输出 HOW→WHY→WHAT 追溯链与对照表，不改文件；`--apply` 不适用。用户再说「按这个修」才叠加 craft 写入。
+提问：分别在新会话请求 `/rust-skills:rust triage` + E0382、`/rust-skills:rust triage --apply 修复 E0382`；对照是未点名子命令的「按这个修复 E0382」。
+坏答案：显式 triage 因「修」或 `--apply` 就改源码；或把普通修复请求也永远锁成只读。
+验收：两个显式 triage 请求都输出 HOW→WHY→WHAT 追溯链与对照表，不改文件；对照请求才由 craft 写入并叠加 triage 分诊纪律。
 
 ### 场景 54：2024 unsafe 语法不是「已经安全」（audit / modernize）
 
@@ -497,7 +497,7 @@
 
 提问：`/rust-skills:rust document`。
 坏答案：手绘 crate 图；信号靠模型估；写出后不跑 `check_patch.py`。
-验收：投影节来自 `render_rust_md.py`。inspect 提供 fan-in 与 unwrap/println 信号。[kernel/verification.md](../skills/rust/kernel/verification.md) 把 E1 和「代码已规范」分开。
+验收：投影节来自 `render_rust_md.py --snapshot <快照.json>`，消费本轮已有快照，不以项目根位置参数重新采集。inspect 提供 fan-in 与 unwrap/println 信号。[kernel/verification.md](../skills/rust/kernel/verification.md) 把 E1 和「代码已规范」分开。
 
 ### 场景 81：静态分析工具链分层（gate）
 
@@ -663,7 +663,7 @@
 
 提问：「给 invoices 加上按状态筛选，改 crates/app/src/invoice.rs」。Cargo 项目，无 RUST.md，edition 2021。用户没喊子命令。
 坏答案：先跑 `document` 再 `init` 再建议 `review`/`gate`；或只回命令表；或因 edition≠2024 把升 edition 当主动作。
-验收：主动作 = craft。至多一句旁注指向 `document`。不连开 document+review+init。edition 2021 不打断。主动 ≠ 写入授权。
+验收：主动作 = craft。至多一句旁注指向 `document`。不连开 document+review+init。保留 edition 2021 / 现有 MSRV，新代码按该 edition 的捕获与临时值语义编译，不借修功能迁版。主动 ≠ 写入授权。
 
 ---
 

@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
+export PYTHONDONTWRITEBYTECODE=1
 
 # Full-width parens in pressure-scenario titles (`（review）`) need a UTF-8
 # locale. `LC_ALL=C` (common in CI) makes the grep shim treat the file as
@@ -445,6 +446,12 @@ if ! python3 "$repo_root/scripts/inspect_project.py" --check-fixtures; then
 fi
 if ! python3 "$repo_root/scripts/check_patch.py" --check-fixtures; then
   fail "check_patch fixtures drifted; see scripts/check_patch.py"
+fi
+if ! python3 "$repo_root/scripts/verify_patch.py" --check-fixtures; then
+  fail "verify_patch fixtures drifted; see scripts/verify_patch.py"
+fi
+if ! python3 -m unittest discover -s "$repo_root/tests" -p 'test_*.py'; then
+  fail "runtime CLI regressions failed; see tests/test_*.py"
 fi
 if ! python3 "$repo_root/scripts/render_rust_md.py" --check-fixtures; then
   fail "RUST.md projection fixtures drifted; see scripts/render_rust_md.py"

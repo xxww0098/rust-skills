@@ -7,7 +7,7 @@
 ## 一次取证
 
 
-1. **结构**：本轮若无快照，跑 `python3 scripts/inspect_project.py <根>` 一次。crate 图、环、fan-in、孤儿、机械信号都来自这份 JSON。workspace ≥2 crate 时按 [kernel/swarm.md](../kernel/swarm.md) 并行补测试/风险/依赖车道。**四个投影节必须** `python3 scripts/render_rust_md.py <根>` 生成，禁止手绘。同一 commit+target 再跑，投影节不得漂移。
+1. **结构**：本轮若无快照，跑 `python3 scripts/inspect_project.py <根>` 一次。crate 图、环、fan-in、孤儿、机械信号都来自这份 JSON。workspace ≥2 crate 时按 [kernel/swarm.md](../kernel/swarm.md) 并行补测试/风险/依赖车道。**四个投影节必须** `python3 scripts/render_rust_md.py --snapshot <快照.json>` 生成，禁止手绘。同一 commit+target 再跑，投影节不得漂移。
 2. **域与模块**：用快照 `graphs.orphans` / `fan_in`；tests 布局仍按 TEST-02/03 读证据。不手扫第二遍 crate 图。
 3. **风险**：只把快照 `signals`（unwrap/println/dbg/expect）和 lock 策略记入债务候选；模型可加低置信项但必须标 `provenance=model`。lock 缺失本身不是债务。
 4. **Facets**：renderer 给出 artifact 初值；模型只在证据不足时改成 `待确认`。edition 2024 是生成默认，存量未解释的旧 edition 标待确认兼容约束。

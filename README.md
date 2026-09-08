@@ -12,7 +12,7 @@
 skillstar add xxww0098/rust-skills
 ```
 
-安装单元是一个 `.<harness>/` 层，或该层里的 `skills/rust`；**不是整个仓库**。不要把 `tests/`、`scripts/`、`docs/` 和其它 harness 投影当成技能正文一起安装。
+安装单元是一个 `.<harness>/` 层，或该层里的 `skills/rust`；**不是整个仓库**。单元内已包含所需运行时资源；不要再把仓库根的 `tests/`、`scripts/`、`docs/` 和其它 harness 投影一起安装。
 
 技能正文的 SSOT 是 [`skills/rust/`](skills/rust/)。已有 clone、需要手动接入 harness 时，链接 `skills/rust/`，不要链接仓库根。按 harness / 插件安装细节见 [docs/DESIGN.md](docs/DESIGN.md)。
 

@@ -20,6 +20,7 @@
       "显式 `review` 的只读性会粘住整条路由",
       "一个主镜头 + 至多一个补充镜头",
       "现存路径先于意图关键词",
+      "range 分别验证两端",
       "同一命令指纹只执行一次",
       "[slim/test.md](slim/test.md)",
       "[slim/cargo.md](slim/cargo.md)",

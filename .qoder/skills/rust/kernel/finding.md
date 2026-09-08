@@ -2,7 +2,7 @@
 
 禁止只输出「某处违反 WS-07，建议解耦」。每条 Finding 必须能回答因果链：目标 → 约束 → 范围 → 快照 → 不变量所有权 → 可观察问题 → 拥有该问题的层 → 最小修复 → 验证。
 
-## Finding（字段与 schemas/finding.schema.json 对齐）
+## Finding（字段与 [schemas/finding.schema.json](../schemas/finding.schema.json) 对齐）
 
 | 字段 | 必须回答 |
 |---|---|

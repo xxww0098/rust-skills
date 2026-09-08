@@ -15,7 +15,7 @@
 
 ## ProjectSnapshot（只读、可丢弃、带来源）
 
-字段与 [schemas/project-snapshot.schema.json](../../../schemas/project-snapshot.schema.json) 对齐。最低必填：
+字段与 [schemas/project-snapshot.schema.json](../schemas/project-snapshot.schema.json) 对齐。最低必填：
 
 ```
 identity.workspace_root / manifest_path / lock_policy / degraded_reasons

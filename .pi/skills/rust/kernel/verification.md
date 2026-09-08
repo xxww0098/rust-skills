@@ -8,15 +8,15 @@
 
 该脚本必须跟 SKILL.md 一起被安装；只有源仓正文、没有 `scripts/verify_patch.py` 的副本不能声称可验证。
 
-默认只分类，不跑 cargo。要执行 Patch.verification，必须显式 `--run`。`proven=true` 只在 cargo 实际退出码为 0 时出现。
+默认只分类，不跑 cargo。要执行 Patch.verification，必须显式 `--run`。Patch 契约或形状被拒绝时不得执行；`proven=true` 只在通过检查且 cargo 实际验证命令退出码为 0 时出现。
 
 ## 最小闭环
 
 1. **verify_patch**：先复用 `check_patch` 的 Patch 契约与生产形状扫描，再解析 `verification`。
 2. **分类**（没 `--run`）：`gap` 未写命令；`invalid` 契约不全或不是单条 `cargo check|test|nextest`；`missing-manifest` 路径不存在；`runnable` 可以跑但还没跑。`runnable` ≠ 已验证。
-3. **执行**（`--run`）：只允许 `shlex` 拆开的一条 cargo，必须带 `--manifest-path`，禁止 `&&` / `|` / 环境替换。成功才是 `ran` + `proven`。
+3. **执行**（`--run`）：只允许 `shlex` 拆开的一条 `cargo check` / `cargo test` / `cargo nextest run`，必须在 `--` 前带唯一 `--manifest-path`（也接受 `=路径`），禁止 `&&` / `|` / 环境替换。帮助、版本、列举不算验证。成功才是 `ran` + `proven`。
 4. **快照不漂**：同一 commit + 同一 target，`inspect_project.py` 的 members/edges/cycles/orphans/signals 字节一致。
-5. **画像不漂**：`document` 的四个投影节必须来自 `python3 scripts/render_rust_md.py <根>`，禁止手绘 crate 图。
+5. **画像不漂**：`document` 的四个投影节必须来自 `python3 scripts/render_rust_md.py --snapshot <快照.json>`，禁止手绘 crate 图。
 
 ## 什么不算验证
 

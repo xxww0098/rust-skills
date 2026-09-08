@@ -26,9 +26,10 @@
 
 ## 发布与同步
 
-- **安装入口是 SkillStar**，不是再做一套 impeccable 式的自安装器。用户侧：`skillstar add xxww0098/rust-skills`。安装单元是某一个 `.<harness>/` 层（或其中的 `skills/rust`），不是整仓。仓库根不再放 `SKILL.md`；SkillStar 不得把 clone 根当成一条技能。按 harness 选 `source_folder`（`.cursor` / `.dsh` / `.claude` / `.agents` 等）或走 Claude/Grok/Cursor/Codex/omp 插件 marketplace；本机已有 clone 时链接 `skills/rust/`，不要链接仓库根。用户 README 不再展开对照表。
+- **安装入口见 [README 的安装说明](../README.md#安装)**。安装单元必须可脱离源码仓库独立运行；不把维护脚本、测试和其他 harness 一起当技能安装，也不另造自安装器。
 - 插件和规范都从 `0.0.1` 起按补丁递增。权威文件是 `.claude-plugin/plugin.json`；改完后跑 `./scripts/sync-providers.py`，它会先重生成命令表与 `rules-full.md`，再写各 harness 清单、**独立副本**（不是出仓即断的相对 symlink）和 `skills/rust/SKILL.md` / `rules/preamble.md` 的版本。不要手改 `.<harness>/` 里的投影。没有 SkillStar 时，这些副本和 Claude/Grok/Cursor 插件仍是后备安装路径。
-- 技能正文只维护 `skills/rust/`。Git 安装单元是某一个 `.<harness>/` 层（或它里面的 `skills/rust`），不是整仓。仓库根不再放 `SKILL.md` / `reference/` / `rules/` 兼容垫片——那会让扫描器把 clone 当一条技能，把 `tests/`、`scripts/`、其它 harness 一并装进去。一层扫描器请装 `.dsh/`（或对应 harness），不要把 clone 根当技能目录。
+- **运行时资源与正文分工**：Python 实现与数据维护在根 `scripts/`，契约维护在根 `schemas/`；`sync-providers.py` 的运行时清单生成技能内资源，再投影到各 harness。生成副本不是第二维护源，不手改。独立安装回归必须切断源码仓库依赖，并检查同步不会沿符号链接写删安装单元之外的文件。
+- **验证入口唯一**：本地与 CI 都跑 `scripts/check-consistency.sh`；fixture、CLI 回归和投影检查由它编排，工作流不另列一份重复检查清单。
 - 当前修正版已用 Claude Code CLI 2.1.233 验证；尚未声明更早版本的兼容下限。
 
 ## 生长节奏

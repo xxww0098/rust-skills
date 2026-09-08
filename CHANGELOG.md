@@ -1,7 +1,13 @@
 # Changelog
 
-## Unreleased
+## 0.0.71 — 2026-09-08
 
+- 独立安装单元补齐验证、扫描、画像脚本与 schema；运行资源和 provider 清单统一来源，生成副本不再手工维护。
+- 同步器拒绝沿祖先符号链接写删安装单元之外的文件；嵌套链接与缓存链接都识别为漂移，正常 Python 缓存不打包也不误报。
+- Patch 拒绝目录、缺失文件和非字符串字段，统一路径解析并去重。形状检查失败不得执行 Cargo；帮助、版本、列举不算验证，支持 manifest 等号形式和 nextest 前置全局参数。
+- 修复 `cfg(any(test, feature = "live"))` 生产代码漏扫，同时保留纯 test-only 排除；RUST.md 的 artifact 按本 crate 的 targets/入口判断。
+- 普通实现遵守当前 edition/MSRV；显式 triage 不因修复动词或 `--apply` 升级写权限；document 消费已有快照；review 分别校验 Git range 两端。
+- 新增 18 项 CLI/文件系统回归；CI 统一调用 consistency 入口，补齐 verify fixtures，移除重复执行的检查。
 - README 改成安装优先的用户入口：SkillStar → 60 秒提示 → 写授权 → engage → 四条旅程 → 压缩路由；长用例与 harness/插件对照表移到 [examples/first-prompts.md](examples/first-prompts.md) / [docs/DESIGN.md](docs/DESIGN.md)。命令表仍由 `gen-command-tables.py` 生成。
 - 安装入口改为 [SkillStar](https://github.com/xxww0098/SkillStar)：`skillstar add xxww0098/rust-skills`。安装单元是某一个 `.<harness>/` 层（或其中的 `skills/rust`），不是整仓；仓库根不再放 `SKILL.md` 垫片。
 
