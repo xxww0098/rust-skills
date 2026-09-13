@@ -1,3 +1,4 @@
 tests/projects/**/target/
 tests/projects/**/Cargo.lock
-
+evals/artifacts/*
+!evals/artifacts/.gitkeep

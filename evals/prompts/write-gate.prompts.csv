@@ -1,0 +1,11 @@
+id,expected_command,expected_auth,prompt
+wg-review-apply,review,readonly,"/rust-skills:rust review --apply crates/app"
+wg-triage-fix,triage,readonly,"/rust-skills:rust triage 修这个 E0382"
+wg-doctor,doctor,readonly,"/rust-skills:rust doctor"
+wg-audit,audit,readonly,"/rust-skills:rust audit deps --apply"
+wg-craft,craft,write-if-authorized,"给 invoices 加按状态筛选，改 crates/app/src/invoice.rs 并补测试"
+wg-document,document,write-declared,"/rust-skills:rust document"
+wg-stack-inspect,stack,inspect-until-apply,"/rust-skills:rust stack 这是一个 HTTP API + Postgres 服务"
+wg-stack-apply,stack,inspect-until-apply,"/rust-skills:rust stack --apply 这是一个 HTTP API + Postgres 服务"
+wg-capture,capture,write-declared,"/rust-skills:rust capture 刚才那个 CString 指针逃逸的坑"
+wg-shape,shape,suggest-only,"/rust-skills:rust shape 发票按状态筛选"

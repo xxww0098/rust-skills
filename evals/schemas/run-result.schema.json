@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "rust-skills eval case result",
+  "type": "object",
+  "properties": {
+    "id": { "type": "string" },
+    "suite": { "type": "string", "enum": ["trigger", "routing", "write-gate"] },
+    "prompt": { "type": "string" },
+    "should_trigger": { "type": "boolean" },
+    "expected_command": { "type": ["string", "null"] },
+    "expected_auth": { "type": ["string", "null"] },
+    "overall_pass": { "type": "boolean" },
+    "score": { "type": "integer", "minimum": 0, "maximum": 100 },
+    "checks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "pass": { "type": "boolean" },
+          "notes": { "type": "string" }
+        },
+        "required": ["id", "pass", "notes"],
+        "additionalProperties": false
+      }
+    },
+    "trace": { "type": ["string", "null"] }
+  },
+  "required": ["id", "suite", "prompt", "overall_pass", "score", "checks"],
+  "additionalProperties": false
+}

@@ -1,6 +1,6 @@
 {
   "evidence_level": "E1",
-  "note": "E1 surface contract, not LLM routing (E3). Description holds positives only. Skip cases live in 非目标, not as description keywords.",
+  "note": "E1 surface contract, not LLM routing (E3). Description holds positives only. Skip cases live in 非目标, not as description keywords. Prompt-level cases: evals/prompts/trigger.prompts.csv.",
   "must_activate": [
     {"phrase": "编译报错", "where": "description"},
     {"phrase": "代码审查", "where": "description"},
@@ -9,8 +9,14 @@
     {"phrase": "清理过期文件", "where": "description"},
     {"phrase": "技术栈", "where": "description"},
     {"phrase": "borrow-checker", "where": "description"},
+    {"phrase": "E0382", "where": "description"},
     {"phrase": "axum", "where": "description"},
+    {"phrase": "sea-orm", "where": "description"},
     {"phrase": "Tauri v2", "where": "description"},
+    {"phrase": "实现功能", "where": "description"},
+    {"phrase": "优化旧代码", "where": "description"},
+    {"phrase": "compile too slow", "where": "description"},
+    {"phrase": "does not compile", "where": "description"},
     {"phrase": "/rust-skills:rust", "where": "description"}
   ],
   "forbidden_in_description": ["Python", "Go/JS", "translation", "翻译"],
@@ -19,11 +25,16 @@
     {"prompt": "review this Python PR", "expect": "skip", "token": "Python"},
     {"prompt": "把这段 Rust 文档翻译成英文", "expect": "skip", "token": "翻译"},
     {"prompt": "总结一下 Rust 的历史", "expect": "skip", "token": "历史"},
-    {"prompt": "帮我修这个 E0382", "expect": "activate", "token": "borrow-checker"},
+    {"prompt": "review this Go service", "expect": "skip", "token": "Go"},
+    {"prompt": "帮我修这个 E0382", "expect": "activate", "token": "E0382"},
+    {"prompt": "this crate does not compile", "expect": "activate", "token": "does not compile"},
+    {"prompt": "compile too slow, target is huge", "expect": "activate", "token": "compile too slow"},
     {"prompt": "这个项目该用什么技术栈", "expect": "activate", "token": "技术栈"},
     {"prompt": "这些函数命名不合规范", "expect": "activate", "token": "函数命名"},
     {"prompt": "这个 workspace 的 crate 该怎么命名", "expect": "activate", "token": "crate命名"},
     {"prompt": "清理这些过期开发文件", "expect": "activate", "token": "清理过期文件"},
+    {"prompt": "给 invoices 加筛选，实现功能", "expect": "activate", "token": "实现功能"},
+    {"prompt": "优化旧代码 crates/app/src/legacy.rs", "expect": "activate", "token": "优化旧代码"},
     {"prompt": "/rust-skills:rust review --apply", "expect": "readonly", "token": "--apply"}
   ]
 }

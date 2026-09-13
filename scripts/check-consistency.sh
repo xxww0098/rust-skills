@@ -461,6 +461,10 @@ if ! python3 "$repo_root/scripts/eval-triggers.py"; then
   fail "trigger eval drifted; see scripts/eval-triggers.py"
 fi
 
+if ! python3 "$repo_root/scripts/eval-agent.py"; then
+  fail "eval-agent contracts drifted; see scripts/eval-agent.py and evals/"
+fi
+
 if ! python3 "$repo_root/scripts/check-floor.py"; then
   fail "version floor drifted; see scripts/version-floor.json"
 fi

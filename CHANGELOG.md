@@ -1,6 +1,13 @@
 # Changelog
 
+## 0.0.72 — 2026-09-13
+
+- 按 [OpenAI eval-skills](https://developers.openai.com/blog/eval-skills) 补齐技能评测：`evals/prompts/`（trigger / routing / write-gate）、四类 success criteria、rubric schema、`scripts/eval-agent.py`。CI 跑契约（每个命令至少一条路由 prompt）；`--live` 才是 `codex exec --json` 的 E3。
+- SKILL 增加可测 Definition of done（outcome / process / style / efficiency）。description 补隐式触发：E0382、sea-orm、实现功能、优化旧代码、compile too slow、does not compile。
+- 失败的会话要回到 CSV，不把 `eval-agent --static` 绿灯写成行为已验证。
+
 ## 0.0.71 — 2026-09-08
+
 
 - 独立安装单元补齐验证、扫描、画像脚本与 schema；运行资源和 provider 清单统一来源，生成副本不再手工维护。
 - 同步器拒绝沿祖先符号链接写删安装单元之外的文件；嵌套链接与缓存链接都识别为漂移，正常 Python 缓存不打包也不误报。
