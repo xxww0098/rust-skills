@@ -2,7 +2,7 @@
 默认: artifact=lib, maturity=待确认
 覆盖: orphan_module=artifact:lib
 ## 基线
-edition 2024 · MSRV unknown · resolver ? · 规范版本 v0.0.71（150 条分级规则）
+edition 2024 · MSRV unknown · resolver ? · 规范版本 v0.0.72（150 条分级规则）
 ## Crate 图
 orphan_module
 ## 域划分

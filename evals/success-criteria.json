@@ -1,0 +1,75 @@
+{
+  "source": "https://developers.openai.com/blog/eval-skills",
+  "note": "Must-pass checks only. Category auth is the default; command overrides win. Virtual owners (craft/help/skip) are not slash commands.",
+  "skill": {
+    "outcome": [
+      {"id": "task-closed", "text": "范围内每项已处理或列为缺口"},
+      {"id": "write-gated", "text": "无写授权则零业务 diff；已授权写入才有 Patch"}
+    ],
+    "process": [
+      {"id": "skill-invoked", "text": "Cargo+Rust 任务加载 rust 技能，非 Cargo/trivia 不加载"},
+      {"id": "one-primary", "text": "一轮一个 primary，至多一个 side-note"},
+      {"id": "engage-first", "text": "未点名子命令时走 engage→craft/triage，不回命令表"}
+    ],
+    "style": [
+      {"id": "finding-shape", "text": "输出按 kernel/finding.md：结论→范围→发现→验证→置信度→下一步"},
+      {"id": "no-clone-to-compile", "text": "禁止为过编译器直接 clone；triage 先 HOW→WHY→WHAT"}
+    ],
+    "efficiency": [
+      {"id": "budget", "text": "1 owner + ≤2 子 playbook + ≤3 rules/<domain>.md；禁止整目录读框架子目录"},
+      {"id": "no-hygiene-train", "text": "功能轮次不把 document+review+init 串成主动作"}
+    ]
+  },
+  "auth_by_category": {
+    "评审": "readonly",
+    "改造": "inspect-until-apply",
+    "语言语义": "inspect-until-apply",
+    "框架": "inspect-until-apply",
+    "交付": "inspect-until-apply",
+    "搭建与设计": "suggest-until-gate",
+    "治理": "declared-files"
+  },
+  "auth_overrides": {
+    "init": "write-declared",
+    "document": "write-declared",
+    "shape": "suggest-only",
+    "crate": "suggest-until-split",
+    "stack": "inspect-until-apply",
+    "batteries": "inspect-until-apply",
+    "capture": "write-declared",
+    "docs": "readonly-until-write-verbs"
+  },
+  "virtual": {
+    "craft": {
+      "auth": "write-if-authorized",
+      "outcome": ["目标内改动有 Patch", "最小相关测试已跑或声明缺口"],
+      "process": ["engage→craft；编译错误叠加 triage"],
+      "style": ["四道门：所有权/非法状态/错误/验证"],
+      "efficiency": ["不先逼 init/document"]
+    },
+    "help": {
+      "auth": "readonly",
+      "outcome": ["2–3 条带理由的推荐 + 命令表", "不执行任何命令"],
+      "process": ["走 reference/routing.md"],
+      "style": ["可复制的完整 /rust-skills:rust … 行"],
+      "efficiency": ["找到 2–3 个推荐即停，不全仓扫描"]
+    },
+    "skip": {
+      "auth": "readonly",
+      "outcome": ["不把本技能当 owner"],
+      "process": ["Python/Go/JS/翻译/trivia 不激活"],
+      "style": ["不假装审过 Rust"],
+      "efficiency": ["不采集 ProjectSnapshot"]
+    }
+  },
+  "writes": {
+    "init": ["RUST.md", "declared baseline files"],
+    "document": ["RUST.md"],
+    "capture": [".rust-skills/capture-outbox.md"],
+    "docs": ["frozen docs + inbound links, only after write verbs"]
+  },
+  "efficiency_caps": {
+    "max_command_executions": 25,
+    "max_inspect_project": 2
+  }
+}

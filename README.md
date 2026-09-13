@@ -192,11 +192,13 @@ init → shape → document → doctor → gate → stack → batteries → craf
 
 命令输出统一：**结论 → scope → findings → verification → confidence → next step**。规则号留在明细里。
 
-`check-consistency.sh` 绿灯只说明 **E1/E2**（结构 + 磁盘 fixture）通过，**不等于** behavioral verification / E3。
+`check-consistency.sh` 绿灯只说明 **E1/E2**（结构 + 磁盘 fixture）通过，**不等于** behavioral verification / E3。E3 契约与 prompt 集在 [`evals/`](evals/)；真跑 agent 才是 `python3 scripts/eval-agent.py --live`。
+
 
 ## 深入阅读
 
 - [examples/first-prompts.md](examples/first-prompts.md)：更多可复制入口
+- [evals/](evals/)：技能评测（prompt → run → checks → score）
 - [docs/DESIGN.md](docs/DESIGN.md)：架构、规则治理、harness sync、maintainer 细节
 - [CHANGELOG.md](CHANGELOG.md)
 - [skills/rust/](skills/rust/)：技能正文 SSOT
